@@ -4,6 +4,7 @@ namespace ShitwareLtd\Shitbot;
 
 use Discord\DiscordCommandClient;
 use Discord\Parts\Channel\Message;
+use ShitwareLtd\Shitbot\Commands\Weather;
 use Throwable;
 
 class ShitbotProvider
@@ -36,9 +37,15 @@ class ShitbotProvider
 
     /**
      * @return void
+     * @throws Throwable
      */
     public function run(): void
     {
+        $this->client->registerCommand(
+            command: 'weather',
+            callable: [new Weather(), 'handle']
+        );
+
         $this->client->on(
             event: 'ready',
             listener: $this->isReady(...)
@@ -65,12 +72,6 @@ class ShitbotProvider
      */
     private function handleMessage(Message $message): void
     {
-        if ($message->author->bot) {
-            return;
-        }
-
-        if (strtolower($message->content) === 'nice') {
-            $message->react(':mochoman:908433686523940884');
-        }
+        (new MessageHandler($message))();
     }
 }
