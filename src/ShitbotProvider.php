@@ -4,6 +4,7 @@ namespace ShitwareLtd\Shitbot;
 
 use Discord\DiscordCommandClient;
 use Discord\Parts\Channel\Message;
+use ShitwareLtd\Shitbot\Commands\Hype;
 use ShitwareLtd\Shitbot\Commands\Weather;
 use Throwable;
 
@@ -44,6 +45,11 @@ class ShitbotProvider
         $this->client->registerCommand(
             command: 'weather',
             callable: [new Weather(), 'handle']
+        );
+
+        $this->client->registerCommand(
+            command: 'hype',
+            callable: [new Hype(), 'handle']
         );
 
         $this->client->on(

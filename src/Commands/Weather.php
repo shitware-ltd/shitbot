@@ -38,7 +38,7 @@ class Weather
     {
         $response = Helpers::getContents(self::API_ENDPOINT."?aqi=no&key={$_ENV['WEATHER_TOKEN']}&q=$location");
 
-        if (!isset($response['location'])) {
+        if (! isset($response['location'])) {
             return false;
         }
 
