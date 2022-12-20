@@ -45,12 +45,13 @@ class Weather
         $name = $response['location']['name'];
         $region = $response['location']['region'];
         $country = $response['location']['country'];
-        $temp = $response['current']['temp_f'];
+        $tempF = $response['current']['temp_f'];
+        $tempC = $response['current']['temp_c'];
         $condition = Str::lower($response['current']['condition']['text']);
         $wind = $response['current']['wind_mph'];
         $windDirection = $response['current']['wind_dir'];
         $humidity = $response['current']['humidity'];
 
-        return "Currently in $name, $region, $country, it is $temp degrees fahrenheit and $condition. Winds out of the $windDirection at {$wind}mph. Humidity is $humidity%";
+        return "Currently in $name, $region, $country, it is {$tempF}°F ({$tempC}°C) and $condition. Winds out of the $windDirection at {$wind}mph. Humidity is $humidity%";
     }
 }
