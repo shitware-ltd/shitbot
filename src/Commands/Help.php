@@ -13,6 +13,6 @@ class Help
      */
     public function handle(Message $message, array $args): void
     {
-        $message->reply('Use: `!daddy` `!help` `!hype` `!joke` `!weather {location}` `!yomomma`');
+        $message->reply('Use: `!daddy` `!help` `!hype` `!joke` `!weather {location}` `!wiki {search}` `!yomomma`');
     }
 }

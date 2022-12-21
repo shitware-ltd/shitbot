@@ -9,6 +9,7 @@ use ShitwareLtd\Shitbot\Commands\Help;
 use ShitwareLtd\Shitbot\Commands\Hype;
 use ShitwareLtd\Shitbot\Commands\Joke;
 use ShitwareLtd\Shitbot\Commands\Weather;
+use ShitwareLtd\Shitbot\Commands\Wiki;
 use ShitwareLtd\Shitbot\Commands\YoMomma;
 use Throwable;
 
@@ -23,6 +24,7 @@ class ShitbotProvider
         Help::class => '!help',
         Joke::class => '!joke',
         Weather::class => '!weather',
+        Wiki::class => '!wiki',
         YoMomma::class => '!yomomma',
     ];
 
