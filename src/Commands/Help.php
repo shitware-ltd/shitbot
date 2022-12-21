@@ -31,6 +31,7 @@ class Help
         > `!weather {location}`: I will gaze into the sky for you.
         > `!wiki {search}`: As if googling was hard enough.
         > `!yomomma`: Mom's are great. But not your mom.
+        > `!yt {search}`: Find the perfect YouTube video.
         EOT;
     }
 }
