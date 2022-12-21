@@ -7,6 +7,7 @@ use Discord\Parts\Channel\Message;
 use ShitwareLtd\Shitbot\Commands\Dad;
 use ShitwareLtd\Shitbot\Commands\Help;
 use ShitwareLtd\Shitbot\Commands\Hype;
+use ShitwareLtd\Shitbot\Commands\Insult;
 use ShitwareLtd\Shitbot\Commands\Joke;
 use ShitwareLtd\Shitbot\Commands\Weather;
 use ShitwareLtd\Shitbot\Commands\Wiki;
@@ -22,6 +23,7 @@ class Shitbot
         Dad::class => '!daddy',
         Hype::class => '!hype',
         Help::class => '!help',
+        Insult::class => '!insult',
         Joke::class => '!joke',
         Weather::class => '!weather',
         Wiki::class => '!wiki',
