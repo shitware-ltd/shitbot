@@ -13,6 +13,7 @@ use ShitwareLtd\Shitbot\Commands\Joke;
 use ShitwareLtd\Shitbot\Commands\Weather;
 use ShitwareLtd\Shitbot\Commands\Wiki;
 use ShitwareLtd\Shitbot\Commands\YoMomma;
+use ShitwareLtd\Shitbot\Commands\YouTube;
 use Throwable;
 
 class Shitbot
@@ -29,6 +30,7 @@ class Shitbot
         Weather::class => '!weather',
         Wiki::class => '!wiki',
         YoMomma::class => '!yomomma',
+        YouTube::class => '!yt',
 //        Test::class => '!test',
     ];
 
@@ -54,7 +56,7 @@ class Shitbot
                 ])
             ))->boot();
         } catch (Throwable) {
-            //Bad time.
+            exit(1);
         }
     }
 
