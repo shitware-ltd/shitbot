@@ -21,8 +21,8 @@ class Shitbot
      */
     private array $commands = [
         Dad::class => '!daddy',
-        Hype::class => '!hype',
         Help::class => '!help',
+        Hype::class => '!hype',
         Insult::class => '!insult',
         Joke::class => '!joke',
         Weather::class => '!weather',
