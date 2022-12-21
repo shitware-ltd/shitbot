@@ -15,6 +15,18 @@ use Throwable;
 class ShitbotProvider
 {
     /**
+     * @var array
+     */
+    private array $commands = [
+        Dad::class => '!daddy',
+        Hype::class => '!hype',
+        Help::class => '!help',
+        Joke::class => '!joke',
+        Weather::class => '!weather',
+        YoMomma::class => '!yomomma',
+    ];
+
+    /**
      * @param  DiscordCommandClient  $client
      */
     public function __construct(
@@ -46,35 +58,12 @@ class ShitbotProvider
      */
     public function run(): void
     {
-        $this->client->registerCommand(
-            command: '!weather',
-            callable: [new Weather(), 'handle']
-        );
-
-        $this->client->registerCommand(
-            command: '!hype',
-            callable: [new Hype(), 'handle']
-        );
-
-        $this->client->registerCommand(
-            command: '!yomomma',
-            callable: [new YoMomma(), 'handle']
-        );
-
-        $this->client->registerCommand(
-            command: '!joke',
-            callable: [new Joke(), 'handle']
-        );
-
-        $this->client->registerCommand(
-            command: '!daddy',
-            callable: [new Dad(), 'handle']
-        );
-
-        $this->client->registerCommand(
-            command: '!help',
-            callable: [new Help(), 'handle']
-        );
+        foreach ($this->commands as $command => $trigger) {
+            $this->client->registerCommand(
+                command: $trigger,
+                callable: [new $command(), 'handle']
+            );
+        }
 
         $this->client->on(
             event: 'ready',
