@@ -5,6 +5,7 @@ namespace ShitwareLtd\Shitbot;
 use Discord\DiscordCommandClient;
 use Discord\Parts\Channel\Message;
 use ShitwareLtd\Shitbot\Commands\Dad;
+use ShitwareLtd\Shitbot\Commands\Help;
 use ShitwareLtd\Shitbot\Commands\Hype;
 use ShitwareLtd\Shitbot\Commands\Joke;
 use ShitwareLtd\Shitbot\Commands\Weather;
@@ -46,28 +47,33 @@ class ShitbotProvider
     public function run(): void
     {
         $this->client->registerCommand(
-            command: 'weather',
+            command: '!weather',
             callable: [new Weather(), 'handle']
         );
 
         $this->client->registerCommand(
-            command: 'hype',
+            command: '!hype',
             callable: [new Hype(), 'handle']
         );
 
         $this->client->registerCommand(
-            command: 'yomomma',
+            command: '!yomomma',
             callable: [new YoMomma(), 'handle']
         );
 
         $this->client->registerCommand(
-            command: 'joke',
+            command: '!joke',
             callable: [new Joke(), 'handle']
         );
 
         $this->client->registerCommand(
-            command: 'daddy',
+            command: '!daddy',
             callable: [new Dad(), 'handle']
+        );
+
+        $this->client->registerCommand(
+            command: '!help',
+            callable: [new Help(), 'handle']
         );
 
         $this->client->on(
