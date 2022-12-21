@@ -1,9 +1,9 @@
 <?php
 
-include __DIR__.'/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
-use ShitwareLtd\Shitbot\ShitbotProvider;
+use ShitwareLtd\Shitbot\Shitbot;
 
 (Dotenv\Dotenv::createImmutable(__DIR__))->load();
 
-ShitbotProvider::boot();
+Shitbot::run();
