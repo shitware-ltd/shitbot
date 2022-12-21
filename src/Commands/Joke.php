@@ -31,7 +31,7 @@ class Joke
     }
 
     /**
-     * Pick a random joke from our yo-momma jokes file.
+     * Pick a random joke from our jokes file.
      *
      * @return array
      */

@@ -21,7 +21,6 @@ class YoMomma
     public function handle(Message $message, array $args): void
     {
         $message->reply("👩 {$this->getYoMomma()}");
-        $message->react("👩");
     }
 
     /**

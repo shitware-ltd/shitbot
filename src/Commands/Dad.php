@@ -21,7 +21,6 @@ class Dad
     {
         if ($joke = $this->getDaddy()) {
             $message->reply("👨 {$joke['joke']}");
-            $message->react("👨");
         }
     }
 

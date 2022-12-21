@@ -20,13 +20,27 @@ class Helpers
     }
 
     /**
+     * @param  array  $args
+     * @return string
+     */
+    public static function implodeContent(array $args): string
+    {
+        return implode(
+            separator: " ",
+            array: $args
+        );
+    }
+
+    /**
      * @param  string  $endpoint
+     * @param  array  $query
      * @param  bool  $decode
      * @param  bool  $allowFail
      * @return array|string|null
      */
     public static function httpGet(
         string $endpoint,
+        array $query = [],
         bool $decode = true,
         bool $allowFail = false
     ): array|string|null {
@@ -38,7 +52,10 @@ class Helpers
         ]);
 
         try {
-            $response = $client->get($endpoint);
+            $response = $client->get(
+                uri: $endpoint,
+                options: count($query) ? ['query' => $query] : []
+            );
 
             if ($response->getStatusCode() >= 400 && ! $allowFail) {
                 return null;

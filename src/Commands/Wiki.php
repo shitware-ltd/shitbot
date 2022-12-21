@@ -2,7 +2,6 @@
 
 namespace ShitwareLtd\Shitbot\Commands;
 
-use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
@@ -17,27 +16,26 @@ class Wiki
      * @param  Message  $message
      * @param  array  $args
      * @return void
-     *
-     * @throws NoPermissionsException
      */
     public function handle(Message $message, array $args): void
     {
-        $search = implode(
-            separator: " ",
-            array: $args
-        );
+        $search = Helpers::implodeContent($args);
 
         $results = $this->getWiki($search);
 
-        if (count($results ?? [])) {
-            $message->reply("I found the following article(s) for `$search`");
+        if (count($results ?? []) && count($results[1])) {
+            $reply = "I found the following article(s) for `$search`".PHP_EOL;
 
             foreach ($results[1] as $key => $value) {
-                $message->channel->sendMessage("`$value` - <{$results[3][$key]}>");
+                $reply .= "> `$value` - <{$results[3][$key]}>".PHP_EOL;
             }
-        } else {
-            $message->reply("I found no results for `$search`");
+
+            $message->reply($reply);
+
+            return;
         }
+
+        $message->reply("I found no results for `$search`");
     }
 
     /**
@@ -46,6 +44,15 @@ class Wiki
      */
     private function getWiki(string $search): array|null
     {
-        return Helpers::httpGet(self::API_ENDPOINT."?limit=3&action=opensearch&namespace=0&format=json&search=$search");
+        return Helpers::httpGet(
+            endpoint: self::API_ENDPOINT,
+            query: [
+                'limit' => 3,
+                'search' => $search,
+                'action' => 'opensearch',
+                'namespace' => 0,
+                'format' => 'json',
+            ]
+        );
     }
 }

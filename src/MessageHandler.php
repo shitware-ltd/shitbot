@@ -3,6 +3,7 @@
 namespace ShitwareLtd\Shitbot;
 
 use Discord\Parts\Channel\Message;
+use Illuminate\Support\Str;
 
 class MessageHandler
 {
@@ -22,8 +23,17 @@ class MessageHandler
             return;
         }
 
-        if (strtolower($this->message->content) === 'nice') {
+        $content = Str::lower($this->message->content);
+
+        if ($content === 'nice') {
             $this->message->react('👍');
+        }
+
+        if (Str::contains(
+            haystack: $content,
+            needles: ['fuck', 'asshole', 'bitch', 'cunt']
+        )) {
+            $this->message->react('🖕');
         }
     }
 }

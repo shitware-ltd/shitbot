@@ -20,16 +20,15 @@ class Weather
      */
     public function handle(Message $message, array $args): void
     {
-        $location = implode(
-            separator: " ",
-            array: $args
-        );
+        $location = Helpers::implodeContent($args);
 
         if ($weather = $this->getWeather($location)) {
             $message->reply($this->makeWeather($weather));
-        } else {
-            $message->reply("No results for `$location`");
+
+            return;
         }
+
+        $message->reply("No results for `$location`");
     }
 
     /**
@@ -38,7 +37,14 @@ class Weather
      */
     private function getWeather(string $location): array|null
     {
-        return Helpers::httpGet(self::API_ENDPOINT."?aqi=no&key={$_ENV['WEATHER_TOKEN']}&q=$location");
+        return Helpers::httpGet(
+            endpoint: self::API_ENDPOINT,
+            query: [
+                'key' => $_ENV['WEATHER_TOKEN'],
+                'q' => $location,
+                'aqi' => 'no',
+            ]
+        );
     }
 
     /**

@@ -10,7 +10,7 @@ class Insult
     /**
      * Endpoint we gather data from.
      */
-    public const API_ENDPOINT = 'https://evilinsult.com/generate_insult.php?lang=en&type=json';
+    public const API_ENDPOINT = 'https://evilinsult.com/generate_insult.php';
 
     /**
      * @param  Message  $message
@@ -21,7 +21,6 @@ class Insult
     {
         if ($insult = $this->getInsult()) {
             $message->reply("{$message->author->username}, {$insult['insult']}");
-            $message->react('🖕');
         }
     }
 
@@ -30,6 +29,12 @@ class Insult
      */
     private function getInsult(): array|null
     {
-        return Helpers::httpGet(self::API_ENDPOINT);
+        return Helpers::httpGet(
+            endpoint: self::API_ENDPOINT,
+            query: [
+                'lang' => 'en',
+                'type' => 'json',
+            ]
+        );
     }
 }
