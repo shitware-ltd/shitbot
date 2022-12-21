@@ -12,7 +12,7 @@ class Joke
     /**
      * Location of our jokes!
      */
-    const JOKES_FILE = __DIR__.'/../../assets/jokes.json';
+    public const JOKES_FILE = __DIR__ . '/../../assets/jokes.json';
 
     /**
      * @param  Message  $message

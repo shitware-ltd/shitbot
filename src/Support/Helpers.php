@@ -2,33 +2,44 @@
 
 namespace ShitwareLtd\Shitbot\Support;
 
-use Throwable;
-
 class Helpers
 {
     /**
-     * @param  string  $endpoint
-     * @param  bool  $asArray
-     * @return array|string
+     * @param  string  $path
+     * @return array
      */
-    public static function getContents(string $endpoint, bool $asArray = true): mixed
+    public static function getContents(string $path): array
     {
-        $response = file_get_contents(
-            filename: $endpoint,
-            context: stream_context_create([
-                'http' => ['ignore_errors' => true],
-            ])
+        return json_decode(
+            json: file_get_contents($path),
+            associative: true
         );
+    }
 
-        try {
-            return $asArray
-                ? json_decode(
-                    json: $response,
-                    associative: true
-                )
-                : $response;
-        } catch (Throwable) {
-            return false;
-        }
+    /**
+     * @param  string  $endpoint
+     * @param  bool  $decode
+     * @return array|string|null
+     */
+    public static function getHttp(string $endpoint, bool $decode = true): array|string|null
+    {
+        $curl = curl_init($endpoint);
+
+        curl_setopt(handle: $curl, option: CURLOPT_URL, value: $endpoint);
+        curl_setopt(handle: $curl, option: CURLOPT_RETURNTRANSFER, value: true);
+        curl_setopt(handle: $curl, option: CURLOPT_HTTPHEADER, value: [
+            'Accept: application/json',
+        ]);
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
+        return $decode
+            ? json_decode(
+                json: $response,
+                associative: true
+            )
+            : $response;
     }
 }

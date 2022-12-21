@@ -4,6 +4,7 @@ namespace ShitwareLtd\Shitbot;
 
 use Discord\DiscordCommandClient;
 use Discord\Parts\Channel\Message;
+use ShitwareLtd\Shitbot\Commands\Dad;
 use ShitwareLtd\Shitbot\Commands\Hype;
 use ShitwareLtd\Shitbot\Commands\Joke;
 use ShitwareLtd\Shitbot\Commands\Weather;
@@ -62,6 +63,11 @@ class ShitbotProvider
         $this->client->registerCommand(
             command: 'joke',
             callable: [new Joke(), 'handle']
+        );
+
+        $this->client->registerCommand(
+            command: 'daddy',
+            callable: [new Dad(), 'handle']
         );
 
         $this->client->on(

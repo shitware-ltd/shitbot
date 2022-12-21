@@ -30,9 +30,9 @@ class Hype
      */
     private function getHype(): string|false
     {
-        $response = Helpers::getContents(
+        $response = Helpers::getHttp(
             endpoint: self::BlOnK_cHaIn."?endpoint=postquote&apikey={$_ENV['HYPE_TOKEN']}",
-            asArray: false
+            decode: false
         );
 
         if (! $response) {
