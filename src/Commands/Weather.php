@@ -34,7 +34,7 @@ class Weather
      * @param  string  $location
      * @return string|false
      */
-    public function getWeather(string $location): string|false
+    private function getWeather(string $location): string|false
     {
         $response = Helpers::getContents(self::API_ENDPOINT."?aqi=no&key={$_ENV['WEATHER_TOKEN']}&q=$location");
 
