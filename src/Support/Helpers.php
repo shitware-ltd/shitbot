@@ -2,6 +2,9 @@
 
 namespace ShitwareLtd\Shitbot\Support;
 
+use GuzzleHttp\Client;
+use Throwable;
+
 class Helpers
 {
     /**
@@ -19,27 +22,37 @@ class Helpers
     /**
      * @param  string  $endpoint
      * @param  bool  $decode
+     * @param  bool  $allowFail
      * @return array|string|null
      */
-    public static function getHttp(string $endpoint, bool $decode = true): array|string|null
-    {
-        $curl = curl_init($endpoint);
-
-        curl_setopt(handle: $curl, option: CURLOPT_URL, value: $endpoint);
-        curl_setopt(handle: $curl, option: CURLOPT_RETURNTRANSFER, value: true);
-        curl_setopt(handle: $curl, option: CURLOPT_HTTPHEADER, value: [
-            'Accept: application/json',
+    public static function httpGet(
+        string $endpoint,
+        bool $decode = true,
+        bool $allowFail = false
+    ): array|string|null {
+        $client = new Client([
+            'http_errors' => false,
+            'headers' => [
+                'Accept' => 'application/json',
+            ],
         ]);
 
-        $response = curl_exec($curl);
+        try {
+            $response = $client->get($endpoint);
 
-        curl_close($curl);
+            if ($response->getStatusCode() >= 400 && ! $allowFail) {
+                return null;
+            }
 
-        return $decode
-            ? json_decode(
-                json: $response,
-                associative: true
-            )
-            : $response;
+            return $decode
+                ? json_decode(
+                    json: (string) $response->getBody(),
+                    associative: true
+                )
+                : (string) $response->getBody();
+
+        } catch (Throwable) {
+            return null;
+        }
     }
 }

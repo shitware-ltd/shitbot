@@ -20,8 +20,8 @@ class Hype
      */
     public function handle(Message $message, array $args): void
     {
-        if ($weather = $this->getHype()) {
-            $message->reply($weather);
+        if ($hype = $this->getHype()) {
+            $message->reply($hype);
         }
     }
 
@@ -30,9 +30,10 @@ class Hype
      */
     private function getHype(): string|false
     {
-        $response = Helpers::getHttp(
+        $response = Helpers::httpGet(
             endpoint: self::BlOnK_cHaIn."?endpoint=postquote&apikey={$_ENV['HYPE_TOKEN']}",
-            decode: false
+            decode: false,
+            allowFail: true
         );
 
         if (! $response) {

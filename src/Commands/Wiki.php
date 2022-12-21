@@ -4,7 +4,6 @@ namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
-use Illuminate\Support\Collection;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
 class Wiki
@@ -30,34 +29,23 @@ class Wiki
 
         $results = $this->getWiki($search);
 
-        if ($results && count($formatted = $this->formatResults($results))) {
-            $message->reply("I found the following article(s) for ( $search ) :");
+        if (count($results ?? [])) {
+            $message->reply("I found the following article(s) for `$search`");
 
-            foreach ($formatted as $result) {
-                $message->channel->sendMessage($result);
+            foreach ($results[1] as $key => $value) {
+                $message->channel->sendMessage("`$value` - <{$results[3][$key]}>");
             }
+        } else {
+            $message->reply("I found no results for `$search`");
         }
     }
 
     /**
      * @param  string  $search
-     * @return array
+     * @return array|null
      */
-    private function getWiki(string $search): array
+    private function getWiki(string $search): array|null
     {
-        return Helpers::getHttp(self::API_ENDPOINT."?limit=3&action=opensearch&namespace=0&format=json&search=$search");
-    }
-
-    /**
-     * Format wiki results. Index 1 contains titles, index 3 contains the links.
-     *
-     * @param  array  $results
-     * @return array
-     */
-    private function formatResults(array $results): array
-    {
-        return Collection::make($results[1])
-            ->map(fn ($value, $key) => $value.' - '.$results[3][$key])
-            ->all();
+        return Helpers::httpGet(self::API_ENDPOINT."?limit=3&action=opensearch&namespace=0&format=json&search=$search");
     }
 }

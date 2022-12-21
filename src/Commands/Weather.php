@@ -26,22 +26,27 @@ class Weather
         );
 
         if ($weather = $this->getWeather($location)) {
-            $message->reply($weather);
+            $message->reply($this->makeWeather($weather));
+        } else {
+            $message->reply("No results for `$location`");
         }
     }
 
     /**
      * @param  string  $location
-     * @return string|false
+     * @return array|null
      */
-    private function getWeather(string $location): string|false
+    private function getWeather(string $location): array|null
     {
-        $response = Helpers::getHttp(self::API_ENDPOINT."?aqi=no&key={$_ENV['WEATHER_TOKEN']}&q=$location");
+        return Helpers::httpGet(self::API_ENDPOINT."?aqi=no&key={$_ENV['WEATHER_TOKEN']}&q=$location");
+    }
 
-        if (! isset($response['location'])) {
-            return false;
-        }
-
+    /**
+     * @param  array  $response
+     * @return string
+     */
+    private function makeWeather(array $response): string
+    {
         $name = $response['location']['name'];
         $region = $response['location']['region'];
         $country = $response['location']['country'];

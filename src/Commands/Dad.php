@@ -19,14 +19,17 @@ class Dad
      */
     public function handle(Message $message, array $args): void
     {
-        $message->reply("👨 {$this->getDaddy()['joke']}");
+        if ($joke = $this->getDaddy()) {
+            $message->reply("👨 {$joke['joke']}");
+            $message->react("👨");
+        }
     }
 
     /**
-     * @return array
+     * @return array|null
      */
-    private function getDaddy(): array
+    private function getDaddy(): array|null
     {
-        return Helpers::getHttp(self::API_ENDPOINT);
+        return Helpers::httpGet(self::API_ENDPOINT);
     }
 }
