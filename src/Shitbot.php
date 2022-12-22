@@ -8,6 +8,7 @@ use ShitwareLtd\Shitbot\Commands\Chuck;
 use ShitwareLtd\Shitbot\Commands\Dad;
 use ShitwareLtd\Shitbot\Commands\Help;
 use ShitwareLtd\Shitbot\Commands\Hype;
+use ShitwareLtd\Shitbot\Commands\Image;
 use ShitwareLtd\Shitbot\Commands\Insult;
 use ShitwareLtd\Shitbot\Commands\Joke;
 use ShitwareLtd\Shitbot\Commands\RockPaperScissors;
@@ -32,6 +33,7 @@ class Shitbot
         Dad::class => '!daddy',
         Help::class => '!help',
         Hype::class => '!hype',
+        Image::class => '!image',
         Insult::class => '!insult',
         Joke::class => '!joke',
         RockPaperScissors::class => '!rps',

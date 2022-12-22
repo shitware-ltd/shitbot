@@ -27,6 +27,7 @@ class Help
         > `!chuck`: Chuck Norris is still alive.
         > `!daddy`: Dad jokes brighten everyone's day up.
         > `!hype`: You never know what you'll get, but it's POG.
+        > `!image`: Random images can be nice.
         > `!insult`: Only if you dare. I can be meaner than the Bean.
         > `!joke`: Basic setup and punchline jokes.
         > `!rps {rock|paper|scissors}`: Play the most basic game on earth.
