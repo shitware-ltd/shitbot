@@ -4,6 +4,7 @@ namespace ShitwareLtd\Shitbot;
 
 use Discord\DiscordCommandClient;
 use Discord\Parts\Channel\Message;
+use ShitwareLtd\Shitbot\Commands\Chuck;
 use ShitwareLtd\Shitbot\Commands\Dad;
 use ShitwareLtd\Shitbot\Commands\Help;
 use ShitwareLtd\Shitbot\Commands\Hype;
@@ -23,6 +24,7 @@ class Shitbot
      * @var array
      */
     private array $commands = [
+        Chuck::class => '!chuck',
         Dad::class => '!daddy',
         Help::class => '!help',
         Hype::class => '!hype',

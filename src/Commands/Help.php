@@ -24,6 +24,7 @@ class Help
         return <<<EOT
         If you want to play with me, try:
         > `!help`: Well...you are already here, so you got this one down.
+        > `!chuck`: Chuck Norris is still alive.
         > `!daddy`: Dad jokes brighten everyone's day up.
         > `!hype`: You never know what you'll get, but it's POG.
         > `!insult`: Only if you dare. I can be meaner than the Bean.
