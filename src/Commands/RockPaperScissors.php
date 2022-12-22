@@ -108,7 +108,7 @@ class RockPaperScissors
             return "**$userName wins!**";
         }
 
-        return "**I win! $userName looses!**";
+        return "**I win! $userName loses!**";
     }
 
     /**
