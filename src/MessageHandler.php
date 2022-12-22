@@ -25,15 +25,57 @@ class MessageHandler
 
         $content = Str::lower($this->message->content);
 
-        if ($content === 'nice') {
-            $this->message->react('👍');
-        }
+        $this->reactToGoodTimes($content);
 
+        $this->reactToBadWords($content);
+    }
+
+    /**
+     * @param  string  $content
+     * @return void
+     */
+    private function reactToGoodTimes(string $content): void
+    {
         if (Str::contains(
             haystack: $content,
-            needles: ['fuck', 'asshole', 'bitch', 'cunt']
+            needles: ['nice', 'awesome', 'sweet', 'cool', 'pog', 'yeet', 'neat']
         )) {
-            $this->message->react('🖕');
+            $this->message->react(
+                collect([
+                    ':BeanLike:955772154367078410',
+                    ':DanSureCan:1054559650030309408',
+                    ':FeelsJorqensenMan:948839460173414420',
+                    ':FeelsTippinMan:945779696870785044',
+                    ':StanManCan:986743587041599568',
+                    ':mochoman:908433686523940884',
+                ])->random()
+            );
+        }
+    }
+
+    /**
+     * @param  string  $content
+     * @return void
+     */
+    private function reactToBadWords(string $content): void
+    {
+        if (Str::contains(
+            haystack: $content,
+            needles: ['fuck', 'asshole', 'bitch', 'cunt', 'shit', 'pussy']
+        )) {
+            $this->message->react(
+                collect([
+                    ':eyesshaking:930095703097745408',
+                    ':GullScream:1008189021505212416',
+                    ':bsod:903869566533394462',
+                    ':getsomehelp:903876935707410505',
+                    ':smh:903877109825540186',
+                    ':codeHard:888730726822981652',
+                    ':BeanThis:953772597110276147',
+                    ':madbean:897099906584567818',
+                    ':beaned:867568151252041758',
+                ])->random()
+            );
         }
     }
 }
