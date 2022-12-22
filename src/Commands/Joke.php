@@ -2,7 +2,6 @@
 
 namespace ShitwareLtd\Shitbot\Commands;
 
-use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
 use Illuminate\Support\Collection;
 use ShitwareLtd\Shitbot\Support\Helpers;
@@ -18,16 +17,15 @@ class Joke
      * @param  Message  $message
      * @param  array  $args
      * @return void
-     *
-     * @throws NoPermissionsException
      */
     public function handle(Message $message, array $args): void
     {
         $joke = $this->getJoke();
 
-        $message->reply($joke['setup']);
+        $reply = $joke['setup'].PHP_EOL;
+        $reply .= "||{$joke['punchline']}||";
 
-        $message->channel->sendMessage($joke['punchline']);
+        $message->reply($reply);
     }
 
     /**
