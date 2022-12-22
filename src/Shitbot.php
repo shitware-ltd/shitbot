@@ -10,6 +10,7 @@ use ShitwareLtd\Shitbot\Commands\Hype;
 use ShitwareLtd\Shitbot\Commands\Insult;
 use ShitwareLtd\Shitbot\Commands\Joke;
 //use ShitwareLtd\Shitbot\Commands\Test;
+use ShitwareLtd\Shitbot\Commands\RockPaperScissors;
 use ShitwareLtd\Shitbot\Commands\Weather;
 use ShitwareLtd\Shitbot\Commands\Wiki;
 use ShitwareLtd\Shitbot\Commands\YoMomma;
@@ -27,6 +28,7 @@ class Shitbot
         Hype::class => '!hype',
         Insult::class => '!insult',
         Joke::class => '!joke',
+        RockPaperScissors::class => '!rps',
         Weather::class => '!weather',
         Wiki::class => '!wiki',
         YoMomma::class => '!yomomma',
