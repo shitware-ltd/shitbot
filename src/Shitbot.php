@@ -10,7 +10,6 @@ use ShitwareLtd\Shitbot\Commands\Help;
 use ShitwareLtd\Shitbot\Commands\Hype;
 use ShitwareLtd\Shitbot\Commands\Insult;
 use ShitwareLtd\Shitbot\Commands\Joke;
-//use ShitwareLtd\Shitbot\Commands\Test;
 use ShitwareLtd\Shitbot\Commands\RockPaperScissors;
 use ShitwareLtd\Shitbot\Commands\Weather;
 use ShitwareLtd\Shitbot\Commands\Wiki;
@@ -35,7 +34,6 @@ class Shitbot
         Wiki::class => '!wiki',
         YoMomma::class => '!yomomma',
         YouTube::class => '!yt',
-//        Test::class => '!test',
     ];
 
     /**
