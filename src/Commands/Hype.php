@@ -4,6 +4,7 @@ namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Parts\Channel\Message;
 use Illuminate\Support\Str;
+use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
 class Hype
@@ -33,7 +34,7 @@ class Hype
         $response = Helpers::httpGet(
             endpoint: self::BlOnK_cHaIn,
             query: [
-                'apikey' => $_ENV['HYPE_TOKEN'],
+                'apikey' => Shitbot::$config['HYPE_TOKEN'],
                 'endpoint' => 'postquote',
             ],
             decode: false,

@@ -22,6 +22,11 @@ class Shitbot
     /**
      * @var array
      */
+    public static array $config = [];
+
+    /**
+     * @var array
+     */
     private array $commands = [
         Chuck::class => '!chuck',
         Dad::class => '!daddy',
@@ -41,7 +46,13 @@ class Shitbot
      */
     public function __construct(
         private readonly DiscordCommandClient $client
-    ){}
+    ){
+        static::$config = [
+            'WEATHER_TOKEN' => $_ENV['WEATHER_TOKEN'],
+            'HYPE_TOKEN' => $_ENV['HYPE_TOKEN'],
+            'YOUTUBE_TOKEN' => $_ENV['YOUTUBE_TOKEN'],
+        ];
+    }
 
     /**
      * @return void

@@ -3,6 +3,7 @@
 namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Parts\Channel\Message;
+use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
 class YouTube
@@ -44,7 +45,7 @@ class YouTube
         return Helpers::httpGet(
             endpoint: self::API_ENDPOINT,
             query: [
-                'key' => $_ENV['YOUTUBE_TOKEN'],
+                'key' => Shitbot::$config['YOUTUBE_TOKEN'],
                 'maxResults' => 1,
                 'q' => $search,
                 'part' => 'id',

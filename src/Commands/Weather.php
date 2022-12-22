@@ -4,6 +4,7 @@ namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Parts\Channel\Message;
 use Illuminate\Support\Str;
+use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
 class Weather
@@ -40,7 +41,7 @@ class Weather
         return Helpers::httpGet(
             endpoint: self::API_ENDPOINT,
             query: [
-                'key' => $_ENV['WEATHER_TOKEN'],
+                'key' => Shitbot::$config['WEATHER_TOKEN'],
                 'q' => $location,
                 'aqi' => 'no',
             ]
