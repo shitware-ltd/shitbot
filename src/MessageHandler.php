@@ -26,8 +26,8 @@ class MessageHandler
         $content = Str::lower($this->message->content);
 
         $this->reactToGoodTimes($content);
-
         $this->reactToBadWords($content);
+        $this->reactToTrongate($content);
     }
 
     /**
@@ -76,6 +76,20 @@ class MessageHandler
                     ':beaned:867568151252041758',
                 ])->random()
             );
+        }
+    }
+
+    /**
+     * @param  string  $content
+     * @return void
+     */
+    private function reactToTrongate(string $content): void
+    {
+        if (Str::contains(
+            haystack: $content,
+            needles: 'trongate'
+        )) {
+            $this->message->react(':trongate:1030233313266389062');
         }
     }
 }
