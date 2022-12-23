@@ -23,7 +23,9 @@ class Insult
      */
     public function handle(Message $message, array $args): void
     {
-        $insult = $this->getInsult();
+        if (! $insult = $this->getInsult()) {
+            return;
+        }
 
         if (! $message->mentions->count()) {
             $message->reply("<@{$message->author->id}>, {$insult['insult']}");
