@@ -36,13 +36,13 @@ class Helpers
     }
 
     /**
-     * One-third chance to win prizes.
+     * 50% chance to win prizes.
      *
      * @return bool
      */
     public static function gamble(): bool
     {
-        return rand(1, 999) < 333;
+        return rand(1, 999) < 500;
     }
 
     /**
