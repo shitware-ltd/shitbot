@@ -47,7 +47,7 @@ class Wiki
         return Helpers::httpGet(
             endpoint: self::API_ENDPOINT,
             query: [
-                'limit' => 3,
+                'limit' => 5,
                 'search' => $search,
                 'action' => 'opensearch',
                 'namespace' => 0,

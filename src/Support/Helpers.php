@@ -42,7 +42,7 @@ class Helpers
      */
     public static function gamble(): bool
     {
-        return rand(1, 999) < 500;
+        return rand(min: 1, max: 999) < 500;
     }
 
     /**
