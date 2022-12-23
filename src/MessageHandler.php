@@ -27,6 +27,7 @@ class MessageHandler
         $content = Str::lower($this->message->content);
 
         $this->reactToGoodTimes($content);
+        $this->reactToFunny($content);
         $this->reactToBadWords($content);
         $this->reactToTrongate($content);
     }
@@ -49,6 +50,32 @@ class MessageHandler
                     ':FeelsTippinMan:945779696870785044',
                     ':StanManCan:986743587041599568',
                     ':mochoman:908433686523940884',
+                    'cooldoge:903865400914239508',
+                    ':cheers:903865719400321024',
+                ])->random()
+            );
+        }
+    }
+
+    /**
+     * @param  string  $content
+     * @return void
+     */
+    private function reactToFunny(string $content): void
+    {
+        if (Str::contains(
+                haystack: $content,
+                needles: ['lmao', 'lmfao', 'rofl', 'kek', 'cringe', 'funny', 'haha', 'lolol']
+            ) && Helpers::gamble()) {
+            $this->message->react(
+                collect([
+                    ':KekwCamera:1031729132607909939',
+                    ':MeLike:1029201658061803560',
+                    ':kekamid:903876917575442432',
+                    ':potatospin:913606622310445088',
+                    ':drilldo:903834334044229693',
+                    ':KekwCry:1055646524840886292',
+                    ':KekwRave:1055646475918516324',
                 ])->random()
             );
         }
@@ -62,7 +89,7 @@ class MessageHandler
     {
         if (Str::contains(
             haystack: $content,
-            needles: ['fuck', 'asshole', 'bitch', 'cunt', 'shit', 'pussy']
+            needles: ['fuck', 'asshole', 'bitch', 'cunt', 'shit', 'pussy', 'dildo', 'dick']
         ) && Helpers::gamble()) {
             $this->message->react(
                 collect([
