@@ -4,6 +4,7 @@ namespace ShitwareLtd\Shitbot;
 
 use Discord\Parts\Channel\Message;
 use Illuminate\Support\Str;
+use ShitwareLtd\Shitbot\Support\Helpers;
 
 class MessageHandler
 {
@@ -39,7 +40,7 @@ class MessageHandler
         if (Str::contains(
             haystack: $content,
             needles: ['nice', 'awesome', 'sweet', 'cool', 'pog', 'yeet', 'neat']
-        )) {
+        ) && Helpers::gamble()) {
             $this->message->react(
                 collect([
                     ':BeanLike:955772154367078410',
@@ -62,7 +63,7 @@ class MessageHandler
         if (Str::contains(
             haystack: $content,
             needles: ['fuck', 'asshole', 'bitch', 'cunt', 'shit', 'pussy']
-        )) {
+        ) && Helpers::gamble()) {
             $this->message->react(
                 collect([
                     ':eyesshaking:930095703097745408',
@@ -88,7 +89,7 @@ class MessageHandler
         if (Str::contains(
             haystack: $content,
             needles: 'trongate'
-        )) {
+        ) && Helpers::gamble()) {
             $this->message->react(':trongate:1030233313266389062');
         }
     }

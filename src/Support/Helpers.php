@@ -8,6 +8,8 @@ use Throwable;
 class Helpers
 {
     /**
+     * Read some json.
+     *
      * @param  string  $path
      * @return array
      */
@@ -20,6 +22,8 @@ class Helpers
     }
 
     /**
+     * Less is more.
+     *
      * @param  array  $args
      * @return string
      */
@@ -32,6 +36,18 @@ class Helpers
     }
 
     /**
+     * One-third chance to win prizes.
+     *
+     * @return bool
+     */
+    public static function gamble(): bool
+    {
+        return rand(1, 999) < 333;
+    }
+
+    /**
+     * The best http client.
+     *
      * @param  string  $endpoint
      * @param  array  $query
      * @param  bool  $decode
