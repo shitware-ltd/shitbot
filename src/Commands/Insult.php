@@ -28,7 +28,7 @@ class Insult
         }
 
         if (! $message->mentions->count()) {
-            $message->reply("<@{$message->author->id}>, {$insult['insult']}");
+            $message->channel->sendMessage("<@{$message->author->id}>, {$insult['insult']}");
 
             return;
         }
