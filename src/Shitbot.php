@@ -6,7 +6,6 @@ use Discord\DiscordCommandClient;
 use Discord\Parts\Channel\Message;
 use ShitwareLtd\Shitbot\Commands\Chuck;
 use ShitwareLtd\Shitbot\Commands\Dad;
-use ShitwareLtd\Shitbot\Commands\Flame;
 use ShitwareLtd\Shitbot\Commands\Help;
 use ShitwareLtd\Shitbot\Commands\Hype;
 use ShitwareLtd\Shitbot\Commands\Image;
@@ -32,7 +31,6 @@ class Shitbot
     private array $commands = [
         Chuck::class => '!chuck',
         Dad::class => '!daddy',
-        Flame::class => '!flame',
         Help::class => '!help',
         Hype::class => '!hype',
         Image::class => '!image',
