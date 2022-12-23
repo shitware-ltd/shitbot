@@ -26,7 +26,6 @@ class Help
         > `!help`: Well...you are already here, so you got this one down.
         > `!chuck`: Chuck Norris is still alive.
         > `!daddy`: Dad jokes brighten everyone's day up.
-        > `!flame`: Same concept as `!insult` except I flame whoever you @mention.
         > `!hype`: You never know what you'll get, but it's POG.
         > `!image`: Random images can be nice.
         > `!insult`: Only if you dare. I can be meaner than the Bean. @mention users if you prefer I flame them.
