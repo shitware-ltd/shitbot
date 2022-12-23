@@ -89,7 +89,7 @@ class MessageHandler
         if (Str::contains(
             haystack: $content,
             needles: 'trongate'
-        ) && Helpers::gamble()) {
+        )) {
             $this->message->react(':trongate:1030233313266389062');
         }
     }
