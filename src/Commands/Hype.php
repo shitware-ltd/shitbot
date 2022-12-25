@@ -57,6 +57,6 @@ class Hype
             to: '</figcaption>'
         );
 
-        return "$ledger $signer";
+        return strip_tags("$ledger $signer");
     }
 }
