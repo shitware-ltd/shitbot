@@ -30,6 +30,7 @@ class MessageHandler
         $this->reactToFunny($content);
         $this->reactToBadWords($content);
         $this->reactToTrongate($content);
+        $this->reactToYaz($content);
     }
 
     /**
@@ -50,7 +51,7 @@ class MessageHandler
                     ':FeelsTippinMan:945779696870785044',
                     ':StanManCan:986743587041599568',
                     ':mochoman:908433686523940884',
-                    'cooldoge:903865400914239508',
+                    ':cooldoge:903865400914239508',
                     ':cheers:903865719400321024',
                 ])->random()
             );
@@ -118,6 +119,20 @@ class MessageHandler
             needles: 'trongate'
         )) {
             $this->message->react(':trongate:1030233313266389062');
+        }
+    }
+
+    /**
+     * @param  string  $content
+     * @return void
+     */
+    private function reactToYaz(string $content): void
+    {
+        if (Str::contains(
+            haystack: $content,
+            needles: 'yaz'
+        )) {
+            $this->message->react(':FeelsYazMan:1056419745898971176');
         }
     }
 }
