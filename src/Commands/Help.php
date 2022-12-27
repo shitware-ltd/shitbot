@@ -23,6 +23,7 @@ class Help
     {
         return <<<EOT
         If you want to play with me, try:
+        > `!ask`: Ask the A.I. overlords something magnificent.
         > `!help`: Well...you are already here, so you got this one down.
         > `!chuck`: Chuck Norris is still alive.
         > `!daddy`: Dad jokes brighten everyone's day up.

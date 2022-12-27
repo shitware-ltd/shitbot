@@ -4,6 +4,7 @@ namespace ShitwareLtd\Shitbot;
 
 use Discord\DiscordCommandClient;
 use Discord\Parts\Channel\Message;
+use ShitwareLtd\Shitbot\Commands\OpenAi;
 use ShitwareLtd\Shitbot\Commands\Chuck;
 use ShitwareLtd\Shitbot\Commands\Dad;
 use ShitwareLtd\Shitbot\Commands\Help;
@@ -36,6 +37,7 @@ class Shitbot
         Image::class => '!image',
         Insult::class => '!insult',
         Joke::class => '!joke',
+        OpenAi::class => '!ask',
         RockPaperScissors::class => '!rps',
         Weather::class => '!weather',
         Wiki::class => '!wiki',
@@ -53,6 +55,7 @@ class Shitbot
             'WEATHER_TOKEN' => $_ENV['WEATHER_TOKEN'],
             'HYPE_TOKEN' => $_ENV['HYPE_TOKEN'],
             'YOUTUBE_TOKEN' => $_ENV['YOUTUBE_TOKEN'],
+            'OPENAI_TOKEN' => $_ENV['OPENAI_TOKEN'],
         ];
     }
 
