@@ -4,6 +4,7 @@ namespace ShitwareLtd\Shitbot;
 
 use Discord\DiscordCommandClient;
 use Discord\Parts\Channel\Message;
+use ShitwareLtd\Shitbot\Commands\Ip;
 use ShitwareLtd\Shitbot\Commands\OpenAi;
 use ShitwareLtd\Shitbot\Commands\Chuck;
 use ShitwareLtd\Shitbot\Commands\Dad;
@@ -36,6 +37,7 @@ class Shitbot
         Hype::class => '!hype',
         Image::class => '!image',
         Insult::class => '!insult',
+        Ip::class => '!ip',
         Joke::class => '!joke',
         OpenAi::class => '!ask',
         RockPaperScissors::class => '!rps',
@@ -56,6 +58,7 @@ class Shitbot
             'HYPE_TOKEN' => $_ENV['HYPE_TOKEN'],
             'YOUTUBE_TOKEN' => $_ENV['YOUTUBE_TOKEN'],
             'OPENAI_TOKEN' => $_ENV['OPENAI_TOKEN'],
+            'IP_TOKEN' => $_ENV['IP_TOKEN'],
         ];
     }
 

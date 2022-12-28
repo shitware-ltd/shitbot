@@ -2,9 +2,12 @@
 
 ### This bot is hand crafted using PHP. It is *fast enough*. You should expect nothing less.
 
+## Notes:
+- `PHP >= 8.1` is required.
+- The use of emojis for reactions inside [MessageHandler](src/MessageHandler.php) are from a private server, and will not work for you. You must swap out all emojis yourself.
+
 ## Setting Up:
 
-- `PHP >= 8.1` is required.
 - Create your [Discord Bot](https://discord.com/developers/applications). 
 - Clone this repo. 
 - Rename `.env.example` to `.env`
@@ -14,6 +17,7 @@
   - To use `!weather`, you must get an API key from [Weather API](https://www.weatherapi.com)
   - To use `!yt`, you must get an API key from [Google Developers Console](https://console.developers.google.com)
   - To use `!hype`, you must get an API key from [Hype Quotes](https://github.com/jorqensen/hypequotes)
+  - To use `!ip`, you must get an API key from [IP API](https://ip-api.com)
 
 ## Running:
 

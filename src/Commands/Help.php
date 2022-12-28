@@ -23,13 +23,14 @@ class Help
     {
         return <<<EOT
         If you want to play with me, try:
-        > `!ask`: Ask the A.I. overlords something magnificent.
         > `!help`: Well...you are already here, so you got this one down.
+        > `!ask {prompt}`: Ask the A.I. overlords something magnificent.
         > `!chuck`: Chuck Norris is still alive.
         > `!daddy`: Dad jokes brighten everyone's day up.
         > `!hype`: You never know what you'll get, but it's POG.
         > `!image`: Random images can be nice.
         > `!insult`: Only if you dare. I can be meaner than the Bean. @mention users if you prefer I flame them.
+        > `!ip {ip}`: Obtain details about the supplied IP address.
         > `!joke`: Basic setup and punchline jokes.
         > `!rps {rock|paper|scissors}`: Play the most basic game on earth.
         > `!weather {location}`: I will gaze into the sky for you.
