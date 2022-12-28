@@ -29,8 +29,13 @@ class OpenAi
             );
 
             $message->reply($response['choices'][0]['text']);
-        } catch (Throwable) {
-            $message->reply('You broke me. Please try again.');
+        } catch (Throwable $e) {
+            $reply = 'You broke me. Please try again.'.PHP_EOL;
+            $reply .= '```diff'.PHP_EOL;
+            $reply .= "- {$e->getMessage()}".PHP_EOL;
+            $reply .= '```';
+
+            $message->reply($reply);
         }
     }
 
