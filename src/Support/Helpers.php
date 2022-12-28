@@ -61,7 +61,9 @@ class Helpers
         bool $allowFail = false
     ): array|string|null {
         $client = new Client([
+            'connect_timeout' => 10,
             'http_errors' => false,
+            'timeout' => 15,
             'headers' => [
                 'Accept' => 'application/json',
             ],

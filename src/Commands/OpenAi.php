@@ -3,8 +3,13 @@
 namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Parts\Channel\Message;
+use GuzzleHttp\Client as GuzzleClient;
+use OpenAI\Client;
 use OpenAI\Responses\Completions\CreateResponse;
-use OpenAi as OpenAiClient;
+use OpenAI\Transporters\HttpTransporter;
+use OpenAI\ValueObjects\ApiToken;
+use OpenAI\ValueObjects\Transporter\BaseUri;
+use OpenAI\ValueObjects\Transporter\Headers;
 use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
 use Throwable;
@@ -25,7 +30,7 @@ class OpenAi
 
             $message->reply($response['choices'][0]['text']);
         } catch (Throwable) {
-            //too bad
+            $message->reply('You broke me. Please try again.');
         }
     }
 
@@ -35,10 +40,25 @@ class OpenAi
      */
     private function askAi(string $prompt): CreateResponse
     {
-        return OpenAiClient::client(Shitbot::$config['OPENAI_TOKEN'])->completions()->create([
+        return $this->client()->completions()->create([
             'model' => 'text-davinci-003',
             'max_tokens' => 2048,
             'prompt' => $prompt,
         ]);
+    }
+
+    /**
+     * @return Client
+     */
+    private function client(): Client
+    {
+        return new Client(new HttpTransporter(
+            client: new GuzzleClient([
+                'connect_timeout' => 10,
+                'timeout' => 20,
+            ]),
+            baseUri: BaseUri::from('api.openai.com/v1'),
+            headers:  Headers::withAuthorization(ApiToken::from(Shitbot::$config['OPENAI_TOKEN']))
+        ));
     }
 }
