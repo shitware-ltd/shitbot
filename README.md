@@ -4,6 +4,7 @@
 
 ## Setting Up:
 
+- `PHP >= 8.1` is required.
 - Create your [Discord Bot](https://discord.com/developers/applications). 
 - Clone this repo. 
 - Rename `.env.example` to `.env`
