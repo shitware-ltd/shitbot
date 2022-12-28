@@ -9,6 +9,7 @@
 - Rename `.env.example` to `.env`
 - Run `composer install`
 - Supply your `BOT_TOKEN` and all other credentials in the `.env`
+  - To use `!ask`, you must get an API key from [OpenAI](https://beta.openai.com/account/api-keys)
   - To use `!weather`, you must get an API key from [Weather API](https://www.weatherapi.com)
   - To use `!yt`, you must get an API key from [Google Developers Console](https://console.developers.google.com)
   - To use `!hype`, you must get an API key from [Hype Quotes](https://github.com/jorqensen/hypequotes)

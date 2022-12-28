@@ -7,6 +7,7 @@ use OpenAI\Responses\Completions\CreateResponse;
 use OpenAi as OpenAiClient;
 use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
+use Throwable;
 
 class OpenAi
 {
@@ -18,10 +19,12 @@ class OpenAi
     public function handle(Message $message, array $args): void
     {
         try {
-            $response = $this->askAi(Helpers::implodeContent($args));
+            $response = $this->askAi(
+                Helpers::implodeContent($args)
+            );
 
             $message->reply($response['choices'][0]['text']);
-        } catch (\Throwable) {
+        } catch (Throwable) {
             //too bad
         }
     }
