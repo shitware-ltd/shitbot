@@ -2,6 +2,7 @@
 
 namespace ShitwareLtd\Shitbot\Support;
 
+use Discord\Parts\Channel\Message;
 use GuzzleHttp\Client;
 use Throwable;
 
@@ -43,6 +44,16 @@ class Helpers
     public static function gamble(): bool
     {
         return rand(min: 1, max: 999) < 500;
+    }
+
+    /**
+     * @param  Message  $message
+     * @return bool
+     */
+    public static function shouldProceed(Message $message): bool
+    {
+        return ! $message->author->bot
+            && $message->guild !== null;
     }
 
     /**

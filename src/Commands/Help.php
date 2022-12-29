@@ -2,6 +2,7 @@
 
 namespace ShitwareLtd\Shitbot\Commands;
 
+use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
 
 class Help extends Command
@@ -18,9 +19,15 @@ class Help extends Command
      * @param  Message  $message
      * @param  array  $args
      * @return void
+     *
+     * @throws NoPermissionsException
      */
     public function handle(Message $message, array $args): void
     {
+        if ($this->bailForBotOrDirectMessage($message)) {
+            return;
+        }
+
         $message->reply($this->message());
     }
 

@@ -31,6 +31,10 @@ class Image extends Command
      */
     public function handle(Message $message, array $args): void
     {
+        if ($this->bailForBotOrDirectMessage($message)) {
+            return;
+        }
+
         if ($image = $this->getImage()) {
             $message->channel->sendMessage(
                 MessageBuilder::new()

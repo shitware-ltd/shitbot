@@ -20,7 +20,7 @@ class MessageHandler
      */
     public function __invoke(): void
     {
-        if ($this->message->author->bot) {
+        if (! Helpers::shouldProceed($this->message)) {
             return;
         }
 

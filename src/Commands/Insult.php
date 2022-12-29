@@ -31,6 +31,10 @@ class Insult extends Command
      */
     public function handle(Message $message, array $args): void
     {
+        if ($this->bailForBotOrDirectMessage($message)) {
+            return;
+        }
+
         if (! $insult = $this->getInsult()) {
             return;
         }

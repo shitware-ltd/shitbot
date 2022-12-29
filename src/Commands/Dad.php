@@ -2,6 +2,7 @@
 
 namespace ShitwareLtd\Shitbot\Commands;
 
+use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
@@ -24,9 +25,15 @@ class Dad extends Command
      * @param  Message  $message
      * @param  array  $args
      * @return void
+     *
+     * @throws NoPermissionsException
      */
     public function handle(Message $message, array $args): void
     {
+        if ($this->bailForBotOrDirectMessage($message)) {
+            return;
+        }
+
         if ($joke = $this->getDaddy()) {
             $message->reply("👨 {$joke['joke']}");
         }
