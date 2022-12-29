@@ -4,6 +4,7 @@ namespace ShitwareLtd\Shitbot;
 
 use Discord\DiscordCommandClient;
 use Discord\Parts\Channel\Message;
+use Discord\Parts\User\Activity;
 use ShitwareLtd\Shitbot\Commands\Command;
 use ShitwareLtd\Shitbot\Commands\Ip;
 use ShitwareLtd\Shitbot\Commands\OpenAi;
@@ -114,6 +115,17 @@ class Shitbot
      */
     private function isReady(DiscordCommandClient $client): void
     {
+        $client->updatePresence(
+            activity: new Activity(
+                discord: $client,
+                attributes: [
+                    'type' => Activity::TYPE_WATCHING,
+                    'name' => 'your moms OnlyFans. 👍',
+                ]
+            ),
+            status: Activity::STATUS_DND
+        );
+
         $client->on(
             event: 'message',
             listener: $this->handleMessage(...)
