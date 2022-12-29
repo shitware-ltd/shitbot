@@ -4,8 +4,16 @@ namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Parts\Channel\Message;
 
-class Help
+class Help extends Command
 {
+    /**
+     * @return string
+     */
+    public function trigger(): string
+    {
+        return '!help';
+    }
+
     /**
      * @param  Message  $message
      * @param  array  $args

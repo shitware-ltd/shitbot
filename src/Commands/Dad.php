@@ -5,12 +5,20 @@ namespace ShitwareLtd\Shitbot\Commands;
 use Discord\Parts\Channel\Message;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
-class Dad
+class Dad extends Command
 {
     /**
      * Endpoint we gather data from.
      */
     public const API_ENDPOINT = 'https://icanhazdadjoke.com/';
+
+    /**
+     * @return string
+     */
+    public function trigger(): string
+    {
+        return '!daddy';
+    }
 
     /**
      * @param  Message  $message

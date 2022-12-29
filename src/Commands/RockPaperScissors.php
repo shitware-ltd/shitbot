@@ -5,7 +5,7 @@ namespace ShitwareLtd\Shitbot\Commands;
 use Discord\Parts\Channel\Message;
 use Illuminate\Support\Str;
 
-class RockPaperScissors
+class RockPaperScissors extends Command
 {
     /**
      * Game rules!
@@ -24,6 +24,14 @@ class RockPaperScissors
             'emoji' => '✂',
         ],
     ];
+
+    /**
+     * @return string
+     */
+    public function trigger(): string
+    {
+        return '!rps';
+    }
 
     /**
      * @param  Message  $message

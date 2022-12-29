@@ -6,12 +6,20 @@ use Discord\Parts\Channel\Message;
 use Illuminate\Support\Collection;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
-class Joke
+class Joke extends Command
 {
     /**
      * Location of our jokes!
      */
     public const JOKES_FILE = __DIR__ . '/../../assets/jokes.json';
+
+    /**
+     * @return string
+     */
+    public function trigger(): string
+    {
+        return '!joke';
+    }
 
     /**
      * @param  Message  $message

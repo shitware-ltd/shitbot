@@ -5,12 +5,20 @@ namespace ShitwareLtd\Shitbot\Commands;
 use Discord\Parts\Channel\Message;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
-class Wiki
+class Wiki extends Command
 {
     /**
      * Endpoint we gather data from.
      */
     public const API_ENDPOINT = 'https://en.wikipedia.org/w/api.php';
+
+    /**
+     * @return string
+     */
+    public function trigger(): string
+    {
+        return '!wiki';
+    }
 
     /**
      * @param  Message  $message

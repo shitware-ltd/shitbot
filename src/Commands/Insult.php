@@ -7,12 +7,20 @@ use Discord\Parts\Channel\Message;
 use Discord\Parts\User\User;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
-class Insult
+class Insult extends Command
 {
     /**
      * Endpoint we gather data from.
      */
     public const API_ENDPOINT = 'https://evilinsult.com/generate_insult.php';
+
+    /**
+     * @return string
+     */
+    public function trigger(): string
+    {
+        return '!insult';
+    }
 
     /**
      * @param  Message  $message

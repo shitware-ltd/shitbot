@@ -14,8 +14,24 @@ use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
 use Throwable;
 
-class OpenAi
+class OpenAi extends Command
 {
+    /**
+     * @return string
+     */
+    public function trigger(): string
+    {
+        return '!ask';
+    }
+
+    /**
+     * @return int
+     */
+    public function cooldown(): int
+    {
+        return 10000;
+    }
+
     /**
      * @param  Message  $message
      * @param  array  $args

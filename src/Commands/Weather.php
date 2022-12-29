@@ -7,12 +7,20 @@ use Illuminate\Support\Str;
 use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
-class Weather
+class Weather extends Command
 {
     /**
      * Endpoint we gather data from.
      */
     public const API_ENDPOINT = 'https://api.weatherapi.com/v1/current.json';
+
+    /**
+     * @return string
+     */
+    public function trigger(): string
+    {
+        return '!weather';
+    }
 
     /**
      * @param  Message  $message

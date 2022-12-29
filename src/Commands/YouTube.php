@@ -6,12 +6,20 @@ use Discord\Parts\Channel\Message;
 use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
-class YouTube
+class YouTube extends Command
 {
     /**
      * Endpoint we gather data from.
      */
     public const API_ENDPOINT = 'https://www.googleapis.com/youtube/v3/search';
+
+    /**
+     * @return string
+     */
+    public function trigger(): string
+    {
+        return '!yt';
+    }
 
     /**
      * @param  Message  $message

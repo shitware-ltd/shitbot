@@ -6,12 +6,20 @@ use Discord\Parts\Channel\Message;
 use Illuminate\Support\Collection;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
-class YoMomma
+class YoMomma extends Command
 {
     /**
      * Location of our yo-momma jokes!
      */
     public const JOKES_FILE = __DIR__ . '/../../assets/mom-jokes.json';
+
+    /**
+     * @return string
+     */
+    public function trigger(): string
+    {
+        return '!yomomma';
+    }
 
     /**
      * @param  Message  $message

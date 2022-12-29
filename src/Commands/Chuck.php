@@ -5,12 +5,20 @@ namespace ShitwareLtd\Shitbot\Commands;
 use Discord\Parts\Channel\Message;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
-class Chuck
+class Chuck extends Command
 {
     /**
      * Endpoint we gather data from.
      */
     public const API_ENDPOINT = 'https://api.chucknorris.io/jokes/random';
+
+    /**
+     * @return string
+     */
+    public function trigger(): string
+    {
+        return '!chuck';
+    }
 
     /**
      * @param  Message  $message

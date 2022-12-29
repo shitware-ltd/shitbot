@@ -6,7 +6,7 @@ use Discord\Parts\Channel\Message;
 use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
-class Ip
+class Ip extends Command
 {
     /**
      * Endpoint we gather data from.
@@ -37,6 +37,14 @@ class Ip
         'proxy',
         'hosting',
     ];
+
+    /**
+     * @return string
+     */
+    public function trigger(): string
+    {
+        return '!ip';
+    }
 
     /**
      * @param  Message  $message

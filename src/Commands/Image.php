@@ -7,12 +7,20 @@ use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
-class Image
+class Image extends Command
 {
     /**
      * Endpoint we gather data from.
      */
     public const API_ENDPOINT = 'https://source.unsplash.com/random';
+
+    /**
+     * @return string
+     */
+    public function trigger(): string
+    {
+        return '!image';
+    }
 
     /**
      * @param  Message  $message

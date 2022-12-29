@@ -4,6 +4,7 @@ namespace ShitwareLtd\Shitbot;
 
 use Discord\DiscordCommandClient;
 use Discord\Parts\Channel\Message;
+use ShitwareLtd\Shitbot\Commands\Command;
 use ShitwareLtd\Shitbot\Commands\Ip;
 use ShitwareLtd\Shitbot\Commands\OpenAi;
 use ShitwareLtd\Shitbot\Commands\Chuck;
@@ -28,23 +29,23 @@ class Shitbot
     public static array $config = [];
 
     /**
-     * @var array
+     * @var array<Command>
      */
     private array $commands = [
-        Chuck::class => '!chuck',
-        Dad::class => '!daddy',
-        Help::class => '!help',
-        Hype::class => '!hype',
-        Image::class => '!image',
-        Insult::class => '!insult',
-        Ip::class => '!ip',
-        Joke::class => '!joke',
-        OpenAi::class => '!ask',
-        RockPaperScissors::class => '!rps',
-        Weather::class => '!weather',
-        Wiki::class => '!wiki',
-        YoMomma::class => '!yomomma',
-        YouTube::class => '!yt',
+        Chuck::class,
+        Dad::class,
+        Help::class,
+        Hype::class,
+        Image::class,
+        Insult::class,
+        Ip::class,
+        Joke::class,
+        OpenAi::class,
+        RockPaperScissors::class,
+        Weather::class,
+        Wiki::class,
+        YoMomma::class,
+        YouTube::class,
     ];
 
     /**
@@ -87,10 +88,15 @@ class Shitbot
      */
     public function boot(): void
     {
-        foreach ($this->commands as $command => $trigger) {
+        foreach ($this->commands as $command) {
+            $command = new $command();
+
             $this->client->registerCommand(
-                command: $trigger,
-                callable: [new $command(), 'handle']
+                command: $command->trigger(),
+                callable: [$command, 'handle'],
+                options: [
+                    'cooldown' => $command->cooldown(),
+                ]
             );
         }
 

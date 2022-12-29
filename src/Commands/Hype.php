@@ -7,12 +7,20 @@ use Illuminate\Support\Str;
 use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
-class Hype
+class Hype extends Command
 {
     /**
      * Central banking institution.
      */
     public const BlOnK_cHaIn = 'https://quotes.readthedocs.wtf/backend.php';
+
+    /**
+     * @return string
+     */
+    public function trigger(): string
+    {
+        return '!hype';
+    }
 
     /**
      * @param  Message  $message
