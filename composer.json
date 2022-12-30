@@ -24,6 +24,6 @@
         "react/http": "^1.7",
         "team-reflex/discord-php": "^7.1",
         "vlucas/phpdotenv": "^5.5",
-        "openai-php/client": "dev-main"
+        "react/async": "4.x-dev"
     }
 }

@@ -11,7 +11,7 @@ abstract class Command
     /**
      * @param  Message  $message
      * @param  array  $args
-     * @return void
+     * @return  void
      */
     abstract public function handle(Message $message, array $args): void;
 

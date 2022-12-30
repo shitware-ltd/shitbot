@@ -5,6 +5,7 @@ namespace ShitwareLtd\Shitbot;
 use Discord\DiscordCommandClient;
 use Discord\Parts\Channel\Message;
 use Discord\Parts\User\Activity;
+use React\EventLoop\LoopInterface;
 use ShitwareLtd\Shitbot\Commands\Command;
 use ShitwareLtd\Shitbot\Commands\Ip;
 use ShitwareLtd\Shitbot\Commands\OpenAi;
@@ -28,6 +29,11 @@ class Shitbot
      * @var array
      */
     public static array $config = [];
+
+    /**
+     * @var LoopInterface|null
+     */
+    public static ?LoopInterface $loop = null;
 
     /**
      * @var array<Command>
@@ -62,6 +68,8 @@ class Shitbot
             'OPENAI_TOKEN' => $_ENV['OPENAI_TOKEN'],
             'IP_TOKEN' => $_ENV['IP_TOKEN'],
         ];
+
+        static::$loop = $this->client->getLoop();
     }
 
     /**

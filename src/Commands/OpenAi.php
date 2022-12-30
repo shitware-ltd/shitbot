@@ -2,18 +2,13 @@
 
 namespace ShitwareLtd\Shitbot\Commands;
 
-use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
-use GuzzleHttp\Client as GuzzleClient;
-use OpenAI\Client;
-use OpenAI\Responses\Completions\CreateResponse;
-use OpenAI\Transporters\HttpTransporter;
-use OpenAI\ValueObjects\ApiToken;
-use OpenAI\ValueObjects\Transporter\BaseUri;
-use OpenAI\ValueObjects\Transporter\Headers;
+use Psr\Http\Message\ResponseInterface;
 use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
 use Throwable;
+
+use function React\Async\coroutine;
 
 class OpenAi extends Command
 {
@@ -37,56 +32,43 @@ class OpenAi extends Command
      * @param  Message  $message
      * @param  array  $args
      * @return void
-     *
-     * @throws NoPermissionsException
      */
     public function handle(Message $message, array $args): void
     {
-        if ($this->bailForBotOrDirectMessage($message)) {
-            return;
-        }
+        coroutine(function (Message $message, array $args) {
+            if ($this->bailForBotOrDirectMessage($message)) {
+                return;
+            }
 
-        try {
-            $response = $this->askAi(
-                Helpers::implodeContent($args)
-            );
+            try {
+                /** @var ResponseInterface $response */
+                $response = yield Helpers::browser()->post(
+                    url: 'https://api.openai.com/v1/completions',
+                    headers: [
+                        'Authorization' => 'Bearer '.Shitbot::$config['OPENAI_TOKEN'],
+                        'Content-Type' => 'application/json',
+                    ],
+                    body: json_encode([
+                        'model' => 'text-davinci-003',
+                        'max_tokens' => 2048,
+                        'prompt' => Helpers::implodeContent($args),
+                    ])
+                );
 
-            $message->reply($response['choices'][0]['text']);
-        } catch (Throwable $e) {
-            $reply = 'You broke me. Please try again.'.PHP_EOL;
-            $reply .= '```diff'.PHP_EOL;
-            $reply .= "- {$e->getMessage()}".PHP_EOL;
-            $reply .= '```';
+                $result = json_decode(
+                    json: $response->getBody()->getContents(),
+                    associative: true
+                );
 
-            $message->reply($reply);
-        }
-    }
+                $message->reply($result['choices'][0]['text']);
+            } catch (Throwable $e) {
+                $reply = 'You broke me. Please try again.'.PHP_EOL;
+                $reply .= '```diff'.PHP_EOL;
+                $reply .= "- {$e->getMessage()}".PHP_EOL;
+                $reply .= '```';
 
-    /**
-     * @param  string  $prompt
-     * @return CreateResponse
-     */
-    private function askAi(string $prompt): CreateResponse
-    {
-        return $this->client()->completions()->create([
-            'model' => 'text-davinci-003',
-            'max_tokens' => 2048,
-            'prompt' => $prompt,
-        ]);
-    }
-
-    /**
-     * @return Client
-     */
-    private function client(): Client
-    {
-        return new Client(new HttpTransporter(
-            client: new GuzzleClient([
-                'connect_timeout' => 10,
-                'timeout' => 20,
-            ]),
-            baseUri: BaseUri::from('api.openai.com/v1'),
-            headers:  Headers::withAuthorization(ApiToken::from(Shitbot::$config['OPENAI_TOKEN']))
-        ));
+                $message->reply($reply);
+            }
+        }, $message, $args);
     }
 }
