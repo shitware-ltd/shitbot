@@ -6,6 +6,7 @@ use Discord\DiscordCommandClient;
 use Discord\Parts\Channel\Message;
 use Discord\Parts\User\Activity;
 use React\EventLoop\LoopInterface;
+use React\Http\Browser;
 use ShitwareLtd\Shitbot\Commands\Command;
 use ShitwareLtd\Shitbot\Commands\Ip;
 use ShitwareLtd\Shitbot\Commands\OpenAi;
@@ -101,11 +102,16 @@ class Shitbot
     }
 
     /**
-     * @return LoopInterface|null
+     * @return Browser
      */
-    public static function loop(): ?LoopInterface
+    public static function browser(): Browser
     {
-        return static::$loop;
+        return (new Browser(loop: static::$loop))
+            ->withTimeout(20.0)
+            ->withHeader(
+                header: 'Accept',
+                value: 'application/json'
+            );
     }
 
     /**

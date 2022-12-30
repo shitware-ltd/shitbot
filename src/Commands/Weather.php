@@ -51,7 +51,7 @@ class Weather extends Command
 
             try {
                 /** @var ResponseInterface $response */
-                $response = yield Helpers::browser()->get("https://api.weatherapi.com/v1/current.json?$query");
+                $response = yield Shitbot::browser()->get("https://api.weatherapi.com/v1/current.json?$query");
 
                 $result = Helpers::json($response);
 

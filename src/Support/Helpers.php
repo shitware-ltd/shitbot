@@ -4,8 +4,6 @@ namespace ShitwareLtd\Shitbot\Support;
 
 use Discord\Parts\Channel\Message;
 use Psr\Http\Message\ResponseInterface;
-use React\Http\Browser;
-use ShitwareLtd\Shitbot\Shitbot;
 
 class Helpers
 {
@@ -61,18 +59,5 @@ class Helpers
     {
         return ! $message->author->bot
             && $message->guild !== null;
-    }
-
-    /**
-     * @return Browser
-     */
-    public static function browser(): Browser
-    {
-        return (new Browser(loop: Shitbot::loop()))
-            ->withTimeout(20.0)
-            ->withHeader(
-                header: 'Accept',
-                value: 'application/json'
-            );
     }
 }

@@ -42,7 +42,7 @@ class OpenAi extends Command
 
             try {
                 /** @var ResponseInterface $response */
-                $response = yield Helpers::browser()->post(
+                $response = yield Shitbot::browser()->post(
                     url: 'https://api.openai.com/v1/completions',
                     headers: [
                         'Authorization' => 'Bearer '.Shitbot::config('OPENAI_TOKEN'),

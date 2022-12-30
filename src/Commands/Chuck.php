@@ -4,6 +4,7 @@ namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Parts\Channel\Message;
 use Psr\Http\Message\ResponseInterface;
+use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
 use Throwable;
 
@@ -33,7 +34,7 @@ class Chuck extends Command
 
             try {
                 /** @var ResponseInterface $response */
-                $response = yield Helpers::browser()->get('https://api.chucknorris.io/jokes/random');
+                $response = yield Shitbot::browser()->get('https://api.chucknorris.io/jokes/random');
 
                 $result = Helpers::json($response);
 

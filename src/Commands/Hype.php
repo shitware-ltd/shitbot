@@ -40,7 +40,7 @@ class Hype extends Command
 
             try {
                 /** @var ResponseInterface $response */
-                $response = yield Helpers::browser()
+                $response = yield Shitbot::browser()
                     ->withRejectErrorResponse(false)
                     ->get("https://quotes.readthedocs.wtf/backend.php?$query");
 

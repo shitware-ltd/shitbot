@@ -52,7 +52,7 @@ class YouTube extends Command
 
             try {
                 /** @var ResponseInterface $response */
-                $response = yield Helpers::browser()->get("https://www.googleapis.com/youtube/v3/search?$query");
+                $response = yield Shitbot::browser()->get("https://www.googleapis.com/youtube/v3/search?$query");
 
                 $result = Helpers::json($response);
 

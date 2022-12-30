@@ -4,6 +4,7 @@ namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Parts\Channel\Message;
 use Psr\Http\Message\ResponseInterface;
+use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
 use Throwable;
 
@@ -51,7 +52,7 @@ class Wiki extends Command
 
             try {
                 /** @var ResponseInterface $response */
-                $response = yield Helpers::browser()->get("https://en.wikipedia.org/w/api.php?$query");
+                $response = yield Shitbot::browser()->get("https://en.wikipedia.org/w/api.php?$query");
 
                 $result = Helpers::json($response);
 

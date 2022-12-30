@@ -51,7 +51,7 @@ class Ip extends Command
 
             try {
                 /** @var ResponseInterface $response */
-                $response = yield Helpers::browser()->get("https://pro.ip-api.com/json/$ip?$query");
+                $response = yield Shitbot::browser()->get("https://pro.ip-api.com/json/$ip?$query");
 
                 $result = Helpers::json($response);
 
