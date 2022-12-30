@@ -3,6 +3,7 @@
 namespace ShitwareLtd\Shitbot\Support;
 
 use Discord\Parts\Channel\Message;
+use Psr\Http\Message\ResponseInterface;
 use React\Http\Browser;
 use ShitwareLtd\Shitbot\Shitbot;
 
@@ -29,6 +30,18 @@ class Helpers
         return implode(
             separator: " ",
             array: $args
+        );
+    }
+
+    /**
+     * @param  ResponseInterface  $response
+     * @return array
+     */
+    public static function json(ResponseInterface $response): array
+    {
+        return json_decode(
+            json: $response->getBody()->getContents(),
+            associative: true
         );
     }
 

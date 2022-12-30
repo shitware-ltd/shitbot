@@ -55,10 +55,7 @@ class OpenAi extends Command
                     ])
                 );
 
-                $result = json_decode(
-                    json: $response->getBody()->getContents(),
-                    associative: true
-                );
+                $result = Helpers::json($response);
 
                 $message->reply($result['choices'][0]['text']);
             } catch (Throwable $e) {

@@ -16,6 +16,14 @@ class Help extends Command
     }
 
     /**
+     * @return int
+     */
+    public function cooldown(): int
+    {
+        return 15000;
+    }
+
+    /**
      * @param  Message  $message
      * @param  array  $args
      * @return void

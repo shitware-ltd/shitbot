@@ -35,10 +35,7 @@ class Chuck extends Command
                 /** @var ResponseInterface $response */
                 $response = yield Helpers::browser()->get('https://api.chucknorris.io/jokes/random');
 
-                $result = json_decode(
-                    json: $response->getBody()->getContents(),
-                    associative: true
-                );
+                $result = Helpers::json($response);
 
                 $message->reply("💀 {$result['value']}");
             } catch (Throwable) {

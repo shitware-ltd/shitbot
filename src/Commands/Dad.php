@@ -35,10 +35,7 @@ class Dad extends Command
                 /** @var ResponseInterface $response */
                 $response = yield Helpers::browser()->get('https://icanhazdadjoke.com/');
 
-                $result = json_decode(
-                    json: $response->getBody()->getContents(),
-                    associative: true
-                );
+                $result = Helpers::json($response);
 
                 $message->reply("👨 {$result['joke']}");
             } catch (Throwable) {

@@ -21,6 +21,14 @@ class Ip extends Command
     }
 
     /**
+     * @return int
+     */
+    public function cooldown(): int
+    {
+        return 5000;
+    }
+
+    /**
      * @param  Message  $message
      * @param  array  $args
      * @return void
@@ -45,10 +53,7 @@ class Ip extends Command
                 /** @var ResponseInterface $response */
                 $response = yield Helpers::browser()->get("https://pro.ip-api.com/json/$ip?$query");
 
-                $result = json_decode(
-                    json: $response->getBody()->getContents(),
-                    associative: true
-                );
+                $result = Helpers::json($response);
 
                 $reply = '```json'.PHP_EOL;
 

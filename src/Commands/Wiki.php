@@ -20,6 +20,14 @@ class Wiki extends Command
     }
 
     /**
+     * @return int
+     */
+    public function cooldown(): int
+    {
+        return 5000;
+    }
+
+    /**
      * @param  Message  $message
      * @param  array  $args
      * @return void
@@ -45,10 +53,7 @@ class Wiki extends Command
                 /** @var ResponseInterface $response */
                 $response = yield Helpers::browser()->get("https://en.wikipedia.org/w/api.php?$query");
 
-                $result = json_decode(
-                    json: $response->getBody()->getContents(),
-                    associative: true
-                );
+                $result = Helpers::json($response);
 
                 if (count($result[1] ?? [])) {
                     $reply = "I found the following article(s) for `$search`".PHP_EOL;

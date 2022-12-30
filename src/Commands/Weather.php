@@ -22,6 +22,14 @@ class Weather extends Command
     }
 
     /**
+     * @return int
+     */
+    public function cooldown(): int
+    {
+        return 5000;
+    }
+
+    /**
      * @param  Message  $message
      * @param  array  $args
      * @return void
@@ -45,10 +53,7 @@ class Weather extends Command
                 /** @var ResponseInterface $response */
                 $response = yield Helpers::browser()->get("https://api.weatherapi.com/v1/current.json?$query");
 
-                $result = json_decode(
-                    json: $response->getBody()->getContents(),
-                    associative: true
-                );
+                $result = Helpers::json($response);
 
                 $message->reply($this->makeWeather($result));
 

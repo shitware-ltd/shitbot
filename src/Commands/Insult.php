@@ -41,10 +41,7 @@ class Insult extends Command
                 /** @var ResponseInterface $response */
                 $response = yield Helpers::browser()->get("https://evilinsult.com/generate_insult.php?$query");
 
-                $result = json_decode(
-                    json: $response->getBody()->getContents(),
-                    associative: true
-                );
+                $result = Helpers::json($response);
 
                 if (! $message->mentions->count()) {
                     $message->channel->sendMessage("<@{$message->author->id}>, {$result['insult']}");
