@@ -45,7 +45,7 @@ class OpenAi extends Command
                 $response = yield Helpers::browser()->post(
                     url: 'https://api.openai.com/v1/completions',
                     headers: [
-                        'Authorization' => 'Bearer '.Shitbot::$config['OPENAI_TOKEN'],
+                        'Authorization' => 'Bearer '.Shitbot::config('OPENAI_TOKEN'),
                         'Content-Type' => 'application/json',
                     ],
                     body: json_encode([

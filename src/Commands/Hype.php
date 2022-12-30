@@ -34,7 +34,7 @@ class Hype extends Command
             }
 
             $query = http_build_query([
-                'apikey' => Shitbot::$config['HYPE_TOKEN'],
+                'apikey' => Shitbot::config('HYPE_TOKEN'),
                 'endpoint' => 'postquote',
             ]);
 

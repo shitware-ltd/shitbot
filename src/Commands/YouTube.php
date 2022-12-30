@@ -35,7 +35,7 @@ class YouTube extends Command
             $search = Helpers::implodeContent($args);
 
             $query = http_build_query([
-                'key' => Shitbot::$config['YOUTUBE_TOKEN'],
+                'key' => Shitbot::config('YOUTUBE_TOKEN'),
                 'maxResults' => 1,
                 'q' => $search,
                 'part' => 'id',

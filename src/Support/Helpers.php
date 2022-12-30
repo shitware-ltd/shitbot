@@ -55,7 +55,7 @@ class Helpers
      */
     public static function browser(): Browser
     {
-        return (new Browser(loop: Shitbot::$loop))
+        return (new Browser(loop: Shitbot::loop()))
             ->withTimeout(20.0)
             ->withHeader(
                 header: 'Accept',

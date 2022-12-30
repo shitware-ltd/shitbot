@@ -28,12 +28,12 @@ class Shitbot
     /**
      * @var array
      */
-    public static array $config = [];
+    private static array $config = [];
 
     /**
      * @var LoopInterface|null
      */
-    public static ?LoopInterface $loop = null;
+    private static ?LoopInterface $loop = null;
 
     /**
      * @var array<Command>
@@ -92,6 +92,23 @@ class Shitbot
     }
 
     /**
+     * @param  string  $key
+     * @return mixed
+     */
+    public static function config(string $key): mixed
+    {
+        return static::$config[$key] ?? null;
+    }
+
+    /**
+     * @return LoopInterface|null
+     */
+    public static function loop(): ?LoopInterface
+    {
+        return static::$loop;
+    }
+
+    /**
      * @return void
      * @throws Throwable
      */
@@ -105,6 +122,7 @@ class Shitbot
                 callable: [$command, 'handle'],
                 options: [
                     'cooldown' => $command->cooldown(),
+                    'cooldownMessage' => "Slow down turbo, %d second(s) until you can use `{$command->trigger()}` again ⏳",
                 ]
             );
         }

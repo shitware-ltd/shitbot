@@ -37,7 +37,7 @@ class Ip extends Command
             }
 
             $query = http_build_query([
-                'key' => Shitbot::$config['IP_TOKEN'],
+                'key' => Shitbot::config('IP_TOKEN'),
                 'fields' => 33292287,
             ]);
 

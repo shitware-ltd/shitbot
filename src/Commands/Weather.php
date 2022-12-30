@@ -36,7 +36,7 @@ class Weather extends Command
             $location = Helpers::implodeContent($args);
 
             $query = http_build_query([
-                'key' => Shitbot::$config['WEATHER_TOKEN'],
+                'key' => Shitbot::config('WEATHER_TOKEN'),
                 'q' => $location,
                 'aqi' => 'no',
             ]);
