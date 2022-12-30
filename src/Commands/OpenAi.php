@@ -40,6 +40,8 @@ class OpenAi extends Command
                 return;
             }
 
+            $message->channel->broadcastTyping();
+
             try {
                 /** @var ResponseInterface $response */
                 $response = yield Shitbot::browser()->post(
