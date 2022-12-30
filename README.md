@@ -4,7 +4,7 @@
 
 ## Notes:
 - `PHP >= 8.1` is required.
-- The use of emojis for reactions inside [MessageHandler](src/MessageHandler.php) are from a private server, and will not work for you. You must swap out all emojis yourself.
+- The use of most emojis for reactions inside [Shitbot](src/Shitbot.php) are from a private server, and will not work for you. You must swap out all emojis yourself.
 
 ## Setting Up:
 

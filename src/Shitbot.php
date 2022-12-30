@@ -5,6 +5,8 @@ namespace ShitwareLtd\Shitbot;
 use Discord\DiscordCommandClient;
 use Discord\Parts\Channel\Message;
 use Discord\Parts\User\Activity;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use React\EventLoop\LoopInterface;
 use React\Http\Browser;
 use ShitwareLtd\Shitbot\Commands\Command;
@@ -35,6 +37,73 @@ class Shitbot
      * @var LoopInterface|null
      */
     private static ?LoopInterface $loop = null;
+
+    /**
+     * @var array
+     */
+    private static array $emojis = [
+        'cool' => [
+            ':BeanLike:955772154367078410',
+            ':DanSureCan:1054559650030309408',
+            ':FeelsJorqensenMan:948839460173414420',
+            ':FeelsTippinMan:945779696870785044',
+            ':StanManCan:986743587041599568',
+            ':mochoman:908433686523940884',
+            ':cooldoge:903865400914239508',
+            ':cheers:903865719400321024',
+            ':OkFam:1034988675240566854',
+            ':coolblink:903877070336167956',
+            ':potatocheer:915906109917757471',
+            ':MarioLuigiDancing:930208778354319370',
+            '😎',
+            '🆒',
+        ],
+        'funny' => [
+            ':KekwCamera:1031729132607909939',
+            ':MeLike:1029201658061803560',
+            ':kekamid:903876917575442432',
+            ':potatospin:913606622310445088',
+            ':drilldo:903834334044229693',
+            ':KekwCry:1055646524840886292',
+            ':KekwRave:1055646475918516324',
+            '😂',
+            '🤣',
+            '😁',
+        ],
+        'think' => [
+            ':BlobEat:903866622345900052',
+            ':ChiefThonk:1029200771096510534',
+            ':NeonThink:930095718771863552',
+            ':ThinkGator:933287413449650206',
+            ':watts:903836408639262790',
+            ':SuperCereal:985316620928942231',
+            ':virus:821890127252946964',
+            ':nervouscursor:903876962328670239',
+            '🤔',
+            '💭',
+        ],
+        'rage' => [
+            ':eyesshaking:930095703097745408',
+            ':GullScream:1008189021505212416',
+            ':bsod:903869566533394462',
+            ':getsomehelp:903876935707410505',
+            ':smh:903877109825540186',
+            ':codeHard:888730726822981652',
+            ':BeanThis:953772597110276147',
+            ':madbean:897099906584567818',
+            ':beaned:867568151252041758',
+            ':yeangry:903877015604703232',
+            ':pain:903876735056085023',
+            ':codeRee:888733167530434580',
+            ':Kaboom:903867872344957008',
+            ':duckno:903876825925681153',
+            ':kermitgun:930095685158719509',
+            '🖕',
+            '💢',
+            '😡',
+            '😠',
+        ],
+    ];
 
     /**
      * @var array<Command>
@@ -112,6 +181,23 @@ class Shitbot
                 header: 'Accept',
                 value: 'application/json'
             );
+    }
+
+    /**
+     * @param  string|null  $flavor
+     * @return string
+     */
+    public static function emoji(?string $flavor = null): string
+    {
+        return Collection::make(
+            match ($flavor) {
+                'cool' => static::$emojis['cool'],
+                'funny' => static::$emojis['funny'],
+                'think' => static::$emojis['think'],
+                'rage' => static::$emojis['rage'],
+                default => Arr::flatten(static::$emojis),
+            }
+        )->random();
     }
 
     /**
