@@ -3,6 +3,7 @@
 namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Parts\Channel\Message;
+use Illuminate\Support\Str;
 use Psr\Http\Message\ResponseInterface;
 use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
@@ -52,14 +53,20 @@ class OpenAi extends Command
                     ],
                     body: json_encode([
                         'model' => 'text-davinci-003',
-                        'max_tokens' => 2048,
+                        'max_tokens' => 3072,
                         'prompt' => Helpers::implodeContent($args),
                     ])
                 );
 
-                $result = Helpers::json($response);
+                $result = Helpers::json($response)['choices'][0]['text'];
 
-                $message->reply($result['choices'][0]['text']);
+                foreach (Helpers::splitMessage($result) as $key => $chunk) {
+                    if ($key === 0) {
+                        $message->reply($chunk);
+                    } else {
+                        $message->channel->sendMessage($chunk);
+                    }
+                }
             } catch (Throwable $e) {
                 $reply = 'You broke me. Please try again.'.PHP_EOL;
                 $reply .= '```diff'.PHP_EOL;

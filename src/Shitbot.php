@@ -179,7 +179,7 @@ class Shitbot
     public static function browser(): Browser
     {
         return (new Browser(loop: static::$loop))
-            ->withTimeout(20.0)
+            ->withTimeout(45.0)
             ->withHeader(
                 header: 'Accept',
                 value: 'application/json'

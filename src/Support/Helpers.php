@@ -60,4 +60,35 @@ class Helpers
         return ! $message->author->bot
             && $message->guild !== null;
     }
+
+    /**
+     * @param  string  $message
+     * @param  int  $max
+     * @return array
+     */
+    public static function splitMessage(string $message, int $max = 1950): array
+    {
+        if (mb_strlen($message) <= $max) {
+            return [$message];
+        }
+
+        $result = [];
+
+        $currentString = '';
+
+        foreach (explode(separator: ' ', string: $message) as $word) {
+            if (mb_strlen($currentString . $word) > $max) {
+                $result[] = $currentString;
+                $currentString = $word;
+            } else {
+                $currentString .= " $word";
+            }
+        }
+
+        if (! empty($currentString)) {
+            $result[] = $currentString;
+        }
+
+        return $result;
+    }
 }
