@@ -84,7 +84,7 @@ class MessageHandler
     {
         if (Str::contains(
             haystack: $content,
-            needles: ['fuck', 'asshole', 'bitch', 'cunt', 'shit', 'pussy', 'dildo', 'dick', 'dumb', 'twat', 'piss', 'bastard']
+            needles: ['fuck', 'asshole', 'bitch', 'cunt', 'shit', 'pussy', 'dildo', 'dick', 'dumb', 'twat', 'piss', 'bastard', 'prick', 'wanker', 'cock']
         ) && Helpers::gamble()) {
             $this->message->react(Shitbot::emoji('rage'));
         }
