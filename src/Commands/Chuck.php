@@ -2,17 +2,15 @@
 
 namespace ShitwareLtd\Shitbot\Commands;
 
-use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
+use Psr\Http\Message\ResponseInterface;
 use ShitwareLtd\Shitbot\Support\Helpers;
+use Throwable;
+
+use function React\Async\coroutine;
 
 class Chuck extends Command
 {
-    /**
-     * Endpoint we gather data from.
-     */
-    public const API_ENDPOINT = 'https://api.chucknorris.io/jokes/random';
-
     /**
      * @return string
      */
@@ -25,25 +23,27 @@ class Chuck extends Command
      * @param  Message  $message
      * @param  array  $args
      * @return void
-     *
-     * @throws NoPermissionsException
      */
     public function handle(Message $message, array $args): void
     {
-        if ($this->bailForBotOrDirectMessage($message)) {
-            return;
-        }
+        coroutine(function (Message $message) {
+            if ($this->bailForBotOrDirectMessage($message)) {
+                return;
+            }
 
-        if ($chuck = $this->getChuck()) {
-            $message->reply("💀 {$chuck['value']}");
-        }
-    }
+            try {
+                /** @var ResponseInterface $response */
+                $response = yield Helpers::browser()->get('https://api.chucknorris.io/jokes/random');
 
-    /**
-     * @return array|null
-     */
-    private function getChuck(): array|null
-    {
-        return Helpers::httpGet(self::API_ENDPOINT);
+                $result = json_decode(
+                    json: $response->getBody()->getContents(),
+                    associative: true
+                );
+
+                $message->reply("💀 {$result['value']}");
+            } catch (Throwable) {
+                //Not important
+            }
+        }, $message);
     }
 }

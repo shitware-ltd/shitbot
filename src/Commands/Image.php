@@ -3,17 +3,13 @@
 namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Builders\MessageBuilder;
-use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
-use ShitwareLtd\Shitbot\Support\Helpers;
+use Throwable;
+
+use function React\Async\coroutine;
 
 class Image extends Command
 {
-    /**
-     * Endpoint we gather data from.
-     */
-    public const API_ENDPOINT = 'https://source.unsplash.com/random';
-
     /**
      * @return string
      */
@@ -26,35 +22,28 @@ class Image extends Command
      * @param  Message  $message
      * @param  array  $args
      * @return void
-     *
-     * @throws NoPermissionsException
      */
     public function handle(Message $message, array $args): void
     {
-        if ($this->bailForBotOrDirectMessage($message)) {
-            return;
-        }
+        coroutine(function (Message $message) {
+            if ($this->bailForBotOrDirectMessage($message)) {
+                return;
+            }
 
-        if ($image = $this->getImage()) {
-            $message->channel->sendMessage(
-                MessageBuilder::new()
-                    ->setReplyTo($message)
-                    ->addFileFromContent(
-                        filename: 'random.jpg',
-                        content: $image
-                    )
-            );
-        }
-    }
+            try {
+                $response = file_get_contents('https://source.unsplash.com/random');
 
-    /**
-     * @return string|null
-     */
-    private function getImage(): string|null
-    {
-        return Helpers::httpGet(
-            endpoint: self::API_ENDPOINT,
-            decode: false
-        );
+                $message->channel->sendMessage(
+                    MessageBuilder::new()
+                        ->setReplyTo($message)
+                        ->addFileFromContent(
+                            filename: 'random.jpg',
+                            content: (string) $response
+                        )
+                );
+            } catch (Throwable) {
+                //Not important
+            }
+        }, $message);
     }
 }

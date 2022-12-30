@@ -2,19 +2,17 @@
 
 namespace ShitwareLtd\Shitbot\Commands;
 
-use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
 use Illuminate\Support\Str;
+use Psr\Http\Message\ResponseInterface;
 use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
+use Throwable;
+
+use function React\Async\coroutine;
 
 class Weather extends Command
 {
-    /**
-     * Endpoint we gather data from.
-     */
-    public const API_ENDPOINT = 'https://api.weatherapi.com/v1/current.json';
-
     /**
      * @return string
      */
@@ -27,40 +25,40 @@ class Weather extends Command
      * @param  Message  $message
      * @param  array  $args
      * @return void
-     *
-     * @throws NoPermissionsException
      */
     public function handle(Message $message, array $args): void
     {
-        if ($this->bailForBotOrDirectMessage($message)) {
-            return;
-        }
+        coroutine(function (Message $message, array $args) {
+            if ($this->bailForBotOrDirectMessage($message)) {
+                return;
+            }
 
-        $location = Helpers::implodeContent($args);
+            $location = Helpers::implodeContent($args);
 
-        if ($weather = $this->getWeather($location)) {
-            $message->reply($this->makeWeather($weather));
-
-            return;
-        }
-
-        $message->reply("No results for `$location`");
-    }
-
-    /**
-     * @param  string  $location
-     * @return array|null
-     */
-    private function getWeather(string $location): array|null
-    {
-        return Helpers::httpGet(
-            endpoint: self::API_ENDPOINT,
-            query: [
+            $query = http_build_query([
                 'key' => Shitbot::$config['WEATHER_TOKEN'],
                 'q' => $location,
                 'aqi' => 'no',
-            ]
-        );
+            ]);
+
+            try {
+                /** @var ResponseInterface $response */
+                $response = yield Helpers::browser()->get("https://api.weatherapi.com/v1/current.json?$query");
+
+                $result = json_decode(
+                    json: $response->getBody()->getContents(),
+                    associative: true
+                );
+
+                $message->reply($this->makeWeather($result));
+
+                return;
+            } catch (Throwable) {
+                //Not important
+            }
+
+            $message->reply("No results for `$location`");
+        }, $message, $args);
     }
 
     /**

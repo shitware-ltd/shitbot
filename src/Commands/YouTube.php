@@ -2,18 +2,16 @@
 
 namespace ShitwareLtd\Shitbot\Commands;
 
-use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
+use Psr\Http\Message\ResponseInterface;
 use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
+use Throwable;
+
+use function React\Async\coroutine;
 
 class YouTube extends Command
 {
-    /**
-     * Endpoint we gather data from.
-     */
-    public const API_ENDPOINT = 'https://www.googleapis.com/youtube/v3/search';
-
     /**
      * @return string
      */
@@ -26,46 +24,46 @@ class YouTube extends Command
      * @param  Message  $message
      * @param  array  $args
      * @return void
-     *
-     * @throws NoPermissionsException
      */
     public function handle(Message $message, array $args): void
     {
-        if ($this->bailForBotOrDirectMessage($message)) {
-            return;
-        }
+        coroutine(function (Message $message, array $args) {
+            if ($this->bailForBotOrDirectMessage($message)) {
+                return;
+            }
 
-        $search = Helpers::implodeContent($args);
+            $search = Helpers::implodeContent($args);
 
-        $result = $this->getVideo($search);
-
-        if ($result && count($result['items'])) {
-            $reply = "I found the following video for `$search`".PHP_EOL;
-            $reply .= "> https://youtu.be/{$result['items'][0]['id']['videoId']}";
-
-            $message->reply($reply);
-
-            return;
-        }
-
-        $message->reply("I found no videos for `$search`");
-    }
-
-    /**
-     * @param  string  $search
-     * @return array|null
-     */
-    private function getVideo(string $search): array|null
-    {
-        return Helpers::httpGet(
-            endpoint: self::API_ENDPOINT,
-            query: [
+            $query = http_build_query([
                 'key' => Shitbot::$config['YOUTUBE_TOKEN'],
                 'maxResults' => 1,
                 'q' => $search,
                 'part' => 'id',
                 'type' => 'video',
-            ]
-        );
+            ]);
+
+            try {
+                /** @var ResponseInterface $response */
+                $response = yield Helpers::browser()->get("https://www.googleapis.com/youtube/v3/search?$query");
+
+                $result = json_decode(
+                    json: $response->getBody()->getContents(),
+                    associative: true
+                );
+
+                if (count($result['items'])) {
+                    $reply = "I found the following video for `$search`".PHP_EOL;
+                    $reply .= "> https://youtu.be/{$result['items'][0]['id']['videoId']}";
+
+                    $message->reply($reply);
+
+                    return;
+                }
+            } catch (Throwable) {
+                //Not important
+            }
+
+            $message->reply("I found no videos for `$search`");
+        }, $message, $args);
     }
 }

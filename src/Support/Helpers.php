@@ -3,16 +3,12 @@
 namespace ShitwareLtd\Shitbot\Support;
 
 use Discord\Parts\Channel\Message;
-use GuzzleHttp\Client;
 use React\Http\Browser;
 use ShitwareLtd\Shitbot\Shitbot;
-use Throwable;
 
 class Helpers
 {
     /**
-     * Read some json.
-     *
      * @param  string  $path
      * @return array
      */
@@ -25,8 +21,6 @@ class Helpers
     }
 
     /**
-     * Less is more.
-     *
      * @param  array  $args
      * @return string
      */
@@ -39,8 +33,6 @@ class Helpers
     }
 
     /**
-     * 50% chance to win prizes.
-     *
      * @return bool
      */
     public static function gamble(): bool
@@ -69,51 +61,5 @@ class Helpers
                 header: 'Accept',
                 value: 'application/json'
             );
-    }
-
-    /**
-     * The best http client.
-     *
-     * @param  string  $endpoint
-     * @param  array  $query
-     * @param  bool  $decode
-     * @param  bool  $allowFail
-     * @return array|string|null
-     */
-    public static function httpGet(
-        string $endpoint,
-        array $query = [],
-        bool $decode = true,
-        bool $allowFail = false
-    ): array|string|null {
-        $client = new Client([
-            'connect_timeout' => 10,
-            'http_errors' => false,
-            'timeout' => 15,
-            'headers' => [
-                'Accept' => 'application/json',
-            ],
-        ]);
-
-        try {
-            $response = $client->get(
-                uri: $endpoint,
-                options: count($query) ? ['query' => $query] : []
-            );
-
-            if ($response->getStatusCode() >= 400 && ! $allowFail) {
-                return null;
-            }
-
-            return $decode
-                ? json_decode(
-                    json: (string) $response->getBody(),
-                    associative: true
-                )
-                : (string) $response->getBody();
-
-        } catch (Throwable) {
-            return null;
-        }
     }
 }

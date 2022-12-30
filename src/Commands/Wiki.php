@@ -2,17 +2,15 @@
 
 namespace ShitwareLtd\Shitbot\Commands;
 
-use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
+use Psr\Http\Message\ResponseInterface;
 use ShitwareLtd\Shitbot\Support\Helpers;
+use Throwable;
+
+use function React\Async\coroutine;
 
 class Wiki extends Command
 {
-    /**
-     * Endpoint we gather data from.
-     */
-    public const API_ENDPOINT = 'https://en.wikipedia.org/w/api.php';
-
     /**
      * @return string
      */
@@ -25,49 +23,49 @@ class Wiki extends Command
      * @param  Message  $message
      * @param  array  $args
      * @return void
-     *
-     * @throws NoPermissionsException
      */
     public function handle(Message $message, array $args): void
     {
-        if ($this->bailForBotOrDirectMessage($message)) {
-            return;
-        }
-
-        $search = Helpers::implodeContent($args);
-
-        $results = $this->getWiki($search);
-
-        if (count($results ?? []) && count($results[1])) {
-            $reply = "I found the following article(s) for `$search`".PHP_EOL;
-
-            foreach ($results[1] as $key => $value) {
-                $reply .= "> `$value` - <{$results[3][$key]}>".PHP_EOL;
+        coroutine(function (Message $message, array $args) {
+            if ($this->bailForBotOrDirectMessage($message)) {
+                return;
             }
 
-            $message->reply($reply);
+            $search = Helpers::implodeContent($args);
 
-            return;
-        }
-
-        $message->reply("I found no results for `$search`");
-    }
-
-    /**
-     * @param  string  $search
-     * @return array|null
-     */
-    private function getWiki(string $search): array|null
-    {
-        return Helpers::httpGet(
-            endpoint: self::API_ENDPOINT,
-            query: [
+            $query = http_build_query([
                 'limit' => 5,
                 'search' => $search,
                 'action' => 'opensearch',
                 'namespace' => 0,
                 'format' => 'json',
-            ]
-        );
+            ]);
+
+            try {
+                /** @var ResponseInterface $response */
+                $response = yield Helpers::browser()->get("https://en.wikipedia.org/w/api.php?$query");
+
+                $result = json_decode(
+                    json: $response->getBody()->getContents(),
+                    associative: true
+                );
+
+                if (count($result[1] ?? [])) {
+                    $reply = "I found the following article(s) for `$search`".PHP_EOL;
+
+                    foreach ($result[1] as $key => $value) {
+                        $reply .= "> `$value` - <{$result[3][$key]}>".PHP_EOL;
+                    }
+
+                    $message->reply($reply);
+
+                    return;
+                }
+            } catch (Throwable) {
+                //Not important
+            }
+
+            $message->reply("I found no results for `$search`");
+        }, $message, $args);
     }
 }
