@@ -4,6 +4,7 @@ namespace ShitwareLtd\Shitbot;
 
 use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\WebSockets\TypingStart;
+use ShitwareLtd\Shitbot\Support\Helpers;
 
 class TypingHandler
 {
@@ -20,10 +21,14 @@ class TypingHandler
      */
     public function __invoke(): void
     {
-        if (rand(min: 0, max: 999) === 69) {
+        if (! Helpers::shouldProceed($this->typing)) {
+            return;
+        }
+
+        if (rand(min: 0, max: 100) === 69) {
             $emojis = '';
 
-            for ($x = 0; $x < rand(min: 5, max: 15); $x++) {
+            for ($x = 0; $x < rand(min: 10, max: 25); $x++) {
                 $pick = Shitbot::emoji();
 
                 if (mb_strlen($pick) > 1) {

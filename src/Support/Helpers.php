@@ -3,6 +3,7 @@
 namespace ShitwareLtd\Shitbot\Support;
 
 use Discord\Parts\Channel\Message;
+use Discord\Parts\WebSockets\TypingStart;
 use Psr\Http\Message\ResponseInterface;
 
 class Helpers
@@ -52,13 +53,18 @@ class Helpers
     }
 
     /**
-     * @param  Message  $message
+     * @param  Message|TypingStart  $part
      * @return bool
      */
-    public static function shouldProceed(Message $message): bool
+    public static function shouldProceed(Message|TypingStart $part): bool
     {
-        return ! $message->author->bot
-            && $message->guild !== null;
+        if ($part instanceof Message) {
+            return ! $part->author->bot
+                && $part->guild !== null;
+        }
+
+        return ! $part->user->bot
+            && $part->guild !== null;
     }
 
     /**
