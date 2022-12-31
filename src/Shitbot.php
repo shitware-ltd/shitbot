@@ -13,9 +13,9 @@ use Discord\Parts\WebSockets\TypingStart;
 use Discord\WebSockets\Event;
 use React\EventLoop\LoopInterface;
 use React\Http\Browser;
+use ShitwareLtd\Shitbot\Commands\Ask;
 use ShitwareLtd\Shitbot\Commands\Command;
 use ShitwareLtd\Shitbot\Commands\Ip;
-use ShitwareLtd\Shitbot\Commands\OpenAi;
 use ShitwareLtd\Shitbot\Commands\Chuck;
 use ShitwareLtd\Shitbot\Commands\Dad;
 use ShitwareLtd\Shitbot\Commands\Help;
@@ -46,6 +46,7 @@ class Shitbot
      * @var array<Command>
      */
     private array $prefixCommands = [
+        Ask::class,
         Chuck::class,
         Dad::class,
         Help::class,
@@ -54,7 +55,6 @@ class Shitbot
         Insult::class,
         Ip::class,
         Joke::class,
-        OpenAi::class,
         RockPaperScissors::class,
         Weather::class,
         Wiki::class,
