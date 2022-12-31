@@ -3,7 +3,8 @@
 namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Parts\Channel\Message;
-use Illuminate\Support\Str;
+use React\EventLoop\Loop;
+use React\Promise\Promise;
 use Psr\Http\Message\ResponseInterface;
 use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
@@ -43,6 +44,11 @@ class OpenAi extends Command
 
             $message->channel->broadcastTyping();
 
+            $typing = Loop::addPeriodicTimer(
+                interval: 5,
+                callback: fn () => $message->channel->broadcastTyping()
+            );
+
             try {
                 /** @var ResponseInterface $response */
                 $response = yield Shitbot::browser()->post(
@@ -75,6 +81,8 @@ class OpenAi extends Command
 
                 $message->reply($reply);
             }
+
+            Loop::cancelTimer($typing);
         }, $message, $args);
     }
 }
