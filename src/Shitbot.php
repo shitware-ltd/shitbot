@@ -2,14 +2,15 @@
 
 namespace ShitwareLtd\Shitbot;
 
+use Discord\Builders\MessageBuilder;
 use Discord\DiscordCommandClient;
 use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
+use Discord\Parts\Interactions\Command\Command as SlashCommand;
+use Discord\Parts\Interactions\Interaction;
 use Discord\Parts\User\Activity;
 use Discord\Parts\WebSockets\TypingStart;
 use Discord\WebSockets\Event;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use React\EventLoop\LoopInterface;
 use React\Http\Browser;
 use ShitwareLtd\Shitbot\Commands\Command;
@@ -42,76 +43,9 @@ class Shitbot
     private static ?LoopInterface $loop = null;
 
     /**
-     * @var array
-     */
-    private static array $emojis = [
-        'cool' => [
-            ':BeanLike:955772154367078410',
-            ':DanSureCan:1054559650030309408',
-            ':FeelsJorqensenMan:948839460173414420',
-            ':FeelsTippinMan:945779696870785044',
-            ':StanManCan:986743587041599568',
-            'a:mochoman:908433686523940884',
-            'a:cooldoge:903865400914239508',
-            'a:cheers:903865719400321024',
-            ':OkFam:1034988675240566854',
-            'a:coolblink:903877070336167956',
-            'a:potatocheer:915906109917757471',
-            'a:MarioLuigiDancing:930208778354319370',
-            '😎',
-            '🆒',
-        ],
-        'funny' => [
-            ':KekwCamera:1031729132607909939',
-            'a:MeLike:1029201658061803560',
-            'a:kekamid:903876917575442432',
-            'a:potatospin:913606622310445088',
-            'a:drilldo:903834334044229693',
-            ':KekwCry:1055646524840886292',
-            'a:KekwRave:1055646475918516324',
-            '😂',
-            '🤣',
-            '😁',
-        ],
-        'think' => [
-            'a:BlobEat:903866622345900052',
-            ':ChiefThonk:1029200771096510534',
-            'a:NeonThink:930095718771863552',
-            ':ThinkGator:933287413449650206',
-            ':watts:903836408639262790',
-            ':SuperCereal:985316620928942231',
-            ':virus:821890127252946964',
-            'a:nervouscursor:903876962328670239',
-            '🤔',
-            '💭',
-        ],
-        'rage' => [
-            'a:eyesshaking:930095703097745408',
-            'a:GullScream:1008189021505212416',
-            ':bsod:903869566533394462',
-            'a:getsomehelp:903876935707410505',
-            'a:smh:903877109825540186',
-            'a:codeHard:888730726822981652',
-            ':BeanThis:953772597110276147',
-            'a:madbean:897099906584567818',
-            ':beaned:867568151252041758',
-            'a:yeangry:903877015604703232',
-            'a:pain:903876735056085023',
-            'a:codeRee:888733167530434580',
-            'a:Kaboom:903867872344957008',
-            'a:duckno:903876825925681153',
-            'a:kermitgun:930095685158719509',
-            '🖕',
-            '💢',
-            '😡',
-            '😠',
-        ],
-    ];
-
-    /**
      * @var array<Command>
      */
-    private array $commands = [
+    private array $prefixCommands = [
         Chuck::class,
         Dad::class,
         Help::class,
@@ -130,9 +64,11 @@ class Shitbot
 
     /**
      * @param  DiscordCommandClient  $client
+     * @param  bool  $installingAppCommands
      */
     public function __construct(
-        private readonly DiscordCommandClient $client
+        private readonly DiscordCommandClient $client,
+        private readonly bool $installingAppCommands
     ){
         static::$config = [
             'WEATHER_TOKEN' => $_ENV['WEATHER_TOKEN'],
@@ -146,19 +82,13 @@ class Shitbot
     }
 
     /**
+     * @param  bool  $asInstall
      * @return void
      */
-    public static function run(): void
+    public static function run(bool $asInstall = false): void
     {
         try {
-            (new self(
-                new DiscordCommandClient([
-                    'token' => $_ENV['BOT_TOKEN'],
-                    'prefix' => false,
-                    'caseInsensitiveCommands' => true,
-                    'defaultHelpCommand' => false,
-                ])
-            ))->boot();
+            static::new($asInstall)->boot();
         } catch (Throwable) {
             exit(1);
         }
@@ -187,39 +117,14 @@ class Shitbot
     }
 
     /**
-     * @param  string|null  $flavor
-     * @return string
-     */
-    public static function emoji(?string $flavor = null): string
-    {
-        return Collection::make(
-            match ($flavor) {
-                'cool' => static::$emojis['cool'],
-                'funny' => static::$emojis['funny'],
-                'think' => static::$emojis['think'],
-                'rage' => static::$emojis['rage'],
-                default => Arr::flatten(static::$emojis),
-            }
-        )->random();
-    }
-
-    /**
      * @return void
+     *
      * @throws Throwable
      */
     public function boot(): void
     {
-        foreach ($this->commands as $command) {
-            $command = new $command();
-
-            $this->client->registerCommand(
-                command: $command->trigger(),
-                callable: [$command, 'handle'],
-                options: [
-                    'cooldown' => $command->cooldown(),
-                    'cooldownMessage' => "Slow down turbo, %d second(s) until you can use `{$command->trigger()}` again ⏳",
-                ]
-            );
+        if (! $this->installingAppCommands) {
+            $this->registerPrefixCommands();
         }
 
         $this->client->on(
@@ -231,11 +136,38 @@ class Shitbot
     }
 
     /**
+     * @return void
+     *
+     * @throws Throwable
+     */
+    private function registerPrefixCommands(): void
+    {
+        foreach ($this->prefixCommands as $command) {
+            $command = new $command();
+
+            $this->client->registerCommand(
+                command: $command->trigger(),
+                callable: [$command, 'handle'],
+                options: [
+                    'cooldown' => $command->cooldown(),
+                    'cooldownMessage' => "Slow down turbo, %d second(s) until you can use `{$command->trigger()}` again ⏳",
+                ]
+            );
+        }
+    }
+
+    /**
      * @param  DiscordCommandClient  $client
      * @return void
      */
     private function isReady(DiscordCommandClient $client): void
     {
+        if ($this->installingAppCommands) {
+            $this->installAppCommands($client);
+
+            return;
+        }
+
         $client->updatePresence(
             activity: new Activity(
                 discord: $client,
@@ -256,6 +188,33 @@ class Shitbot
             event: Event::TYPING_START,
             listener: $this->handleTyping(...)
         );
+
+        $client->listenCommand(
+            name: 'ping',
+            callback: $this->pong(...)
+        );
+    }
+
+    /**
+     * @param  DiscordCommandClient  $client
+     * @return void
+     */
+    private function installAppCommands(DiscordCommandClient $client): void
+    {
+        $command = new SlashCommand(
+            discord: $client,
+            attributes: ['name' => 'ping', 'description' => 'See if I am alive and well.']
+        );
+
+        try {
+            $client->application->commands->save($command);
+        } catch (Throwable $e) {
+            echo $e->getMessage().PHP_EOL;
+        }
+
+        echo 'Install done, shutting down.';
+
+        $client->close();
     }
 
     /**
@@ -275,5 +234,33 @@ class Shitbot
     private function handleTyping(TypingStart $typing): void
     {
         (new TypingHandler($typing))();
+    }
+
+    /**
+     * @param  Interaction  $interaction
+     * @return void
+     */
+    private function pong(Interaction $interaction): void
+    {
+        $interaction->respondWithMessage(
+            builder: MessageBuilder::new()->setContent('Yea yea...PONG. Shitbot at your service. 💦'),
+            ephemeral: true
+        );
+    }
+
+    /**
+     * @throws Throwable
+     */
+    private static function new(bool $asInstall): Shitbot
+    {
+        return new self(
+            client: new DiscordCommandClient([
+                'token' => $_ENV['BOT_TOKEN'],
+                'prefix' => false,
+                'caseInsensitiveCommands' => true,
+                'defaultHelpCommand' => false,
+            ]),
+            installingAppCommands: $asInstall
+        );
     }
 }

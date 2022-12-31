@@ -4,6 +4,7 @@ namespace ShitwareLtd\Shitbot;
 
 use Discord\Parts\Channel\Message;
 use Illuminate\Support\Str;
+use ShitwareLtd\Shitbot\Support\Emoji;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
 class MessageHandler
@@ -44,7 +45,7 @@ class MessageHandler
             haystack: $content,
             needles: ['nice', 'awesome', 'sweet', 'cool', 'pog', 'yeet', 'neat', 'badass', 'whoa', 'wow']
         ) && Helpers::gamble()) {
-            $this->message->react(Shitbot::emoji('cool'));
+            $this->message->react(Emoji::get('cool'));
         }
     }
 
@@ -58,7 +59,7 @@ class MessageHandler
                 haystack: $content,
                 needles: ['lmao', 'lmfao', 'rofl', 'kek', 'cringe', 'funny', 'hah', 'lolol', 'xd']
             ) && Helpers::gamble()) {
-            $this->message->react(Shitbot::emoji('funny'));
+            $this->message->react(Emoji::get('funny'));
         }
     }
 
@@ -72,7 +73,7 @@ class MessageHandler
                 haystack: $content,
                 needles: ['hmm', 'huh', 'interesting', 'think', 'thonk', 'curious', 'why', 'how', 'who', 'wonder']
             ) && Helpers::gamble()) {
-            $this->message->react(Shitbot::emoji('think'));
+            $this->message->react(Emoji::get('think'));
         }
     }
 
@@ -86,7 +87,7 @@ class MessageHandler
             haystack: $content,
             needles: ['fuck', 'asshole', 'bitch', 'cunt', 'shit', 'pussy', 'dildo', 'dick', 'dumb', 'twat', 'piss', 'bastard', 'prick', 'wanker', 'cock']
         ) && Helpers::gamble()) {
-            $this->message->react(Shitbot::emoji('rage'));
+            $this->message->react(Emoji::get('rage'));
         }
     }
 
