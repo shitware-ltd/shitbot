@@ -207,14 +207,22 @@ class Shitbot
         );
 
         try {
-            $client->application->commands->save($command);
-        } catch (Throwable $e) {
-            echo $e->getMessage().PHP_EOL;
+            $client->application
+                ->commands
+                ->save($command)
+                ->then(
+                    onFulfilled: function () use ($client) {
+                        echo PHP_EOL.'Installed PING!'.PHP_EOL;
+                        $client->close();
+                    },
+                    onRejected: function (Throwable $e) use ($client) {
+                        echo PHP_EOL.'OH NO: '.$e->getMessage().PHP_EOL;
+                        $client->close();
+                    }
+                );
+        } catch (Throwable) {
+            $client->close();
         }
-
-        echo 'Install done, shutting down.';
-
-        $client->close();
     }
 
     /**
