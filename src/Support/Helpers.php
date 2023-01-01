@@ -4,6 +4,7 @@ namespace ShitwareLtd\Shitbot\Support;
 
 use Discord\Parts\Channel\Message;
 use Discord\Parts\WebSockets\TypingStart;
+use Illuminate\Support\Str;
 use Psr\Http\Message\ResponseInterface;
 
 class Helpers
@@ -74,7 +75,7 @@ class Helpers
      */
     public static function splitMessage(string $message, int $max = 1950): array
     {
-        if (mb_strlen($message) <= $max) {
+        if (Str::length($message) <= $max) {
             return [$message];
         }
 
@@ -83,7 +84,7 @@ class Helpers
         $currentString = '';
 
         foreach (explode(separator: ' ', string: $message) as $word) {
-            if (mb_strlen($currentString . $word) > $max) {
+            if (Str::length($currentString . $word) > $max) {
                 $result[] = $currentString;
                 $currentString = $word;
             } else {

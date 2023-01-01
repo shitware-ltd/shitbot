@@ -10,7 +10,7 @@ class Emoji
     /**
      * @var array
      */
-    private static array $emojis = [
+    private const EMOJIS = [
         'cool' => [
             ':BeanLike:955772154367078410',
             ':DanSureCan:1054559650030309408',
@@ -81,13 +81,7 @@ class Emoji
     public static function get(?string $flavor = null): string
     {
         return Collection::make(
-            match ($flavor) {
-                'cool' => static::$emojis['cool'],
-                'funny' => static::$emojis['funny'],
-                'think' => static::$emojis['think'],
-                'rage' => static::$emojis['rage'],
-                default => Arr::flatten(static::$emojis),
-            }
+            static::EMOJIS[$flavor] ?? Arr::flatten(static::EMOJIS)
         )->random();
     }
 }

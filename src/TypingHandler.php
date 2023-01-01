@@ -4,6 +4,7 @@ namespace ShitwareLtd\Shitbot;
 
 use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\WebSockets\TypingStart;
+use Illuminate\Support\Str;
 use ShitwareLtd\Shitbot\Support\Emoji;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
@@ -32,7 +33,7 @@ class TypingHandler
             for ($x = 0; $x < rand(min: 10, max: 25); $x++) {
                 $pick = Emoji::get();
 
-                if (mb_strlen($pick) > 1) {
+                if (Str::length($pick) > 1) {
                     $pick = "<$pick>";
                 }
 

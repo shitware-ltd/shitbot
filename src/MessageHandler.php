@@ -58,7 +58,7 @@ class MessageHandler
         if (Str::contains(
                 haystack: $content,
                 needles: ['lmao', 'lmfao', 'rofl', 'kek', 'cringe', 'funny', 'hah', 'lolol', 'xd']
-            ) && Helpers::gamble()) {
+        ) && Helpers::gamble()) {
             $this->message->react(Emoji::get('funny'));
         }
     }
@@ -72,7 +72,7 @@ class MessageHandler
         if (Str::contains(
                 haystack: $content,
                 needles: ['hmm', 'huh', 'interesting', 'think', 'thonk', 'curious', 'why', 'how', 'who', 'wonder']
-            ) && Helpers::gamble()) {
+        ) && Helpers::gamble()) {
             $this->message->react(Emoji::get('think'));
         }
     }
