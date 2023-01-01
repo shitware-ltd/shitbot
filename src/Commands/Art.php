@@ -28,7 +28,7 @@ class Art extends Command
      */
     public function cooldown(): int
     {
-        return 120000;
+        return 0;
     }
 
     /**
