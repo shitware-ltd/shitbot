@@ -2,7 +2,9 @@
 
 namespace ShitwareLtd\Shitbot\Commands;
 
+use Discord\Builders\MessageBuilder;
 use Discord\Parts\Channel\Message;
+use Illuminate\Support\Str;
 use React\EventLoop\Loop;
 use Psr\Http\Message\ResponseInterface;
 use ShitwareLtd\Shitbot\Shitbot;
@@ -11,14 +13,14 @@ use Throwable;
 
 use function React\Async\coroutine;
 
-class Ask extends Command
+class Art extends Command
 {
     /**
      * @return string
      */
     public function trigger(): string
     {
-        return '!ask';
+        return '!art';
     }
 
     /**
@@ -26,7 +28,7 @@ class Ask extends Command
      */
     public function cooldown(): int
     {
-        return 15000;
+        return 120000;
     }
 
     /**
@@ -51,29 +53,29 @@ class Ask extends Command
             try {
                 /** @var ResponseInterface $response */
                 $response = yield Shitbot::browser()->post(
-                    url: 'https://api.openai.com/v1/completions',
+                    url: 'https://api.openai.com/v1/images/generations',
                     headers: [
                         'Authorization' => 'Bearer '.Shitbot::config('OPENAI_TOKEN'),
                         'Content-Type' => 'application/json',
                     ],
                     body: json_encode([
-                        'max_tokens' => 3072,
-                        'model' => 'text-davinci-003',
                         'n' => 1,
                         'prompt' => Helpers::implodeContent($args),
-                        'temperature' => 1,
+                        'response_format' => 'b64_json',
+                        'size' => '1024x1024',
                     ])
                 );
 
-                $result = Helpers::json($response)['choices'][0]['text'];
+                $result = Helpers::json($response)['data'][0]['b64_json'];
 
-                foreach (Helpers::splitMessage($result) as $key => $chunk) {
-                    if ($key === 0) {
-                        $message->reply($chunk);
-                    } else {
-                        $message->channel->sendMessage($chunk);
-                    }
-                }
+                $message->channel->sendMessage(
+                    MessageBuilder::new()
+                        ->setReplyTo($message)
+                        ->addFileFromContent(
+                            filename: 'dalle_'.uniqid(more_entropy: true).'.png',
+                            content: base64_decode($result)
+                        )
+                );
             } catch (Throwable $e) {
                 $reply = 'You broke me. Please try again.'.PHP_EOL;
                 $reply .= '```diff'.PHP_EOL;
