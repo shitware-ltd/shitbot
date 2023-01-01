@@ -77,12 +77,7 @@ class Art extends Command
                         )
                 );
             } catch (Throwable $e) {
-                $reply = 'You broke me. Please try again.'.PHP_EOL;
-                $reply .= '```diff'.PHP_EOL;
-                $reply .= "- {$e->getMessage()}".PHP_EOL;
-                $reply .= '```';
-
-                $message->reply($reply);
+                $message->reply($this->formatError($e));
             }
 
             Loop::cancelTimer($typing);

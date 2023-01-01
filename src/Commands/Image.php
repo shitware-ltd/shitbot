@@ -45,7 +45,7 @@ class Image extends Command
                     MessageBuilder::new()
                         ->setReplyTo($message)
                         ->addFileFromContent(
-                            filename: 'random.jpg',
+                            filename: 'random_'.uniqid(more_entropy: true).'.jpg',
                             content: (string) $response
                         )
                 );

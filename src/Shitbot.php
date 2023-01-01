@@ -47,7 +47,7 @@ class Shitbot
      * @var array<Command>
      */
     private array $prefixCommands = [
-//        Art::class,
+        Art::class,
         Ask::class,
         Chuck::class,
         Dad::class,

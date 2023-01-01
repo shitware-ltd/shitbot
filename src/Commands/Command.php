@@ -5,6 +5,7 @@ namespace ShitwareLtd\Shitbot\Commands;
 use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
 use ShitwareLtd\Shitbot\Support\Helpers;
+use Throwable;
 
 abstract class Command
 {
@@ -46,5 +47,19 @@ abstract class Command
         }
 
         return true;
+    }
+
+    /**
+     * @param  Throwable  $e
+     * @return string
+     */
+    protected function formatError(Throwable $e): string
+    {
+        $reply = 'You broke me. Please try again.'.PHP_EOL;
+        $reply .= '```diff'.PHP_EOL;
+        $reply .= "- {$e->getMessage()}".PHP_EOL;
+        $reply .= '```';
+
+        return $reply;
     }
 }

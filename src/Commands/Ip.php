@@ -56,12 +56,10 @@ class Ip extends Command
                 $result = Helpers::json($response);
 
                 $reply = '```json'.PHP_EOL;
-
                 $reply .= json_encode(
                         value: $result,
                         flags: JSON_PRETTY_PRINT
-                    ).PHP_EOL;
-
+                ).PHP_EOL;
                 $reply .= '```';
 
                 $message->reply($reply);
