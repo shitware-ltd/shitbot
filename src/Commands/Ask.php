@@ -26,7 +26,7 @@ class Ask extends Command
      */
     public function cooldown(): int
     {
-        return 15000;
+        return 20000;
     }
 
     /**
@@ -77,7 +77,9 @@ class Ask extends Command
 
                 $this->hitCooldown($message);
             } catch (Throwable $e) {
-                $message->reply($this->formatError($e));
+                $message->reply(
+                    $this->formatError($e->getMessage())
+                );
             }
 
             Loop::cancelTimer($typing);

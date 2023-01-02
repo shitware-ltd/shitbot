@@ -23,7 +23,7 @@ class TypingStart
      */
     public function __invoke(): void
     {
-        if (! Helpers::shouldProceed($this->typing)) {
+        if (Helpers::isBotOrDirectMessage($this->typing)) {
             return;
         }
 

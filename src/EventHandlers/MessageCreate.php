@@ -21,7 +21,7 @@ class MessageCreate
      */
     public function __invoke(): void
     {
-        if (! Helpers::shouldProceed($this->message)) {
+        if (Helpers::isBotOrDirectMessage($this->message)) {
             return;
         }
 

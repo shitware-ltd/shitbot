@@ -6,7 +6,6 @@ use Discord\Parts\Channel\Message;
 use Illuminate\Support\Str;
 use Psr\Http\Message\ResponseInterface;
 use ShitwareLtd\Shitbot\Shitbot;
-use ShitwareLtd\Shitbot\Support\Helpers;
 use Throwable;
 
 use function React\Async\coroutine;

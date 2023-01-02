@@ -57,15 +57,15 @@ class Helpers
      * @param  Message|TypingStart  $part
      * @return bool
      */
-    public static function shouldProceed(Message|TypingStart $part): bool
+    public static function isBotOrDirectMessage(Message|TypingStart $part): bool
     {
         if ($part instanceof Message) {
-            return ! $part->author->bot
-                && $part->guild !== null;
+            return $part->author->bot
+                || $part->guild === null;
         }
 
-        return ! $part->user->bot
-            && $part->guild !== null;
+        return $part->user->bot
+            || $part->guild === null;
     }
 
     /**

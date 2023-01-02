@@ -2,10 +2,9 @@
 
 namespace ShitwareLtd\Shitbot\Commands;
 
-use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
 use ShitwareLtd\Shitbot\Shitbot;
-use Throwable;
+use ShitwareLtd\Shitbot\Support\Helpers;
 
 abstract class Command
 {
@@ -37,18 +36,10 @@ abstract class Command
     /**
      * @param  Message  $message
      * @return bool
-     *
-     * @throws NoPermissionsException
      */
     protected function skip(Message $message): bool
     {
-        if ($message->author->bot) {
-            return true;
-        }
-
-        if ($message->guild === null) {
-            $message->channel->sendMessage('You have no power to command me here 🖕');
-
+        if (Helpers::isBotOrDirectMessage($message)) {
             return true;
         }
 
@@ -64,14 +55,14 @@ abstract class Command
     }
 
     /**
-     * @param  Throwable  $e
+     * @param  string  $message
      * @return string
      */
-    protected function formatError(Throwable $e): string
+    protected function formatError(string $message): string
     {
         $reply = 'You broke me. Please try again.'.PHP_EOL;
         $reply .= '```diff'.PHP_EOL;
-        $reply .= "- {$e->getMessage()}".PHP_EOL;
+        $reply .= "- $message".PHP_EOL;
         $reply .= '```';
 
         return $reply;
