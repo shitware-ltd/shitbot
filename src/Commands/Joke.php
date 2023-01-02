@@ -31,7 +31,7 @@ class Joke extends Command
      */
     public function handle(Message $message, array $args): void
     {
-        if ($this->bailForBotOrDirectMessage($message)) {
+        if ($this->skip($message)) {
             return;
         }
 

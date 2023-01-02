@@ -36,7 +36,7 @@ class Ip extends Command
     public function handle(Message $message, array $args): void
     {
         coroutine(function (Message $message, array $args) {
-            if ($this->bailForBotOrDirectMessage($message)) {
+            if ($this->skip($message)) {
                 return;
             }
 
@@ -63,6 +63,8 @@ class Ip extends Command
                 $reply .= '```';
 
                 $message->reply($reply);
+
+                $this->hitCooldown($message);
             } catch (Throwable) {
                 //Not important
             }

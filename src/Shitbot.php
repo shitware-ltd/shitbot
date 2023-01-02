@@ -41,6 +41,11 @@ class Shitbot
     private static array $config = [];
 
     /**
+     * @var array
+     */
+    private static array $owners = [];
+
+    /**
      * @var LoopInterface|null
      */
     private static ?LoopInterface $loop = null;
@@ -75,12 +80,19 @@ class Shitbot
         private readonly bool $installingAppCommands
     ){
         static::$config = [
-            'WEATHER_TOKEN' => $_ENV['WEATHER_TOKEN'],
-            'HYPE_TOKEN' => $_ENV['HYPE_TOKEN'],
-            'YOUTUBE_TOKEN' => $_ENV['YOUTUBE_TOKEN'],
-            'OPENAI_TOKEN' => $_ENV['OPENAI_TOKEN'],
-            'IP_TOKEN' => $_ENV['IP_TOKEN'],
+            'WEATHER_TOKEN' => $_ENV['WEATHER_TOKEN'] ?? 'token',
+            'HYPE_TOKEN' => $_ENV['HYPE_TOKEN'] ?? 'token',
+            'YOUTUBE_TOKEN' => $_ENV['YOUTUBE_TOKEN'] ?? 'token',
+            'OPENAI_TOKEN' => $_ENV['OPENAI_TOKEN'] ?? 'token',
+            'IP_TOKEN' => $_ENV['IP_TOKEN'] ?? 'token',
         ];
+
+        static::$owners = empty($_ENV['OWNER_IDS'])
+            ? []
+            : explode(
+                separator: ',',
+                string: $_ENV['OWNER_IDS']
+            );
 
         static::$loop = $this->client->getLoop();
     }
@@ -100,11 +112,19 @@ class Shitbot
 
     /**
      * @param  string  $key
-     * @return mixed
+     * @return string|null
      */
-    public static function config(string $key): mixed
+    public static function config(string $key): ?string
     {
         return static::$config[$key] ?? null;
+    }
+
+    /**
+     * @return array
+     */
+    public static function owners(): array
+    {
+        return static::$owners;
     }
 
     /**
@@ -151,11 +171,7 @@ class Shitbot
 
             $this->client->registerCommand(
                 command: $command->trigger(),
-                callable: [$command, 'handle'],
-                options: [
-                    'cooldown' => $command->cooldown(),
-                    'cooldownMessage' => "Slow down turbo, %d second(s) until you can use `{$command->trigger()}` again ⏳",
-                ]
+                callable: [$command, 'handle']
             );
         }
     }
@@ -267,7 +283,7 @@ class Shitbot
     {
         return new self(
             client: new DiscordCommandClient([
-                'token' => $_ENV['BOT_TOKEN'],
+                'token' => $_ENV['BOT_TOKEN'] ?? 'token',
                 'prefix' => false,
                 'caseInsensitiveCommands' => true,
                 'defaultHelpCommand' => false,

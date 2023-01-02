@@ -29,7 +29,7 @@ class Hype extends Command
     public function handle(Message $message, array $args): void
     {
         coroutine(function (Message $message) {
-            if ($this->bailForBotOrDirectMessage($message)) {
+            if ($this->skip($message)) {
                 return;
             }
 

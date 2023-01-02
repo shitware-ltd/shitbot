@@ -14,14 +14,18 @@
   - You **must** use the `bot` and `applications.commands` scopes when generating your bots oauth URL.
   - Permissions wise, [517544070208](https://discordapi.com/permissions.html#517544070208) is all this bot should need.
 - Clone this repo. 
-- Rename `.env.example` to `.env`
 - Run `composer install`
-- Supply your `BOT_TOKEN` and all other credentials in the `.env`
-  - To use `!ask` or `!art`, you must get an API key from [OpenAI](https://beta.openai.com/account/api-keys)
-  - To use `!weather`, you must get an API key from [Weather API](https://www.weatherapi.com)
-  - To use `!yt`, you must get an API key from [Google Developers Console](https://console.developers.google.com)
-  - To use `!hype`, you must get an API key from [Hype Quotes](https://github.com/jorqensen/hypequotes)
-  - To use `!ip`, you must get an API key from [IP API](https://ip-api.com)
+- Rename `.env.example` to `.env`
+
+## Configure .env
+
+- `BOT_TOKEN`: Your discord bot token you received from [Discord](https://discord.com/developers/applications).
+- `OWNER_IDS`: Supply your discord ID (separate multiple IDs with commas) to get elevated powers.
+- `OPENAI_TOKEN`: To use `!ask` or `!art`, you must get an API key from [OpenAI](https://beta.openai.com/account/api-keys).
+- `WEATHER_TOKEN`: To use `!weather`, you must get an API key from [Weather API](https://www.weatherapi.com).
+- `YOUTUBE_TOKEN`: To use `!yt`, you must get an API key from [Google Developers Console](https://console.developers.google.com).
+- `IP_TOKEN`: To use `!ip`, you must get an API key from [IP API](https://ip-api.com).
+- `HYPE_TOKEN`: To use `!hype`, you must get an API key from [Hype Quotes](https://github.com/jorqensen/hypequotes).
 
 ## Prefix Commands:
 

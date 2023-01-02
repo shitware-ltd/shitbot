@@ -4,11 +4,16 @@ namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
-use ShitwareLtd\Shitbot\Support\Helpers;
+use ShitwareLtd\Shitbot\Shitbot;
 use Throwable;
 
 abstract class Command
 {
+    /**
+     * @var array
+     */
+    private array $cooldowns = [];
+
     /**
      * @param  Message  $message
      * @param  array  $args
@@ -35,18 +40,27 @@ abstract class Command
      *
      * @throws NoPermissionsException
      */
-    protected function bailForBotOrDirectMessage(Message $message): bool
+    protected function skip(Message $message): bool
     {
-        if (Helpers::shouldProceed($message)) {
-            return false;
+        if ($message->author->bot) {
+            return true;
         }
 
-        if (! $message->author->bot
-            && $message->guild === null) {
+        if ($message->guild === null) {
             $message->channel->sendMessage('You have no power to command me here 🖕');
+
+            return true;
         }
 
-        return true;
+        $cooldown = $this->currentCooldown($message);
+
+        if ($cooldown > 0) {
+            $message->reply("Slow down turbo, $cooldown second(s) until you can use `{$this->trigger()}` again ⏳");
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -61,5 +75,51 @@ abstract class Command
         $reply .= '```';
 
         return $reply;
+    }
+
+    /**
+     * @param  Message  $message
+     * @return void
+     */
+    protected function hitCooldown(Message $message): void
+    {
+        if (in_array(
+            needle: $message->author->id,
+            haystack: Shitbot::owners()
+        ) || $this->cooldown() === 0) {
+            return;
+        }
+
+        $this->cooldowns[$message->author->id] = $this->now() + $this->cooldown();
+    }
+
+    /**
+     * @param  Message  $message
+     * @return float|int
+     */
+    private function currentCooldown(Message $message): float|int
+    {
+        if (! isset($this->cooldowns[$message->author->id])
+            || $this->cooldown() === 0) {
+            return 0;
+        }
+
+        $time = $this->now();
+
+        if ($this->cooldowns[$message->author->id] < $time) {
+            unset($this->cooldowns[$message->author->id]);
+
+            return 0;
+        }
+
+        return ceil(($this->cooldowns[$message->author->id] - $time) / 1000);
+    }
+
+    /**
+     * @return float
+     */
+    private function now(): float
+    {
+     return round(microtime(true) * 1000);
     }
 }

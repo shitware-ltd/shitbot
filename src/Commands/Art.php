@@ -39,7 +39,7 @@ class Art extends Command
     public function handle(Message $message, array $args): void
     {
         coroutine(function (Message $message, array $args) {
-            if ($this->bailForBotOrDirectMessage($message)) {
+            if ($this->skip($message)) {
                 return;
             }
 
@@ -76,6 +76,8 @@ class Art extends Command
                             content: base64_decode($result)
                         )
                 );
+
+                $this->hitCooldown($message);
             } catch (Throwable $e) {
                 $message->reply($this->formatError($e));
             }

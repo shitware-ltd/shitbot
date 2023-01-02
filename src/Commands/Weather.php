@@ -37,7 +37,7 @@ class Weather extends Command
     public function handle(Message $message, array $args): void
     {
         coroutine(function (Message $message, array $args) {
-            if ($this->bailForBotOrDirectMessage($message)) {
+            if ($this->skip($message)) {
                 return;
             }
 
@@ -56,6 +56,8 @@ class Weather extends Command
                 $result = Helpers::json($response);
 
                 $message->reply($this->makeWeather($result));
+
+                $this->hitCooldown($message);
 
                 return;
             } catch (Throwable) {

@@ -34,7 +34,7 @@ class Image extends Command
     public function handle(Message $message, array $args): void
     {
         coroutine(function (Message $message) {
-            if ($this->bailForBotOrDirectMessage($message)) {
+            if ($this->skip($message)) {
                 return;
             }
 
@@ -49,6 +49,8 @@ class Image extends Command
                             content: (string) $response
                         )
                 );
+
+                $this->hitCooldown($message);
             } catch (Throwable) {
                 //Not important
             }
