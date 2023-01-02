@@ -11,5 +11,4 @@ $opt = getopt(
     long_options: ['install']
 );
 
-
 Shitbot::run(asInstall: isset($opt['install']));

@@ -85,6 +85,9 @@ class Shitbot
             'YOUTUBE_TOKEN' => $_ENV['YOUTUBE_TOKEN'] ?? 'token',
             'OPENAI_TOKEN' => $_ENV['OPENAI_TOKEN'] ?? 'token',
             'IP_TOKEN' => $_ENV['IP_TOKEN'] ?? 'token',
+            'BOT_ACTIVITY_STATUS' => $_ENV['BOT_ACTIVITY_STATUS'] ?? 'online',
+            'BOT_ACTIVITY_TYPE' => $_ENV['BOT_ACTIVITY_TYPE'] ?? null,
+            'BOT_ACTIVITY_NAME' => $_ENV['BOT_ACTIVITY_NAME'] ?? null,
         ];
 
         static::$owners = empty($_ENV['OWNER_IDS'])
@@ -188,16 +191,7 @@ class Shitbot
             return;
         }
 
-        $client->updatePresence(
-            activity: new Activity(
-                discord: $client,
-                attributes: [
-                    'type' => Activity::TYPE_WATCHING,
-                    'name' => 'your moms OnlyFans. 👍',
-                ]
-            ),
-            status: Activity::STATUS_DND
-        );
+        $this->setActiveStatus($client);
 
         $client->on(
             event: Event::MESSAGE_CREATE,
@@ -212,6 +206,33 @@ class Shitbot
         $client->listenCommand(
             name: 'ping',
             callback: $this->pong(...)
+        );
+    }
+
+    /**
+     * @param  DiscordCommandClient  $client
+     * @return void
+     */
+    private function setActiveStatus(DiscordCommandClient $client): void
+    {
+        $activity = null;
+        $type = static::config('BOT_ACTIVITY_TYPE');
+        $name = static::config('BOT_ACTIVITY_NAME');
+
+        if ($type && $name) {
+            $activity = new Activity(
+                discord: $client,
+                attributes: [
+                    'type' => (int) $type,
+                    'name' => $name,
+                    'details' => $name,
+                ]
+            );
+        }
+
+        $client->updatePresence(
+            activity: $activity,
+            status: static::config('BOT_ACTIVITY_STATUS')
         );
     }
 

@@ -20,6 +20,14 @@
 ## Configure .env
 
 - `BOT_TOKEN`: Your discord bot token you received from [Discord](https://discord.com/developers/applications).
+- `BOT_ACTIVITY_STATUS`: Bots presence status. Use: `online|idle|dnd|invisible`.
+- `BOT_ACTIVITY_TYPE`: Bots activity. Leave empty to skip. Requires `BOT_ACTIVITY_NAME`. Available flags are:
+    - `0` - Playing
+    - `1` - Streaming
+    - `2` - Listening
+    - `3` - Watching
+    - `5` - Competing
+- `BOT_ACTIVITY_NAME`: Describe the bots activity.
 - `OWNER_IDS`: Supply your discord ID (separate multiple IDs with commas) to get elevated powers.
 - `OPENAI_TOKEN`: To use `!ask` or `!art`, you must get an API key from [OpenAI](https://beta.openai.com/account/api-keys).
 - `WEATHER_TOKEN`: To use `!weather`, you must get an API key from [Weather API](https://www.weatherapi.com).
