@@ -9,26 +9,28 @@ use Discord\Parts\Channel\Message;
 use Discord\Parts\Interactions\Command\Command as SlashCommand;
 use Discord\Parts\Interactions\Interaction;
 use Discord\Parts\User\Activity;
-use Discord\Parts\WebSockets\TypingStart;
+use Discord\Parts\WebSockets\TypingStart as Typing;
 use Discord\WebSockets\Event;
 use React\EventLoop\LoopInterface;
 use React\Http\Browser;
 use ShitwareLtd\Shitbot\Commands\Art;
 use ShitwareLtd\Shitbot\Commands\Ask;
-use ShitwareLtd\Shitbot\Commands\Command;
-use ShitwareLtd\Shitbot\Commands\Ip;
 use ShitwareLtd\Shitbot\Commands\Chuck;
+use ShitwareLtd\Shitbot\Commands\Command;
 use ShitwareLtd\Shitbot\Commands\Dad;
 use ShitwareLtd\Shitbot\Commands\Help;
 use ShitwareLtd\Shitbot\Commands\Hype;
 use ShitwareLtd\Shitbot\Commands\Image;
 use ShitwareLtd\Shitbot\Commands\Insult;
+use ShitwareLtd\Shitbot\Commands\Ip;
 use ShitwareLtd\Shitbot\Commands\Joke;
 use ShitwareLtd\Shitbot\Commands\RockPaperScissors;
 use ShitwareLtd\Shitbot\Commands\Weather;
 use ShitwareLtd\Shitbot\Commands\Wiki;
 use ShitwareLtd\Shitbot\Commands\YoMomma;
 use ShitwareLtd\Shitbot\Commands\YouTube;
+use ShitwareLtd\Shitbot\EventHandlers\MessageCreate;
+use ShitwareLtd\Shitbot\EventHandlers\TypingStart;
 use Throwable;
 
 class Shitbot
@@ -198,6 +200,37 @@ class Shitbot
     }
 
     /**
+     * @param  Message  $message
+     * @return void
+     */
+    private function handleMessage(Message $message): void
+    {
+        (new MessageCreate($message))();
+    }
+
+    /**
+     * @param  Typing  $typing
+     * @return void
+     * @throws NoPermissionsException
+     */
+    private function handleTyping(Typing $typing): void
+    {
+        (new TypingStart($typing))();
+    }
+
+    /**
+     * @param  Interaction  $interaction
+     * @return void
+     */
+    private function pong(Interaction $interaction): void
+    {
+        $interaction->respondWithMessage(
+            builder: MessageBuilder::new()->setContent('Yea yea...PONG. Shitbot at your service. 💦'),
+            ephemeral: true
+        );
+    }
+
+    /**
      * @param  DiscordCommandClient  $client
      * @return void
      */
@@ -225,37 +258,6 @@ class Shitbot
         } catch (Throwable) {
             $client->close();
         }
-    }
-
-    /**
-     * @param  Message  $message
-     * @return void
-     */
-    private function handleMessage(Message $message): void
-    {
-        (new MessageHandler($message))();
-    }
-
-    /**
-     * @param  TypingStart  $typing
-     * @return void
-     * @throws NoPermissionsException
-     */
-    private function handleTyping(TypingStart $typing): void
-    {
-        (new TypingHandler($typing))();
-    }
-
-    /**
-     * @param  Interaction  $interaction
-     * @return void
-     */
-    private function pong(Interaction $interaction): void
-    {
-        $interaction->respondWithMessage(
-            builder: MessageBuilder::new()->setContent('Yea yea...PONG. Shitbot at your service. 💦'),
-            ephemeral: true
-        );
     }
 
     /**
