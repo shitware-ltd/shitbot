@@ -27,7 +27,7 @@ class TypingStart
             return;
         }
 
-        if (rand(min: 0, max: 100) === 69) {
+        if (rand(min: 0, max: 420) === 69) {
             $emojis = '';
 
             for ($x = 0; $x < rand(min: 10, max: 25); $x++) {

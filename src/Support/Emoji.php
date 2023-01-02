@@ -24,6 +24,7 @@ class Emoji
             'a:coolblink:903877070336167956',
             'a:potatocheer:915906109917757471',
             'a:MarioLuigiDancing:930208778354319370',
+            ':FeelsDanishMan:1059588246146916432',
             '😎',
             '🆒',
         ],
