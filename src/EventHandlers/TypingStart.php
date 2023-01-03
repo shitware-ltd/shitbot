@@ -5,6 +5,7 @@ namespace ShitwareLtd\Shitbot\EventHandlers;
 use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\WebSockets\TypingStart as Typing;
 use Illuminate\Support\Str;
+use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Emoji;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
@@ -23,7 +24,8 @@ class TypingStart
      */
     public function __invoke(): void
     {
-        if (Helpers::isBotOrDirectMessage($this->typing)) {
+        if (Shitbot::paused()
+            || Helpers::isBotOrDirectMessage($this->typing)) {
             return;
         }
 

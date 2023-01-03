@@ -13,6 +13,7 @@ use Discord\Parts\WebSockets\TypingStart as Typing;
 use Discord\WebSockets\Event;
 use React\EventLoop\LoopInterface;
 use React\Http\Browser;
+use ShitwareLtd\Shitbot\Commands\Admin;
 use ShitwareLtd\Shitbot\Commands\Art;
 use ShitwareLtd\Shitbot\Commands\Ask;
 use ShitwareLtd\Shitbot\Commands\Chuck;
@@ -46,6 +47,11 @@ class Shitbot
     private static array $owners = [];
 
     /**
+     * @var bool
+     */
+    private static bool $paused = false;
+
+    /**
      * @var LoopInterface|null
      */
     private static ?LoopInterface $loop = null;
@@ -54,6 +60,7 @@ class Shitbot
      * @var array<Command>
      */
     private array $prefixCommands = [
+        Admin::class,
         Art::class,
         Ask::class,
         Chuck::class,
@@ -104,6 +111,19 @@ class Shitbot
     public static function config(string $key): string|bool|null
     {
         return static::$config[$key] ?? null;
+    }
+
+    /**
+     * @param  bool|null  $paused
+     * @return bool
+     */
+    public static function paused(?bool $paused = null): bool
+    {
+        if ($paused !== null) {
+            static::$paused = $paused;
+        }
+
+        return static::$paused;
     }
 
     /**
@@ -247,7 +267,11 @@ class Shitbot
     private function pong(Interaction $interaction): void
     {
         $interaction->respondWithMessage(
-            builder: MessageBuilder::new()->setContent('Yea yea...PONG. Shitbot at your service. 💦'),
+            builder: MessageBuilder::new()->setContent(
+                static::$paused
+                    ? 'I am resting. 💤'
+                    : 'Shitbot at your service. 💦'
+            ),
             ephemeral: true
         );
     }

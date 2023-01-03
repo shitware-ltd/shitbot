@@ -40,7 +40,8 @@ abstract class Command
      */
     protected function skip(Message $message, ?string $flag = null): bool
     {
-        if (Helpers::isBotOrDirectMessage($message)) {
+        if (Shitbot::paused()
+            || Helpers::isBotOrDirectMessage($message)) {
             return true;
         }
 

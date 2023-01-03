@@ -4,6 +4,7 @@ namespace ShitwareLtd\Shitbot\EventHandlers;
 
 use Discord\Parts\Channel\Message;
 use Illuminate\Support\Str;
+use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Emoji;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
@@ -21,7 +22,8 @@ class MessageCreate
      */
     public function __invoke(): void
     {
-        if (Helpers::isBotOrDirectMessage($this->message)) {
+        if (Shitbot::paused()
+            || Helpers::isBotOrDirectMessage($this->message)) {
             return;
         }
 
