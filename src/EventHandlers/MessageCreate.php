@@ -32,7 +32,6 @@ class MessageCreate
         $this->reactToThink($content);
         $this->reactToBadWords($content);
         $this->reactToTrongate($content);
-        $this->reactToYaz($content);
     }
 
     /**
@@ -102,20 +101,6 @@ class MessageCreate
             needles: 'trongate'
         )) {
             $this->message->react(':trongate:1030233313266389062');
-        }
-    }
-
-    /**
-     * @param  string  $content
-     * @return void
-     */
-    private function reactToYaz(string $content): void
-    {
-        if (Str::contains(
-            haystack: $content,
-            needles: 'yaz'
-        )) {
-            $this->message->react(':FeelsYazMan:1056419745898971176');
         }
     }
 }
