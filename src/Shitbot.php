@@ -177,6 +177,7 @@ class Shitbot
                     'type' => (int) $type,
                     'name' => $name,
                     'details' => $name,
+                    'url' => static::config('BOT_ACTIVITY_URL') ?: null,
                 ]
             );
         }
@@ -331,6 +332,7 @@ class Shitbot
             'IP_TOKEN' => $_ENV['IP_TOKEN'] ?? 'token',
             'BOT_ACTIVITY_STATUS' => $_ENV['BOT_ACTIVITY_STATUS'] ?? 'online',
             'BOT_ACTIVITY_TYPE' => $_ENV['BOT_ACTIVITY_TYPE'] ?? null,
+            'BOT_ACTIVITY_URL' => $_ENV['BOT_ACTIVITY_URL'] ?? null,
             'BOT_ACTIVITY_NAME' => $_ENV['BOT_ACTIVITY_NAME'] ?? null,
             'OWNER_ONLY_ART' => filter_var(
                 value: $_ENV['OWNER_ONLY_ART'] ?? false,

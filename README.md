@@ -27,6 +27,7 @@
     - `2` - Listening
     - `3` - Watching
     - `5` - Competing
+- `BOT_ACTIVITY_URL`: Only used for streaming.
 - `BOT_ACTIVITY_NAME`: Describe the bots activity.
 - `OWNER_IDS`: Supply your discord ID (separate multiple IDs with commas) to get elevated powers.
 - `OWNER_ONLY_ART`: Set `true` to only allow listed owners to trigger the `!art` command.
