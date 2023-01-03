@@ -52,6 +52,11 @@ class Shitbot
     private static bool $paused = false;
 
     /**
+     * @var DiscordCommandClient|null
+     */
+    private static ?DiscordCommandClient $discord = null;
+
+    /**
      * @var LoopInterface|null
      */
     private static ?LoopInterface $loop = null;
@@ -83,10 +88,11 @@ class Shitbot
      * @param  bool  $installingAppCommands
      */
     public function __construct(
-        private readonly DiscordCommandClient $client,
+        DiscordCommandClient $client,
         private readonly bool $installingAppCommands
     ){
-        static::$loop = $this->client->getLoop();
+        static::$discord = $client;
+        static::$loop = $client->getLoop();
         $this->setConfig();
         $this->setOwners();
     }
@@ -111,6 +117,14 @@ class Shitbot
     public static function config(string $key): string|bool|null
     {
         return static::$config[$key] ?? null;
+    }
+
+    /**
+     * @return DiscordCommandClient|null
+     */
+    public static function discord(): ?DiscordCommandClient
+    {
+        return static::$discord;
     }
 
     /**
@@ -149,6 +163,32 @@ class Shitbot
 
     /**
      * @return void
+     */
+    public static function setDefaultActiveStatus(): void
+    {
+        $activity = null;
+        $type = static::config('BOT_ACTIVITY_TYPE');
+        $name = static::config('BOT_ACTIVITY_NAME');
+
+        if ($type && $name) {
+            $activity = new Activity(
+                discord: static::$discord,
+                attributes: [
+                    'type' => (int) $type,
+                    'name' => $name,
+                    'details' => $name,
+                ]
+            );
+        }
+
+        static::$discord->updatePresence(
+            activity: $activity,
+            status: static::config('BOT_ACTIVITY_STATUS')
+        );
+    }
+
+    /**
+     * @return void
      *
      * @throws Throwable
      */
@@ -158,12 +198,12 @@ class Shitbot
             $this->registerPrefixCommands();
         }
 
-        $this->client->on(
+        static::$discord->on(
             event: 'ready',
             listener: $this->isReady(...)
         );
 
-        $this->client->run();
+        static::$discord->run();
     }
 
     /**
@@ -176,7 +216,7 @@ class Shitbot
         foreach ($this->prefixCommands as $command) {
             $command = new $command();
 
-            $this->client->registerCommand(
+            static::$discord->registerCommand(
                 command: $command->trigger(),
                 callable: [$command, 'handle']
             );
@@ -184,59 +224,31 @@ class Shitbot
     }
 
     /**
-     * @param  DiscordCommandClient  $client
      * @return void
      */
-    private function isReady(DiscordCommandClient $client): void
+    private function isReady(): void
     {
         if ($this->installingAppCommands) {
-            $this->installAppCommands($client);
+            $this->installAppCommands();
 
             return;
         }
 
-        $this->setActiveStatus($client);
+        static::setDefaultActiveStatus();
 
-        $client->on(
+        static::$discord->on(
             event: Event::MESSAGE_CREATE,
             listener: $this->handleMessage(...)
         );
 
-        $client->on(
+        static::$discord->on(
             event: Event::TYPING_START,
             listener: $this->handleTyping(...)
         );
 
-        $client->listenCommand(
+        static::$discord->listenCommand(
             name: 'ping',
             callback: $this->pong(...)
-        );
-    }
-
-    /**
-     * @param  DiscordCommandClient  $client
-     * @return void
-     */
-    private function setActiveStatus(DiscordCommandClient $client): void
-    {
-        $activity = null;
-        $type = static::config('BOT_ACTIVITY_TYPE');
-        $name = static::config('BOT_ACTIVITY_NAME');
-
-        if ($type && $name) {
-            $activity = new Activity(
-                discord: $client,
-                attributes: [
-                    'type' => (int) $type,
-                    'name' => $name,
-                    'details' => $name,
-                ]
-            );
-        }
-
-        $client->updatePresence(
-            activity: $activity,
-            status: static::config('BOT_ACTIVITY_STATUS')
         );
     }
 
@@ -278,32 +290,31 @@ class Shitbot
 
     /**
      * @todo extract to installer class.
-     * @param  DiscordCommandClient  $client
      * @return void
      */
-    private function installAppCommands(DiscordCommandClient $client): void
+    private function installAppCommands(): void
     {
         $command = new SlashCommand(
-            discord: $client,
+            discord: static::$discord,
             attributes: ['name' => 'ping', 'description' => 'See if I am alive and well.']
         );
 
         try {
-            $client->application
+            static::$discord->application
                 ->commands
                 ->save($command)
                 ->then(
-                    onFulfilled: function () use ($client) {
+                    onFulfilled: function () {
                         echo PHP_EOL.'Installed PING!'.PHP_EOL;
-                        $client->close();
+                        static::$discord->close();
                     },
-                    onRejected: function (Throwable $e) use ($client) {
+                    onRejected: function (Throwable $e) {
                         echo PHP_EOL.'OH NO: '.$e->getMessage().PHP_EOL;
-                        $client->close();
+                        static::$discord->close();
                     }
                 );
         } catch (Throwable) {
-            $client->close();
+            static::$discord->close();
         }
     }
 

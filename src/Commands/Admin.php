@@ -3,6 +3,7 @@
 namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Parts\Channel\Message;
+use Discord\Parts\User\Activity;
 use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
@@ -45,6 +46,19 @@ class Admin extends Command
     {
         Shitbot::paused(true);
 
+        $activity = new Activity(
+            discord: Shitbot::discord(),
+            attributes: [
+                'type' => Activity::TYPE_WATCHING,
+                'name' => 'The void. 💤',
+            ]
+        );
+
+        Shitbot::discord()->updatePresence(
+            activity: $activity,
+            status: Activity::STATUS_IDLE
+        );
+
         return true;
     }
 
@@ -54,6 +68,8 @@ class Admin extends Command
     private function wakeup(): bool
     {
         Shitbot::paused(false);
+
+        Shitbot::setDefaultActiveStatus();
 
         return true;
     }
