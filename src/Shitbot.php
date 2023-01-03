@@ -79,25 +79,9 @@ class Shitbot
         private readonly DiscordCommandClient $client,
         private readonly bool $installingAppCommands
     ){
-        static::$config = [
-            'WEATHER_TOKEN' => $_ENV['WEATHER_TOKEN'] ?? 'token',
-            'HYPE_TOKEN' => $_ENV['HYPE_TOKEN'] ?? 'token',
-            'YOUTUBE_TOKEN' => $_ENV['YOUTUBE_TOKEN'] ?? 'token',
-            'OPENAI_TOKEN' => $_ENV['OPENAI_TOKEN'] ?? 'token',
-            'IP_TOKEN' => $_ENV['IP_TOKEN'] ?? 'token',
-            'BOT_ACTIVITY_STATUS' => $_ENV['BOT_ACTIVITY_STATUS'] ?? 'online',
-            'BOT_ACTIVITY_TYPE' => $_ENV['BOT_ACTIVITY_TYPE'] ?? null,
-            'BOT_ACTIVITY_NAME' => $_ENV['BOT_ACTIVITY_NAME'] ?? null,
-        ];
-
-        static::$owners = empty($_ENV['OWNER_IDS'])
-            ? []
-            : explode(
-                separator: ',',
-                string: $_ENV['OWNER_IDS']
-            );
-
         static::$loop = $this->client->getLoop();
+        $this->setConfig();
+        $this->setOwners();
     }
 
     /**
@@ -107,7 +91,7 @@ class Shitbot
     public static function run(bool $asInstall = false): void
     {
         try {
-            static::new($asInstall)->boot();
+            static::new($asInstall)();
         } catch (Throwable) {
             exit(1);
         }
@@ -115,9 +99,9 @@ class Shitbot
 
     /**
      * @param  string  $key
-     * @return string|null
+     * @return string|bool|null
      */
-    public static function config(string $key): ?string
+    public static function config(string $key): string|bool|null
     {
         return static::$config[$key] ?? null;
     }
@@ -148,7 +132,7 @@ class Shitbot
      *
      * @throws Throwable
      */
-    public function boot(): void
+    public function __invoke(): void
     {
         if (! $this->installingAppCommands) {
             $this->registerPrefixCommands();
@@ -256,6 +240,7 @@ class Shitbot
     }
 
     /**
+     * @todo extract to handler class.
      * @param  Interaction  $interaction
      * @return void
      */
@@ -268,6 +253,7 @@ class Shitbot
     }
 
     /**
+     * @todo extract to installer class.
      * @param  DiscordCommandClient  $client
      * @return void
      */
@@ -295,6 +281,44 @@ class Shitbot
         } catch (Throwable) {
             $client->close();
         }
+    }
+
+    /**
+     * @return void
+     */
+    private function setConfig(): void
+    {
+        static::$config = [
+            'WEATHER_TOKEN' => $_ENV['WEATHER_TOKEN'] ?? 'token',
+            'HYPE_TOKEN' => $_ENV['HYPE_TOKEN'] ?? 'token',
+            'YOUTUBE_TOKEN' => $_ENV['YOUTUBE_TOKEN'] ?? 'token',
+            'OPENAI_TOKEN' => $_ENV['OPENAI_TOKEN'] ?? 'token',
+            'IP_TOKEN' => $_ENV['IP_TOKEN'] ?? 'token',
+            'BOT_ACTIVITY_STATUS' => $_ENV['BOT_ACTIVITY_STATUS'] ?? 'online',
+            'BOT_ACTIVITY_TYPE' => $_ENV['BOT_ACTIVITY_TYPE'] ?? null,
+            'BOT_ACTIVITY_NAME' => $_ENV['BOT_ACTIVITY_NAME'] ?? null,
+            'OWNER_ONLY_ART' => filter_var(
+                value: $_ENV['OWNER_ONLY_ART'] ?? false,
+                filter: FILTER_VALIDATE_BOOL
+            ),
+            'OWNER_ONLY_ASK' => filter_var(
+                value: $_ENV['OWNER_ONLY_ASK'] ?? false,
+                filter: FILTER_VALIDATE_BOOL
+            ),
+        ];
+    }
+
+    /**
+     * @return void
+     */
+    private function setOwners(): void
+    {
+        static::$owners = empty($_ENV['OWNER_IDS'])
+            ? []
+            : explode(
+                separator: ',',
+                string: $_ENV['OWNER_IDS']
+            );
     }
 
     /**

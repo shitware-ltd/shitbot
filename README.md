@@ -29,6 +29,8 @@
     - `5` - Competing
 - `BOT_ACTIVITY_NAME`: Describe the bots activity.
 - `OWNER_IDS`: Supply your discord ID (separate multiple IDs with commas) to get elevated powers.
+- `OWNER_ONLY_ART`: Set `true` to only allow listed owners to trigger the `!art` command.
+- `OWNER_ONLY_ASK`: Set `true` to only allow listed owners to trigger the `!ask` command.
 - `OPENAI_TOKEN`: To use `!ask` or `!art`, you must get an API key from [OpenAI](https://beta.openai.com/account/api-keys).
 - `WEATHER_TOKEN`: To use `!weather`, you must get an API key from [Weather API](https://www.weatherapi.com).
 - `YOUTUBE_TOKEN`: To use `!yt`, you must get an API key from [Google Developers Console](https://console.developers.google.com).

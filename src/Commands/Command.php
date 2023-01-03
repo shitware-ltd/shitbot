@@ -35,11 +35,20 @@ abstract class Command
 
     /**
      * @param  Message  $message
+     * @param  string|null  $flag
      * @return bool
      */
-    protected function skip(Message $message): bool
+    protected function skip(Message $message, ?string $flag = null): bool
     {
         if (Helpers::isBotOrDirectMessage($message)) {
+            return true;
+        }
+
+        if ($flag
+            && Shitbot::config($flag) === true
+            && ! Helpers::isOwner($message)) {
+            $message->react('a:nonono:903831572065697875');
+
             return true;
         }
 
@@ -74,10 +83,7 @@ abstract class Command
      */
     protected function hitCooldown(Message $message): void
     {
-        if (in_array(
-            needle: $message->author->id,
-            haystack: Shitbot::owners()
-        ) || $this->cooldown() === 0) {
+        if ($this->cooldown() === 0 || Helpers::isOwner($message)) {
             return;
         }
 

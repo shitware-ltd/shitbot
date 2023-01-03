@@ -39,7 +39,10 @@ class Art extends Command
     public function handle(Message $message, array $args): void
     {
         coroutine(function (Message $message, array $args) {
-            if ($this->skip($message)) {
+            if ($this->skip(
+                message: $message,
+                flag: 'OWNER_ONLY_ART'
+            )) {
                 return;
             }
 

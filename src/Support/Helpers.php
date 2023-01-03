@@ -6,6 +6,7 @@ use Discord\Parts\Channel\Message;
 use Discord\Parts\WebSockets\TypingStart;
 use Illuminate\Support\Str;
 use Psr\Http\Message\ResponseInterface;
+use ShitwareLtd\Shitbot\Shitbot;
 
 class Helpers
 {
@@ -66,6 +67,18 @@ class Helpers
 
         return $part->user->bot
             || $part->guild === null;
+    }
+
+    /**
+     * @param  Message  $message
+     * @return bool
+     */
+    public static function isOwner(Message $message): bool
+    {
+        return in_array(
+            needle: $message->author->id,
+            haystack: Shitbot::owners()
+        );
     }
 
     /**
