@@ -61,9 +61,7 @@ class Bank
     public function getTotalExpenses(): array
     {
         $data = $this->getBankData();
-
-        var_dump($data);
-
+        
         $balanceOverview = [];
 
         foreach ($data as $type => $usage) {
