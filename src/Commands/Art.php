@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use React\EventLoop\Loop;
 use Psr\Http\Message\ResponseInterface;
 use ShitwareLtd\Shitbot\Shitbot;
+use ShitwareLtd\Shitbot\Support\Bank;
 use ShitwareLtd\Shitbot\Support\Helpers;
 use Throwable;
 
@@ -94,6 +95,12 @@ class Art extends Command
                                 content: base64_decode($result['data'][0]['b64_json'])
                             )
                     );
+
+                    (new Bank($message->author))
+                        ->registerExpense(
+                            type: 'image_generation',
+                            amount: 1
+                        );
 
                     $this->hitCooldown($message);
                 }

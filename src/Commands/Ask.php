@@ -3,9 +3,11 @@
 namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Parts\Channel\Message;
+use Illuminate\Support\Facades\Log;
 use React\EventLoop\Loop;
 use Psr\Http\Message\ResponseInterface;
 use ShitwareLtd\Shitbot\Shitbot;
+use ShitwareLtd\Shitbot\Support\Bank;
 use ShitwareLtd\Shitbot\Support\Helpers;
 use Throwable;
 
@@ -68,7 +70,14 @@ class Ask extends Command
                     ])
                 );
 
-                $result = Helpers::json($response)['choices'][0]['text'];
+                $response = Helpers::json($response);
+                $result = $response['choices'][0]['text'];
+
+                (new Bank($message->author))
+                    ->registerExpense(
+                        type: 'text-davinci-003',
+                        amount: $response['usage']['total_tokens']
+                    );
 
                 foreach (Helpers::splitMessage($result) as $key => $chunk) {
                     if ($key === 0) {

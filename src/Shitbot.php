@@ -16,6 +16,7 @@ use React\Http\Browser;
 use ShitwareLtd\Shitbot\Commands\Admin;
 use ShitwareLtd\Shitbot\Commands\Art;
 use ShitwareLtd\Shitbot\Commands\Ask;
+use ShitwareLtd\Shitbot\Commands\Balance;
 use ShitwareLtd\Shitbot\Commands\Chuck;
 use ShitwareLtd\Shitbot\Commands\Command;
 use ShitwareLtd\Shitbot\Commands\Dad;
@@ -68,6 +69,7 @@ class Shitbot
         Admin::class,
         Art::class,
         Ask::class,
+        Balance::class,
         Chuck::class,
         Dad::class,
         Help::class,
