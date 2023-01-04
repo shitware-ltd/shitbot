@@ -55,7 +55,7 @@ class Bank
 
     private function getBankPath(): string
     {
-        return __DIR__.'/../Bank/'.$this->author->id.'.json';
+        return __DIR__.'/../../bank/'.$this->author->id.'.json';
     }
 
     public function getTotalExpenses(): array
