@@ -3,11 +3,11 @@
 namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Parts\Channel\Message;
-use Illuminate\Support\Facades\Log;
-use React\EventLoop\Loop;
 use Psr\Http\Message\ResponseInterface;
+use React\EventLoop\Loop;
+use ShitwareLtd\Shitbot\Bank\Bank;
+use ShitwareLtd\Shitbot\Bank\Item;
 use ShitwareLtd\Shitbot\Shitbot;
-use ShitwareLtd\Shitbot\Support\Bank;
 use ShitwareLtd\Shitbot\Support\Helpers;
 use Throwable;
 
@@ -71,21 +71,19 @@ class Ask extends Command
                 );
 
                 $response = Helpers::json($response);
-                $result = $response['choices'][0]['text'];
 
-                (new Bank($message->author))
-                    ->registerExpense(
-                        type: 'text-davinci-003',
-                        amount: $response['usage']['total_tokens']
-                    );
-
-                foreach (Helpers::splitMessage($result) as $key => $chunk) {
+                foreach (Helpers::splitMessage($response['choices'][0]['text']) as $key => $chunk) {
                     if ($key === 0) {
                         $message->reply($chunk);
                     } else {
                         $message->channel->sendMessage($chunk);
                     }
                 }
+
+                Bank::for($message->author)->charge(
+                    item: Item::Davinci003,
+                    units: $response['usage']['total_tokens']
+                );
 
                 $this->hitCooldown($message);
             } catch (Throwable $e) {

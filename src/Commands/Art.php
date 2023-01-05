@@ -5,10 +5,11 @@ namespace ShitwareLtd\Shitbot\Commands;
 use Discord\Builders\MessageBuilder;
 use Discord\Parts\Channel\Message;
 use Illuminate\Support\Str;
-use React\EventLoop\Loop;
 use Psr\Http\Message\ResponseInterface;
+use React\EventLoop\Loop;
+use ShitwareLtd\Shitbot\Bank\Bank;
+use ShitwareLtd\Shitbot\Bank\Item;
 use ShitwareLtd\Shitbot\Shitbot;
-use ShitwareLtd\Shitbot\Support\Bank;
 use ShitwareLtd\Shitbot\Support\Helpers;
 use Throwable;
 
@@ -96,11 +97,10 @@ class Art extends Command
                             )
                     );
 
-                    (new Bank($message->author))
-                        ->registerExpense(
-                            type: 'image_generation',
-                            amount: 1
-                        );
+                    Bank::for($message->author)->charge(
+                        item: Item::Dalle2,
+                        units: 1
+                    );
 
                     $this->hitCooldown($message);
                 }

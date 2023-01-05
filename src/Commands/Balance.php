@@ -3,8 +3,7 @@
 namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Parts\Channel\Message;
-use ShitwareLtd\Shitbot\Support\Bank;
-use ShitwareLtd\Shitbot\Support\Helpers;
+use ShitwareLtd\Shitbot\Bank\Bank;
 
 class Balance extends Command
 {
@@ -35,18 +34,13 @@ class Balance extends Command
             return;
         }
 
-        [ $totalCost, $costOverview ] = (new Bank($message->author))
-            ->getTotalExpenses();
+        $expenses = Bank::for($message->author)->expenses();
 
-        $reply = "
-            **<@{$message->author->id}>'s balance:**
-Your current balance is: **$ -{$totalCost}**
-            
-**Here is an overview of your expenses:**";
+        $reply = "Your current balance is: **$$expenses->total**".PHP_EOL.PHP_EOL;
+        $reply .= 'Here is an overview of your expenses:'.PHP_EOL;
 
-        foreach ($costOverview as $category => $cost) {
-            $reply .= "
-{$category}: $ " . $cost['total_cost'];
+        foreach ($expenses->breakdown as $item => $total) {
+            $reply .= "> [ $item ]: **$$total**".PHP_EOL;
         }
 
         $message->reply($reply);
