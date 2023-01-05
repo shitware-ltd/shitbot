@@ -5,8 +5,10 @@ namespace ShitwareLtd\Shitbot\Commands;
 use Discord\Builders\MessageBuilder;
 use Discord\Parts\Channel\Message;
 use Illuminate\Support\Str;
-use React\EventLoop\Loop;
 use Psr\Http\Message\ResponseInterface;
+use React\EventLoop\Loop;
+use ShitwareLtd\Shitbot\Bank\Bank;
+use ShitwareLtd\Shitbot\Bank\Item;
 use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
 use Throwable;
@@ -93,6 +95,11 @@ class Art extends Command
                                 filename: 'dalle_'.uniqid(more_entropy: true).'.png',
                                 content: base64_decode($result['data'][0]['b64_json'])
                             )
+                    );
+
+                    Bank::for($message->author)->charge(
+                        item: Item::Dalle2,
+                        units: 1
                     );
 
                     $this->hitCooldown($message);

@@ -3,8 +3,10 @@
 namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Parts\Channel\Message;
-use React\EventLoop\Loop;
 use Psr\Http\Message\ResponseInterface;
+use React\EventLoop\Loop;
+use ShitwareLtd\Shitbot\Bank\Bank;
+use ShitwareLtd\Shitbot\Bank\Item;
 use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
 use Throwable;
@@ -68,15 +70,20 @@ class Ask extends Command
                     ])
                 );
 
-                $result = Helpers::json($response)['choices'][0]['text'];
+                $response = Helpers::json($response);
 
-                foreach (Helpers::splitMessage($result) as $key => $chunk) {
+                foreach (Helpers::splitMessage($response['choices'][0]['text']) as $key => $chunk) {
                     if ($key === 0) {
                         $message->reply($chunk);
                     } else {
                         $message->channel->sendMessage($chunk);
                     }
                 }
+
+                Bank::for($message->author)->charge(
+                    item: Item::Davinci003,
+                    units: $response['usage']['total_tokens']
+                );
 
                 $this->hitCooldown($message);
             } catch (Throwable $e) {
