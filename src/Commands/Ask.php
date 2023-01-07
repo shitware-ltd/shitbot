@@ -49,26 +49,28 @@ class Ask extends Command
             $message->channel->broadcastTyping();
 
             $typing = Loop::addPeriodicTimer(
-                interval: 5,
+                interval: 4,
                 callback: fn () => $message->channel->broadcastTyping()
             );
 
             try {
                 /** @var ResponseInterface $response */
-                $response = yield Shitbot::browser()->post(
-                    url: 'https://api.openai.com/v1/completions',
-                    headers: [
-                        'Authorization' => 'Bearer '.Shitbot::config('OPENAI_TOKEN'),
-                        'Content-Type' => 'application/json',
-                    ],
-                    body: json_encode([
-                        'max_tokens' => 3072,
-                        'model' => 'text-davinci-003',
-                        'n' => 1,
-                        'prompt' => Helpers::implodeContent($args),
-                        'temperature' => 1,
-                    ])
-                );
+                $response = yield Shitbot::browser()
+                    ->withTimeout(90.0)
+                    ->post(
+                        url: 'https://api.openai.com/v1/completions',
+                        headers: [
+                            'Authorization' => 'Bearer '.Shitbot::config('OPENAI_TOKEN'),
+                            'Content-Type' => 'application/json',
+                        ],
+                        body: json_encode([
+                            'max_tokens' => 3072,
+                            'model' => 'text-davinci-003',
+                            'n' => 1,
+                            'prompt' => Helpers::implodeContent($args),
+                            'temperature' => 1,
+                        ])
+                    );
 
                 $response = Helpers::json($response);
 

@@ -4,7 +4,6 @@ namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Builders\MessageBuilder;
 use Discord\Parts\Channel\Message;
-use Illuminate\Support\Str;
 use Psr\Http\Message\ResponseInterface;
 use React\EventLoop\Loop;
 use ShitwareLtd\Shitbot\Bank\Bank;
@@ -48,24 +47,17 @@ class Art extends Command
                 return;
             }
 
-            $prompt = Helpers::implodeContent($args);
-
-            if (Str::length($prompt) < 25) {
-                $message->reply('Please be more descriptive.');
-
-                return;
-            }
-
             $message->channel->broadcastTyping();
 
             $typing = Loop::addPeriodicTimer(
-                interval: 5,
+                interval: 4,
                 callback: fn () => $message->channel->broadcastTyping()
             );
 
             try {
                 /** @var ResponseInterface $response */
                 $response = yield Shitbot::browser()
+                    ->withTimeout(60.0)
                     ->withRejectErrorResponse(false)
                     ->post(
                         url: 'https://api.openai.com/v1/images/generations',
@@ -75,7 +67,7 @@ class Art extends Command
                         ],
                         body: json_encode([
                             'n' => 1,
-                            'prompt' => $prompt,
+                            'prompt' => Helpers::implodeContent($args),
                             'response_format' => 'b64_json',
                             'size' => '1024x1024',
                         ])
@@ -83,11 +75,7 @@ class Art extends Command
 
                 $result = Helpers::json($response);
 
-                if ($response->getStatusCode() >= 400) {
-                    $message->reply(
-                        $this->formatError($result['error']['message'])
-                    );
-                } else {
+                if ($response->getStatusCode() < 300) {
                     $message->channel->sendMessage(
                         MessageBuilder::new()
                             ->setReplyTo($message)
@@ -103,11 +91,15 @@ class Art extends Command
                     );
 
                     $this->hitCooldown($message);
+                } else {
+                    $message->reply($this->formatError(
+                        $result['error']['message']
+                    ));
                 }
             } catch (Throwable $e) {
-                $message->reply(
-                    $this->formatError($e->getMessage())
-                );
+                $message->reply($this->formatError(
+                    $e->getMessage()
+                ));
             }
 
             Loop::cancelTimer($typing);

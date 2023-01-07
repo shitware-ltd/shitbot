@@ -57,8 +57,8 @@ class Ip extends Command
 
                 $reply = '```json'.PHP_EOL;
                 $reply .= json_encode(
-                        value: $result,
-                        flags: JSON_PRETTY_PRINT
+                    value: $result,
+                    flags: JSON_PRETTY_PRINT
                 ).PHP_EOL;
                 $reply .= '```';
 
