@@ -3,6 +3,7 @@
 namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Parts\Channel\Message;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Psr\Http\Message\ResponseInterface;
 use ShitwareLtd\Shitbot\Shitbot;
@@ -77,13 +78,28 @@ class Weather extends Command
         $name = $response['location']['name'];
         $region = $response['location']['region'];
         $country = $response['location']['country'];
+        $localTime = Carbon::parse($response['location']['localtime'])->toDayDateTimeString();
         $tempF = $response['current']['temp_f'];
         $tempC = $response['current']['temp_c'];
         $condition = Str::lower($response['current']['condition']['text']);
-        $wind = $response['current']['wind_mph'];
+        $windMph = $response['current']['wind_mph'];
+        $windKph = $response['current']['wind_kph'];
         $windDirection = $response['current']['wind_dir'];
+        $gustMph = $response['current']['gust_mph'];
+        $gustKph = $response['current']['gust_kph'];
         $humidity = $response['current']['humidity'];
+        $precipIn = $response['current']['precip_in'];
+        $precipMm = $response['current']['precip_mm'];
+        $cloud = $response['current']['cloud'];
+        $uv = $response['current']['uv'];
 
-        return "Currently in $name, $region, $country, it is {$tempF}°F ({$tempC}°C) and $condition. Winds out of the $windDirection at {$wind}mph. Humidity is $humidity%";
+        return <<<EOT
+        > **$name, $region, $country:**
+        > Local time is **$localTime**. 
+        > Conditions are **$tempF °F** / **$tempC °C** and **$condition**.
+        > Winds out of the **$windDirection** at **$windMph mph** / **$windKph kph**, with gusts up to **$gustMph mph** / **$gustKph kph**. 
+        > Humidity is **$humidity%** with precipitation at **$precipIn in** / **$precipMm mm**.
+        > Cloud coverage is at **$cloud%** with a UV index of **$uv**.
+        EOT;
     }
 }
