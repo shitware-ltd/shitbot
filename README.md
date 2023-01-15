@@ -5,7 +5,7 @@
 ## Notes:
 - `PHP >= 8.1` is required.
 - All http calls are handled through coroutines, thus non-blocking. This **php** bot can indeed handle many user commands at the same time.
-- The use of most emojis for reactions inside the [Emoji](src/Support/Emoji.php) are from a private server, and will not work for you. You must swap out all emojis yourself.
+- The use emojis for reactions inside the [Emoji](src/Support/Emoji.php) support class are from a private server, and will not work for you. You must swap the emojis out yourself.
 
 ## Setting Up:
 
@@ -26,12 +26,11 @@
     - `1` - Streaming
     - `2` - Listening
     - `3` - Watching
+    - `4` - Custom
     - `5` - Competing
 - `BOT_ACTIVITY_URL`: Only used for streaming.
 - `BOT_ACTIVITY_NAME`: Describe the bots activity.
 - `OWNER_IDS`: Supply your discord ID (separate multiple IDs with commas) to get elevated powers.
-- `OWNER_ONLY_ART`: Set `true` to only allow listed owners to trigger the `!art` command.
-- `OWNER_ONLY_ASK`: Set `true` to only allow listed owners to trigger the `!ask` command.
 - `OPENAI_TOKEN`: To use `!ask` or `!art`, you must get an API key from [OpenAI](https://beta.openai.com/account/api-keys).
 - `WEATHER_TOKEN`: To use `!weather`, you must get an API key from [Weather API](https://www.weatherapi.com).
 - `YOUTUBE_TOKEN`: To use `!yt`, you must get an API key from [Google Developers Console](https://console.developers.google.com).
@@ -43,6 +42,7 @@
 - `!help`: Send a help message listing every prefix command.
 - `!art {prompt}`: Uses OpenAI's **[DALLE-2]** to generate an image based on the prompt.
 - `!ask {prompt}`: Uses OpenAI's **[GPT-3 text-davinci-003]** to return completion(s).
+- `!balance`: See how much money from API usage you have spent.
 - `!chuck`: Chuck Norris jokes.
 - `!daddy`: Dad jokes.
 - `!hype`: Lara-cord best quotes of all time.

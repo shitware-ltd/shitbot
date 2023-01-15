@@ -336,14 +336,6 @@ class Shitbot
             'BOT_ACTIVITY_TYPE' => $_ENV['BOT_ACTIVITY_TYPE'] ?? null,
             'BOT_ACTIVITY_URL' => $_ENV['BOT_ACTIVITY_URL'] ?? null,
             'BOT_ACTIVITY_NAME' => $_ENV['BOT_ACTIVITY_NAME'] ?? null,
-            'OWNER_ONLY_ART' => filter_var(
-                value: $_ENV['OWNER_ONLY_ART'] ?? false,
-                filter: FILTER_VALIDATE_BOOL
-            ),
-            'OWNER_ONLY_ASK' => filter_var(
-                value: $_ENV['OWNER_ONLY_ASK'] ?? false,
-                filter: FILTER_VALIDATE_BOOL
-            ),
         ];
     }
 

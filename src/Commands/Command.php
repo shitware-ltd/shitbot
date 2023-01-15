@@ -35,21 +35,12 @@ abstract class Command
 
     /**
      * @param  Message  $message
-     * @param  string|null  $flag
      * @return bool
      */
-    protected function skip(Message $message, ?string $flag = null): bool
+    protected function skip(Message $message): bool
     {
         if (Shitbot::paused()
             || Helpers::isBotOrDirectMessage($message)) {
-            return true;
-        }
-
-        if ($flag
-            && Shitbot::config($flag) === true
-            && ! Helpers::isOwner($message)) {
-            $message->react('a:nonono:903831572065697875');
-
             return true;
         }
 
