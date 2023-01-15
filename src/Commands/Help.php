@@ -48,6 +48,7 @@ class Help extends Command
         > `!help`: Well...you are already here, so you got this one down.
         > `!art {prompt}`: Ask the A.I. overlords to make a magical image for you. **[DALLE-2]**
         > `!ask {prompt}`: Ask the A.I. overlords something magnificent. **[GPT-3 text-davinci-003]**
+        > `!balance`: Show how much money from API usage you've spent.
         > `!chuck`: Chuck Norris is still alive.
         > `!daddy`: Dad jokes brighten everyone's day up.
         > `!hype`: You never know what you'll get, but it's POG.
