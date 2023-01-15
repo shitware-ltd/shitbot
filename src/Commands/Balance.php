@@ -36,7 +36,7 @@ class Balance extends Command
 
         $expenses = Bank::for($message->author)->expenses();
 
-        $reply = "Your current balance is: **$$expenses->total**".PHP_EOL.PHP_EOL;
+        $reply = "You have spent: **$$expenses->total**".PHP_EOL.PHP_EOL;
         $reply .= 'Here is an overview of your expenses:'.PHP_EOL;
 
         foreach ($expenses->breakdown as $item => $total) {
