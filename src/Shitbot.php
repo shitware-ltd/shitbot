@@ -8,7 +8,6 @@ use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
 use Discord\Parts\Interactions\Command\Command as SlashCommand;
 use Discord\Parts\Interactions\Interaction;
-use Discord\Parts\User\Activity;
 use Discord\Parts\WebSockets\TypingStart as Typing;
 use Discord\WebSockets\Event;
 use React\EventLoop\LoopInterface;
@@ -33,6 +32,7 @@ use ShitwareLtd\Shitbot\Commands\YoMomma;
 use ShitwareLtd\Shitbot\Commands\YouTube;
 use ShitwareLtd\Shitbot\EventHandlers\MessageCreate;
 use ShitwareLtd\Shitbot\EventHandlers\TypingStart;
+use ShitwareLtd\Shitbot\Support\Status;
 use Throwable;
 
 class Shitbot
@@ -165,33 +165,6 @@ class Shitbot
 
     /**
      * @return void
-     */
-    public static function setDefaultActiveStatus(): void
-    {
-        $activity = null;
-        $type = static::config('BOT_ACTIVITY_TYPE');
-        $name = static::config('BOT_ACTIVITY_NAME');
-
-        if ($type && $name) {
-            $activity = new Activity(
-                discord: static::$discord,
-                attributes: [
-                    'type' => (int) $type,
-                    'name' => $name,
-                    'details' => $name,
-                    'url' => static::config('BOT_ACTIVITY_URL') ?: null,
-                ]
-            );
-        }
-
-        static::$discord->updatePresence(
-            activity: $activity,
-            status: static::config('BOT_ACTIVITY_STATUS')
-        );
-    }
-
-    /**
-     * @return void
      *
      * @throws Throwable
      */
@@ -237,8 +210,6 @@ class Shitbot
             return;
         }
 
-        static::setDefaultActiveStatus();
-
         static::$discord->on(
             event: Event::MESSAGE_CREATE,
             listener: $this->handleMessage(...)
@@ -253,6 +224,8 @@ class Shitbot
             name: 'ping',
             callback: $this->pong(...)
         );
+
+        Status::setDefault();
     }
 
     /**
@@ -333,9 +306,11 @@ class Shitbot
             'OPENAI_TOKEN' => $_ENV['OPENAI_TOKEN'] ?? 'token',
             'IP_TOKEN' => $_ENV['IP_TOKEN'] ?? 'token',
             'BOT_ACTIVITY_STATUS' => $_ENV['BOT_ACTIVITY_STATUS'] ?? 'online',
-            'BOT_ACTIVITY_TYPE' => $_ENV['BOT_ACTIVITY_TYPE'] ?? null,
             'BOT_ACTIVITY_URL' => $_ENV['BOT_ACTIVITY_URL'] ?? null,
             'BOT_ACTIVITY_NAME' => $_ENV['BOT_ACTIVITY_NAME'] ?? null,
+            'BOT_ACTIVITY_TYPE' => empty($_ENV['BOT_ACTIVITY_TYPE'])
+                ? null
+                : (int) $_ENV['BOT_ACTIVITY_TYPE'],
         ];
     }
 

@@ -55,7 +55,7 @@
 - `!wiki {search}`: Get the top 5 results from Wikipedia from your search.
 - `!yomomma`: YoMomma jokes.
 - `!yt {search}`: Search and obtain the top video result from YouTube.
-- `!!!! {rest|wakeup}`: Owner command to pause or resume all interactions.
+- `!!!! {rest|wakeup|status|terminate}`: Admin commands.
 
 ## Application Commands:
 
