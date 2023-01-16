@@ -31,8 +31,8 @@ class Admin extends Command
         }
 
         $matched = match ($args[0] ?? false) {
-            'rest' => $this->rest(),
-            'wakeup' => $this->wakeup(),
+            'pause' => $this->pause(),
+            'play' => $this->play(),
             'status' => $this->status($args),
             'terminate' => $this->terminate(),
             default => false,
@@ -51,7 +51,7 @@ class Admin extends Command
     /**
      * @return bool
      */
-    private function rest(): bool
+    private function pause(): bool
     {
         Shitbot::paused(true);
 
@@ -67,7 +67,7 @@ class Admin extends Command
     /**
      * @return bool
      */
-    private function wakeup(): bool
+    private function play(): bool
     {
         Shitbot::paused(false);
 
