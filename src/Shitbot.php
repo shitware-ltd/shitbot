@@ -114,9 +114,9 @@ class Shitbot
 
     /**
      * @param  string  $key
-     * @return string|bool|null
+     * @return mixed
      */
-    public static function config(string $key): string|bool|null
+    public static function config(string $key): mixed
     {
         return static::$config[$key] ?? null;
     }
