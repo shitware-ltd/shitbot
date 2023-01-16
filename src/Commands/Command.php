@@ -84,6 +84,17 @@ abstract class Command
 
     /**
      * @param  Message  $message
+     * @return void
+     */
+    protected function clearCooldown(Message $message):  void
+    {
+        if (isset($this->cooldowns[$message->author->id])) {
+            unset($this->cooldowns[$message->author->id]);
+        }
+    }
+
+    /**
+     * @param  Message  $message
      * @return float|int
      */
     private function currentCooldown(Message $message): float|int

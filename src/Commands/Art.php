@@ -44,6 +44,8 @@ class Art extends Command
                 return;
             }
 
+            $this->hitCooldown($message);
+
             $message->channel->broadcastTyping();
 
             $typing = Loop::addPeriodicTimer(
@@ -72,7 +74,7 @@ class Art extends Command
 
                 $result = Helpers::json($response);
 
-                if ($response->getStatusCode() < 300) {
+                if ($response->getStatusCode() === 200) {
                     $message->channel->sendMessage(
                         MessageBuilder::new()
                             ->setReplyTo($message)
@@ -89,11 +91,15 @@ class Art extends Command
 
                     $this->hitCooldown($message);
                 } else {
+                    $this->clearCooldown($message);
+
                     $message->reply($this->formatError(
                         $result['error']['message']
                     ));
                 }
             } catch (Throwable $e) {
+                $this->clearCooldown($message);
+
                 $message->reply($this->formatError(
                     $e->getMessage()
                 ));

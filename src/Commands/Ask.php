@@ -43,6 +43,8 @@ class Ask extends Command
                 return;
             }
 
+            $this->hitCooldown($message);
+
             $message->channel->broadcastTyping();
 
             $typing = Loop::addPeriodicTimer(
@@ -86,9 +88,11 @@ class Ask extends Command
 
                 $this->hitCooldown($message);
             } catch (Throwable $e) {
-                $message->reply(
-                    $this->formatError($e->getMessage())
-                );
+                $this->clearCooldown($message);
+
+                $message->reply($this->formatError(
+                    $e->getMessage()
+                ));
             }
 
             Loop::cancelTimer($typing);
