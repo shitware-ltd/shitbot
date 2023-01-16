@@ -32,7 +32,7 @@ class TypingStart
         if (rand(min: 0, max: 420) === 69) {
             $emojis = '';
 
-            for ($x = 0; $x < rand(min: 10, max: 25); $x++) {
+            for ($x = 0; $x < rand(min: 15, max: 30); $x++) {
                 $pick = Emoji::get();
 
                 if (Str::length($pick) > 1) {
@@ -42,7 +42,9 @@ class TypingStart
                 $emojis .= "$pick ";
             }
 
-            $this->typing->channel->sendMessage("$emojis <@{$this->typing->user->id}>!");
+            $this->typing
+                ->channel
+                ->sendMessage("$emojis <@{$this->typing->user->id}>!");
         }
     }
 }
