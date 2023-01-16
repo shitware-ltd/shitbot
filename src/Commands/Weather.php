@@ -94,7 +94,7 @@ class Weather extends Command
         $uv = $response['current']['uv'];
 
         return <<<EOT
-        > **$name, $region, $country:**
+        **$name, $region, $country**
         > Local time is **$localTime**. 
         > Conditions are **$tempF °F** / **$tempC °C** and **$condition**.
         > Winds out of the **$windDirection** at **$windMph mph** / **$windKph kph**, with gusts up to **$gustMph mph** / **$gustKph kph**. 
