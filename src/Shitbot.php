@@ -26,6 +26,7 @@ use ShitwareLtd\Shitbot\Commands\Insult;
 use ShitwareLtd\Shitbot\Commands\Ip;
 use ShitwareLtd\Shitbot\Commands\Joke;
 use ShitwareLtd\Shitbot\Commands\RockPaperScissors;
+use ShitwareLtd\Shitbot\Commands\Uptime;
 use ShitwareLtd\Shitbot\Commands\Weather;
 use ShitwareLtd\Shitbot\Commands\Wiki;
 use ShitwareLtd\Shitbot\Commands\YoMomma;
@@ -79,6 +80,7 @@ class Shitbot
         Ip::class,
         Joke::class,
         RockPaperScissors::class,
+        Uptime::class,
         Weather::class,
         Wiki::class,
         YoMomma::class,

@@ -111,4 +111,36 @@ class Helpers
 
         return $result;
     }
+
+    /**
+     * @param  int|null  $bytes
+     * @return string
+     */
+    public static function bytesToHuman(?int $bytes): string
+    {
+        if (is_null($bytes) || $bytes <= 0) {
+            return 'unknown';
+        }
+
+        $base = log($bytes) / log(1024);
+        $floor = floor($base);
+        $type = match ((int) $floor) {
+            0 => 'bytes',
+            1 => 'KB',
+            2 => 'MB',
+            3 => 'GB',
+            4 => 'TB',
+            5 => 'PB',
+            default => 'unknown',
+        };
+        $rounded = round(
+            num: pow(
+                num: 1024,
+                exponent: $base - $floor
+            ),
+            precision: 2
+        );
+
+        return "$rounded $type";
+    }
 }

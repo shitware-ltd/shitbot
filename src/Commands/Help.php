@@ -57,6 +57,7 @@ class Help extends Command
         > `!ip {ip}`: Obtain details about the supplied IP address.
         > `!joke`: Basic setup and punchline jokes.
         > `!rps {rock|paper|scissors}`: Play the most basic game on earth.
+        > `!uptime`: Reports how long the bot has been online as well as current and peak memory usage.
         > `!weather {location}`: I will gaze into the sky for you.
         > `!wiki {search}`: As if googling was hard enough.
         > `!yomomma`: Mom's are great. But not your mom.

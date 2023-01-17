@@ -51,6 +51,7 @@
 - `!ip {ip}`: Obtain details about the supplied IP address.
 - `!joke`: Basic setup and punchline jokes.
 - `!rps {rock|paper|scissors}`: Play the most basic game on earth.
+- `!uptime`: Reports how long the bot has been online as well as current and peak memory usage.
 - `!weather {location}`: Get the current weather for the given location.
 - `!wiki {search}`: Get the top 5 results from Wikipedia from your search.
 - `!yomomma`: YoMomma jokes.
