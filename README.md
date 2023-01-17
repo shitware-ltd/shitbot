@@ -31,7 +31,7 @@
 - `BOT_ACTIVITY_URL`: Only used for streaming.
 - `BOT_ACTIVITY_NAME`: Describe the bots activity.
 - `OWNER_IDS`: Supply your discord ID (separate multiple IDs with commas) to get elevated powers.
-- `OPENAI_TOKEN`: To use `!ask` or `!art`, you must get an API key from [OpenAI](https://beta.openai.com/account/api-keys).
+- `OPENAI_TOKEN`: To use `!ask`, `!art`, or `!variation`, you must get an API key from [OpenAI](https://beta.openai.com/account/api-keys).
 - `WEATHER_TOKEN`: To use `!weather`, you must get an API key from [Weather API](https://www.weatherapi.com).
 - `YOUTUBE_TOKEN`: To use `!yt`, you must get an API key from [Google Developers Console](https://console.developers.google.com).
 - `IP_TOKEN`: To use `!ip`, you must get an API key from [IP API](https://ip-api.com).
@@ -52,6 +52,7 @@
 - `!joke`: Basic setup and punchline jokes.
 - `!rps {rock|paper|scissors}`: Play the most basic game on earth.
 - `!uptime`: Reports how long the bot has been online as well as current and peak memory usage.
+- `!variation`: Uses OpenAI's **[DALLE-2]** to generate a new image variation based on your uploaded image.
 - `!weather {location}`: Get the current weather for the given location.
 - `!wiki {search}`: Get the top 5 results from Wikipedia from your search.
 - `!yomomma`: YoMomma jokes.

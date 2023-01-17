@@ -58,6 +58,7 @@ class Help extends Command
         > `!joke`: Basic setup and punchline jokes.
         > `!rps {rock|paper|scissors}`: Play the most basic game on earth.
         > `!uptime`: Reports how long the bot has been online as well as current and peak memory usage.
+        > `!variation`: Ask the A.I. overlords to reimagine your attached image. Must be a valid PNG file, less than 4MB, and square. **[DALLE-2]**
         > `!weather {location}`: I will gaze into the sky for you.
         > `!wiki {search}`: As if googling was hard enough.
         > `!yomomma`: Mom's are great. But not your mom.
