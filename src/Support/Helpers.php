@@ -61,8 +61,8 @@ class Helpers
     public static function isBotOrDirectMessage(Message|TypingStart $part): bool
     {
         if ($part instanceof Message) {
-            return $part->author->bot
-                || $part->guild === null;
+            return $part->guild === null
+                || ($part->author->bot && $part->attachments->count() === 0);
         }
 
         return $part->user->bot

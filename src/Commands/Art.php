@@ -2,8 +2,12 @@
 
 namespace ShitwareLtd\Shitbot\Commands;
 
+use Discord\Builders\Components\ActionRow;
+use Discord\Builders\Components\Button;
 use Discord\Builders\MessageBuilder;
+use Discord\Discord;
 use Discord\Parts\Channel\Message;
+use Discord\Parts\Interactions\Interaction;
 use Psr\Http\Message\ResponseInterface;
 use React\EventLoop\Loop;
 use ShitwareLtd\Shitbot\Bank\Bank;
@@ -81,6 +85,27 @@ class Art extends Command
                             ->addFileFromContent(
                                 filename: 'dalle_'.uniqid(more_entropy: true).'.png',
                                 content: base64_decode($result['data'][0]['b64_json'])
+                            )
+                            ->addComponent(
+                                component: ActionRow::new()
+                                    ->addComponent(
+                                        component: Button::new(
+                                            style: Button::STYLE_SECONDARY,
+                                        )
+                                        ->setLabel('Regenerate art')
+                                        ->setListener(function(Interaction $interaction) use ($args, $message) {
+                                            (new Art())->handle($message, $args);
+                                        }, Shitbot::discord())
+                                    )
+                                    ->addComponent(
+                                        component: Button::new(
+                                            style: Button::STYLE_PRIMARY,
+                                        )
+                                        ->setLabel('Generate variation')
+                                        ->setListener(function(Interaction $interaction) use ($args, $message, $result) {
+                                            (new Variation())->handle($interaction->message, []);
+                                        }, Shitbot::discord())
+                                    )
                             )
                     );
 
