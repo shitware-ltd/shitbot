@@ -3,6 +3,8 @@
 namespace ShitwareLtd\Shitbot\Support;
 
 use Discord\Parts\Channel\Message;
+use Discord\Parts\Interactions\Interaction;
+use Discord\Parts\User\User;
 use Discord\Parts\WebSockets\TypingStart;
 use Illuminate\Support\Str;
 use Psr\Http\Message\ResponseInterface;
@@ -55,14 +57,18 @@ class Helpers
     }
 
     /**
-     * @param  Message|TypingStart  $part
+     * @param  Message|TypingStart|Interaction  $part
      * @return bool
      */
-    public static function isBotOrDirectMessage(Message|TypingStart $part): bool
+    public static function isBotOrDirectMessage(Message|TypingStart|Interaction $part): bool
     {
+        if ($part instanceof Interaction) {
+            return false;
+        }
+
         if ($part instanceof Message) {
-            return $part->guild === null
-                || ($part->author->bot && $part->attachments->count() === 0);
+            return $part->author->bot
+                || $part->guild === null;
         }
 
         return $part->user->bot
@@ -70,13 +76,13 @@ class Helpers
     }
 
     /**
-     * @param  Message  $message
+     * @param  User  $user
      * @return bool
      */
-    public static function isOwner(Message $message): bool
+    public static function isOwner(User $user): bool
     {
         return in_array(
-            needle: $message->author->id,
+            needle: $user->id,
             haystack: Shitbot::owners()
         );
     }

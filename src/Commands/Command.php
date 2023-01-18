@@ -3,6 +3,8 @@
 namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Parts\Channel\Message;
+use Discord\Parts\Interactions\Interaction;
+use Discord\Parts\User\User;
 use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
@@ -34,20 +36,26 @@ abstract class Command
     }
 
     /**
-     * @param  Message  $message
+     * @param  Interaction|Message  $entity
      * @return bool
      */
-    protected function skip(Message $message): bool
+    protected function skip(Interaction|Message $entity): bool
     {
         if (Shitbot::paused()
-            || Helpers::isBotOrDirectMessage($message)) {
+            || Helpers::isBotOrDirectMessage($entity)) {
+            var_dump('FAILED');
             return true;
         }
 
-        $cooldown = $this->currentCooldown($message);
+        $user = $entity instanceof Message
+            ? $entity->author
+            : $entity->user;
+        var_dump($user);
+
+        $cooldown = $this->currentCooldown($user);
 
         if ($cooldown > 0) {
-            $message->reply("Slow down turbo, $cooldown second(s) until you can use `{$this->trigger()}` again ⏳");
+            $entity->reply("Slow down turbo, $cooldown second(s) until you can use `{$this->trigger()}` again ⏳");
 
             return true;
         }
@@ -70,49 +78,49 @@ abstract class Command
     }
 
     /**
-     * @param  Message  $message
+     * @param  User  $user
      * @return void
      */
-    protected function hitCooldown(Message $message): void
+    protected function hitCooldown(User $user): void
     {
-        if ($this->cooldown() === 0 || Helpers::isOwner($message)) {
+        if ($this->cooldown() === 0 || Helpers::isOwner($user)) {
             return;
         }
 
-        $this->cooldowns[$message->author->id] = $this->now() + $this->cooldown();
+        $this->cooldowns[$user->id] = $this->now() + $this->cooldown();
     }
 
     /**
-     * @param  Message  $message
+     * @param  User  $user
      * @return void
      */
-    protected function clearCooldown(Message $message):  void
+    protected function clearCooldown(User $user):  void
     {
-        if (isset($this->cooldowns[$message->author->id])) {
-            unset($this->cooldowns[$message->author->id]);
+        if (isset($this->cooldowns[$user->id])) {
+            unset($this->cooldowns[$user->id]);
         }
     }
 
     /**
-     * @param  Message  $message
+     * @param  User  $user
      * @return float|int
      */
-    private function currentCooldown(Message $message): float|int
+    private function currentCooldown(User $user): float|int
     {
-        if (! isset($this->cooldowns[$message->author->id])
+        if (! isset($this->cooldowns[$user->id])
             || $this->cooldown() === 0) {
             return 0;
         }
 
         $time = $this->now();
 
-        if ($this->cooldowns[$message->author->id] < $time) {
-            unset($this->cooldowns[$message->author->id]);
+        if ($this->cooldowns[$user->id] < $time) {
+            unset($this->cooldowns[$user->id]);
 
             return 0;
         }
 
-        return ceil(($this->cooldowns[$message->author->id] - $time) / 1000);
+        return ceil(($this->cooldowns[$user->id] - $time) / 1000);
     }
 
     /**

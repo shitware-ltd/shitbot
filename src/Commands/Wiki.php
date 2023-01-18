@@ -65,7 +65,7 @@ class Wiki extends Command
 
                     $message->reply($reply);
 
-                    $this->hitCooldown($message);
+                    $this->hitCooldown($message->author);
 
                     return;
                 }

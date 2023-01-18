@@ -65,6 +65,11 @@ class Shitbot
     private static ?LoopInterface $loop = null;
 
     /**
+     * @var array
+     */
+    private static array $commandInstances = [];
+
+    /**
      * @var array<Command>
      */
     private array $prefixCommands = [
@@ -155,6 +160,20 @@ class Shitbot
     }
 
     /**
+     * @param  string  $commandClass
+     * @return Command
+     * @throws \Exception
+     */
+    public static function commandInstances(string $commandClass): Command
+    {
+        if (! isset(static::$commandInstances[$commandClass])) {
+            throw new \Exception('You fucked.');
+        }
+
+        return static::$commandInstances[$commandClass];
+    }
+
+    /**
      * @return Browser
      */
     public static function browser(): Browser
@@ -194,11 +213,13 @@ class Shitbot
     private function registerPrefixCommands(): void
     {
         foreach ($this->prefixCommands as $command) {
-            $command = new $command();
+            $commandInstance = new $command();
+
+            static::$commandInstances[$command] = $commandInstance;
 
             static::$discord->registerCommand(
-                command: $command->trigger(),
-                callable: [$command, 'handle']
+                command: $commandInstance->trigger(),
+                callable: [$commandInstance, 'handle']
             );
         }
     }

@@ -48,7 +48,7 @@ class Art extends Command
                 return;
             }
 
-            $this->hitCooldown($message);
+            $this->hitCooldown($message->author);
 
             $message->channel->broadcastTyping();
 
@@ -94,7 +94,7 @@ class Art extends Command
                                         )
                                         ->setLabel('Regenerate art')
                                         ->setListener(function(Interaction $interaction) use ($args, $message) {
-                                            (new Art())->handle($message, $args);
+                                            Shitbot::commandInstances(Art::class)->handle($message, $args);
                                         }, Shitbot::discord())
                                     )
                                     ->addComponent(
@@ -103,7 +103,7 @@ class Art extends Command
                                         )
                                         ->setLabel('Generate variation')
                                         ->setListener(function(Interaction $interaction) use ($args, $message, $result) {
-                                            (new Variation())->handle($interaction->message, []);
+                                            Shitbot::commandInstances(Variation::class)->handle($interaction, []);
                                         }, Shitbot::discord())
                                     )
                             )
@@ -114,16 +114,16 @@ class Art extends Command
                         units: 1
                     );
 
-                    $this->hitCooldown($message);
+                    $this->hitCooldown($message->author);
                 } else {
-                    $this->clearCooldown($message);
+                    $this->clearCooldown($message->author);
 
                     $message->reply($this->formatError(
                         $result['error']['message']
                     ));
                 }
             } catch (Throwable $e) {
-                $this->clearCooldown($message);
+                $this->clearCooldown($message->author);
 
                 $message->reply($this->formatError(
                     $e->getMessage()

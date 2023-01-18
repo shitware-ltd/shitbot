@@ -35,7 +35,7 @@ class Help extends Command
 
         $message->reply($this->message());
 
-        $this->hitCooldown($message);
+        $this->hitCooldown($message->author);
     }
 
     /**

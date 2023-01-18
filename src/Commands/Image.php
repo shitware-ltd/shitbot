@@ -50,7 +50,7 @@ class Image extends Command
                         )
                 );
 
-                $this->hitCooldown($message);
+                $this->hitCooldown($message->author);
             } catch (Throwable) {
                 //Not important
             }

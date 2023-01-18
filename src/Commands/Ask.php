@@ -43,7 +43,7 @@ class Ask extends Command
                 return;
             }
 
-            $this->hitCooldown($message);
+            $this->hitCooldown($message->author);
 
             $message->channel->broadcastTyping();
 
@@ -86,9 +86,9 @@ class Ask extends Command
                     units: $response['usage']['total_tokens']
                 );
 
-                $this->hitCooldown($message);
+                $this->hitCooldown($message->author);
             } catch (Throwable $e) {
-                $this->clearCooldown($message);
+                $this->clearCooldown($message->author);
 
                 $message->reply($this->formatError(
                     $e->getMessage()

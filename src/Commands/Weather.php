@@ -58,7 +58,7 @@ class Weather extends Command
 
                 $message->reply($this->makeWeather($result));
 
-                $this->hitCooldown($message);
+                $this->hitCooldown($message->author);
 
                 return;
             } catch (Throwable) {

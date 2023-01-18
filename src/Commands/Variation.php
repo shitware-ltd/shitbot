@@ -5,6 +5,7 @@ namespace ShitwareLtd\Shitbot\Commands;
 use Discord\Builders\MessageBuilder;
 use Discord\Parts\Channel\Attachment;
 use Discord\Parts\Channel\Message;
+use Discord\Parts\Interactions\Interaction;
 use Psr\Http\Message\ResponseInterface;
 use React\EventLoop\Loop;
 use ShitwareLtd\Shitbot\Bank\Bank;
@@ -34,19 +35,26 @@ class Variation extends Command
     }
 
     /**
-     * @param  Message  $message
+     * @param  Message|Interaction  $message
      * @param  array  $args
      * @return void
      */
-    public function handle(Message $message, array $args): void
+    public function handle(Message|Interaction $message, array $args): void
     {
-        coroutine(function (Message $message) {
-            if ($this->skip($message)
-                || ! $this->passesInitialChecks($message)) {
+        coroutine(function (Message|Interaction $entity) {
+            if ($this->skip($entity)) {
                 return;
             }
 
-            $this->hitCooldown($message);
+            $message = $entity instanceof Message
+                ? $entity
+                : $entity->message;
+
+            if (! $this->passesInitialChecks($message)) {
+                return;
+            }
+
+            $this->hitCooldown($message->author);
 
             $message->channel->broadcastTyping();
 
@@ -98,16 +106,16 @@ class Variation extends Command
                         units: 1
                     );
 
-                    $this->hitCooldown($message);
+                    $this->hitCooldown($message->author);
                 } else {
-                    $this->clearCooldown($message);
+                    $this->clearCooldown($message->author);
 
                     $message->reply($this->formatError(
                         $result['error']['message']
                     ));
                 }
             } catch (Throwable $e) {
-                $this->clearCooldown($message);
+                $this->clearCooldown($message->author);
 
                 $message->reply($this->formatError(
                     $e->getMessage()
