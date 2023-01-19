@@ -159,7 +159,7 @@ class Variation extends Command
                 $this->buildActionRow()
             );
         } else {
-            $builder->setContent("<@{$entity->user->id}>");
+            $builder->setContent("<@{$entity->user->id}>, here is your variation:");
         }
 
         return $builder->addFileFromContent(
