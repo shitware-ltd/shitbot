@@ -7,11 +7,13 @@ use Discord\Builders\Components\Button;
 use Discord\Builders\MessageBuilder;
 use Discord\Parts\Channel\Message;
 use Discord\Parts\Interactions\Interaction;
+use Illuminate\Support\Str;
 use Psr\Http\Message\ResponseInterface;
 use React\EventLoop\Loop;
 use ShitwareLtd\Shitbot\Bank\Bank;
 use ShitwareLtd\Shitbot\Bank\Item;
 use ShitwareLtd\Shitbot\Shitbot;
+use ShitwareLtd\Shitbot\Support\Emoji;
 use ShitwareLtd\Shitbot\Support\Helpers;
 use Throwable;
 
@@ -52,65 +54,67 @@ class Art extends Command
 
             $this->hitCooldown($user);
 
-//            $message->channel->broadcastTyping();
-//
-//            $typing = Loop::addPeriodicTimer(
-//                interval: 4,
-//                callback: fn () => $message->channel->broadcastTyping()
-//            );
+            $message->channel->broadcastTyping();
+
+            $typing = Loop::addPeriodicTimer(
+                interval: 4,
+                callback: fn () => $message->channel->broadcastTyping()
+            );
 
             try {
-//                /** @var ResponseInterface $response */
-//                $response = yield Shitbot::browser()
-//                    ->withTimeout(60.0)
-//                    ->withRejectErrorResponse(false)
-//                    ->post(
-//                        url: 'https://api.openai.com/v1/images/generations',
-//                        headers: [
-//                            'Authorization' => 'Bearer '.Shitbot::config('OPENAI_TOKEN'),
-//                            'Content-Type' => 'application/json',
-//                        ],
-//                        body: json_encode([
-//                            'n' => 1,
-//                            'prompt' => Helpers::implodeContent($args),
-//                            'response_format' => 'b64_json',
-//                            'size' => '1024x1024',
-//                        ])
-//                    );
+                /** @var ResponseInterface $response */
+                $response = yield Shitbot::browser()
+                    ->withTimeout(60.0)
+                    ->withRejectErrorResponse(false)
+                    ->post(
+                        url: 'https://api.openai.com/v1/images/generations',
+                        headers: [
+                            'Authorization' => 'Bearer '.Shitbot::config('OPENAI_TOKEN'),
+                            'Content-Type' => 'application/json',
+                        ],
+                        body: json_encode([
+                            'n' => 1,
+                            'prompt' => Helpers::implodeContent($args),
+                            'response_format' => 'b64_json',
+                            'size' => '1024x1024',
+                        ])
+                    );
 
-//                $result = Helpers::json($response);
+                $result = Helpers::json($response);
 
-//                if ($response->getStatusCode() === 200) {
+                if ($response->getStatusCode() === 200) {
                     $message->channel->sendMessage(
                         $this->buildMessage(
                             entity: $entity,
-                            result: [],
+                            result: $result,
                             args: $args
                         )
                     );
 
-//                    Bank::for($user)->charge(
-//                        item: Item::Dalle2,
-//                        units: 1
-//                    );
+                    Bank::for($user)->charge(
+                        item: Item::Dalle2,
+                        units: 1
+                    );
 
                     $this->hitCooldown($user);
-//                } else {
-//                    $this->clearCooldown($user);
-//
-//                    $entity->reply($this->formatError(
-//                        $result['error']['message']
-//                    ));
-//                }
+                } else {
+                    $this->clearCooldown($user);
+
+                    $this->sendError(
+                        entity: $entity,
+                        error: $result['error']['message']
+                    );
+                }
             } catch (Throwable $e) {
                 $this->clearCooldown($user);
 
-                $entity->reply($this->formatError(
-                    $e->getMessage()
-                ));
+                $this->sendError(
+                    entity: $entity,
+                    error: $e->getMessage()
+                );
             }
 
-//            Loop::cancelTimer($typing);
+            Loop::cancelTimer($typing);
         }, $entity, $args);
     }
 
@@ -124,11 +128,6 @@ class Art extends Command
     {
         $builder = MessageBuilder::new();
 
-//        $builder->addFileFromContent(
-//            filename: 'dalle_'.uniqid(more_entropy: true).'.png',
-//            content: base64_decode($result['data'][0]['b64_json'])
-//        );
-
         iF ($entity instanceof Message) {
             $builder->addComponent(
                 $this->buildActionRow(
@@ -137,15 +136,25 @@ class Art extends Command
                 )
             )->setReplyTo($entity);
         } else {
+            $prompt = Str::after(
+                subject: $entity->message->content,
+                search: '!art '
+            );
+            $text = "<@{$entity->user->id}>, retried prompt:".PHP_EOL;
+            $text .= "> $prompt";
+
             $builder->addComponent(
                 $this->buildActionRow(
                     args: $args,
                     withRetry: false
                 )
-            )->setContent("<@{$entity->user->id}>");
+            )->setContent($text);
         }
 
-        return $builder;
+        return $builder->addFileFromContent(
+            filename: 'dalle_'.uniqid(more_entropy: true).'.png',
+            content: base64_decode($result['data'][0]['b64_json'])
+        );
     }
 
     /**
@@ -160,7 +169,8 @@ class Art extends Command
         if ($withRetry) {
             $action->addComponent(
                 Button::new(Button::STYLE_PRIMARY)
-                    ->setLabel('Try Prompt Again')
+                    ->setLabel('Retry Prompt')
+                    ->setEmoji(Emoji::get())
                     ->setListener(
                         callback: fn (Interaction $interaction) => Shitbot::command(Art::class)->handle(
                             entity: $interaction,
@@ -171,9 +181,10 @@ class Art extends Command
             );
         }
 
-        $action->addComponent(
+        return $action->addComponent(
             Button::new(Button::STYLE_SUCCESS)
                 ->setLabel('Generate Variation')
+                ->setEmoji(Emoji::get())
                 ->setListener(
                     callback: fn (Interaction $interaction) => Shitbot::command(Variation::class)->handle(
                         entity: $interaction,
@@ -182,7 +193,5 @@ class Art extends Command
                     discord: Shitbot::discord()
                 )
         );
-
-        return $action;
     }
 }

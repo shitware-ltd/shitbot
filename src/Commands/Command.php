@@ -2,6 +2,8 @@
 
 namespace ShitwareLtd\Shitbot\Commands;
 
+use Discord\Builders\MessageBuilder;
+use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
 use Discord\Parts\Interactions\Interaction;
 use Discord\Parts\User\User;
@@ -34,6 +36,8 @@ abstract class Command
     /**
      * @param  Interaction|Message  $entity
      * @return bool
+     *
+     * @throws NoPermissionsException
      */
     protected function skip(Interaction|Message $entity): bool
     {
@@ -47,26 +51,15 @@ abstract class Command
         );
 
         if ($cooldown > 0) {
-            $entity->reply("Slow down turbo, $cooldown second(s) until you can use `{$this->trigger()}` again ⏳");
+            $this->sendSlowdown(
+                entity: $entity,
+                cooldown: $cooldown
+            );
 
             return true;
         }
 
         return false;
-    }
-
-    /**
-     * @param  string  $message
-     * @return string
-     */
-    protected function formatError(string $message): string
-    {
-        $reply = 'You broke me. Please try again.'.PHP_EOL;
-        $reply .= '```diff'.PHP_EOL;
-        $reply .= "- $message".PHP_EOL;
-        $reply .= '```';
-
-        return $reply;
     }
 
     /**
@@ -91,6 +84,55 @@ abstract class Command
         if (isset($this->cooldowns[$user->id])) {
             unset($this->cooldowns[$user->id]);
         }
+    }
+
+    /**
+     * @param  Interaction|Message  $entity
+     * @param  string  $error
+     * @return void
+     *
+     * @throws NoPermissionsException
+     */
+    protected function sendError(Interaction|Message $entity, string $error): void
+    {
+        $message = Helpers::getMessage($entity);
+        $builder = MessageBuilder::new();
+        $text = <<<EOT
+        You broke me. Please try again.
+        ```diff
+        - $error
+        ```
+        EOT;
+
+        if ($entity instanceof Message) {
+            $builder->setReplyTo($message)->setContent($text);
+        } else {
+            $builder->setContent("<@{$entity->user->id}>, $text");
+        }
+
+        $message->channel->sendMessage($builder);
+    }
+
+    /**
+     * @param  Interaction|Message  $entity
+     * @param  int|float  $cooldown
+     * @return void
+     *
+     * @throws NoPermissionsException
+     */
+    private function sendSlowdown(Interaction|Message $entity, int|float $cooldown): void
+    {
+        $text = "Slow down turbo, $cooldown second(s) until you can use `{$this->trigger()}` again ⏳";
+        $message = Helpers::getMessage($entity);
+        $builder = MessageBuilder::new();
+
+        if ($entity instanceof Message) {
+            $builder->setReplyTo($message)->setContent($text);
+        } else {
+            $builder->setContent("<@{$entity->user->id}>, $text");
+        }
+
+        $message->channel->sendMessage($builder);
     }
 
     /**

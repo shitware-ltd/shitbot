@@ -3,6 +3,7 @@
 namespace ShitwareLtd\Shitbot\Commands;
 
 use Carbon\CarbonInterface;
+use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
 use Illuminate\Support\Carbon;
 use ShitwareLtd\Shitbot\Support\Helpers;
@@ -29,6 +30,8 @@ class Uptime extends Command
      * @param  Message  $entity
      * @param  array  $args
      * @return void
+     *
+     * @throws NoPermissionsException
      */
     public function handle(Message $entity, array $args): void
     {

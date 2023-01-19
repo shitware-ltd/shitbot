@@ -46,12 +46,12 @@ class Variation extends Command
                 return;
             }
 
-            $message = Helpers::getMessage($entity);
-
-            if (! $this->passesInitialChecks($message)) {
+            if ($entity instanceof Message
+                && ! $this->passesInitialChecks($entity)) {
                 return;
             }
 
+            $message = Helpers::getMessage($entity);
             $user = Helpers::getUser($entity);
 
             $this->hitCooldown($user);
@@ -110,16 +110,18 @@ class Variation extends Command
                 } else {
                     $this->clearCooldown($user);
 
-                    $message->reply($this->formatError(
-                        $result['error']['message']
-                    ));
+                    $this->sendError(
+                        entity: $entity,
+                        error: $result['error']['message']
+                    );
                 }
             } catch (Throwable $e) {
                 $this->clearCooldown($user);
 
-                $message->reply($this->formatError(
-                    $e->getMessage()
-                ));
+                $this->sendError(
+                    entity: $entity,
+                    error: $e->getMessage()
+                );
             }
 
             Loop::cancelTimer($typing);

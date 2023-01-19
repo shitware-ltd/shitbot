@@ -90,9 +90,10 @@ class Ask extends Command
             } catch (Throwable $e) {
                 $this->clearCooldown($entity->author);
 
-                $entity->reply($this->formatError(
-                    $e->getMessage()
-                ));
+                $this->sendError(
+                    entity: $entity,
+                    error: $e->getMessage()
+                );
             }
 
             Loop::cancelTimer($typing);

@@ -2,6 +2,7 @@
 
 namespace ShitwareLtd\Shitbot\Commands;
 
+use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
 use Illuminate\Support\Collection;
 use ShitwareLtd\Shitbot\Support\Helpers;
@@ -25,6 +26,8 @@ class YoMomma extends Command
      * @param  Message  $entity
      * @param  array  $args
      * @return void
+     *
+     * @throws NoPermissionsException
      */
     public function handle(Message $entity, array $args): void
     {
