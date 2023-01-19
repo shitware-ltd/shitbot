@@ -2,6 +2,8 @@
 
 namespace ShitwareLtd\Shitbot\Commands;
 
+use Discord\Builders\Components\ActionRow;
+use Discord\Builders\Components\Button;
 use Discord\Builders\MessageBuilder;
 use Discord\Parts\Channel\Attachment;
 use Discord\Parts\Channel\Message;
@@ -11,6 +13,7 @@ use React\EventLoop\Loop;
 use ShitwareLtd\Shitbot\Bank\Bank;
 use ShitwareLtd\Shitbot\Bank\Item;
 use ShitwareLtd\Shitbot\Shitbot;
+use ShitwareLtd\Shitbot\Support\Emoji;
 use ShitwareLtd\Shitbot\Support\Helpers;
 use Throwable;
 
@@ -93,12 +96,10 @@ class Variation extends Command
 
                 if ($response->getStatusCode() === 200) {
                     $message->channel->sendMessage(
-                        MessageBuilder::new()
-                            ->setReplyTo($message)
-                            ->addFileFromContent(
-                                filename: 'dalle_'.uniqid(more_entropy: true).'.png',
-                                content: base64_decode($result['data'][0]['b64_json'])
-                            )
+                        $this->buildMessage(
+                            entity: $entity,
+                            result: $result
+                        )
                     );
 
                     Bank::for($user)->charge(
@@ -142,6 +143,48 @@ class Variation extends Command
         }
 
         return true;
+    }
+
+    /**
+     * @param  Message|Interaction  $entity
+     * @param  array  $result
+     * @return MessageBuilder
+     */
+    private function buildMessage(Message|Interaction $entity, array $result): MessageBuilder
+    {
+        $builder = MessageBuilder::new();
+
+        iF ($entity instanceof Message) {
+            $builder->setReplyTo($entity)->addComponent(
+                $this->buildActionRow()
+            );
+        } else {
+            $builder->setContent("<@{$entity->user->id}>");
+        }
+
+        return $builder->addFileFromContent(
+            filename: 'dalle_'.uniqid(more_entropy: true).'.png',
+            content: base64_decode($result['data'][0]['b64_json'])
+        );
+    }
+
+    /**
+     * @return ActionRow
+     */
+    private function buildActionRow(): ActionRow
+    {
+        return ActionRow::new()->addComponent(
+            Button::new(Button::STYLE_SUCCESS)
+                ->setLabel('Retry Variation')
+                ->setEmoji(Emoji::get())
+                ->setListener(
+                    callback: fn (Interaction $interaction) => Shitbot::command(Variation::class)->handle(
+                        entity: $interaction,
+                        args: []
+                    ),
+                    discord: Shitbot::discord()
+                )
+        );
     }
 
     /**

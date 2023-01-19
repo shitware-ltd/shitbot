@@ -136,12 +136,9 @@ class Art extends Command
                 )
             )->setReplyTo($entity);
         } else {
-            $prompt = Str::after(
-                subject: $entity->message->content,
-                search: '!art '
-            );
+            $prompt = Helpers::implodeContent($args);
             $text = "<@{$entity->user->id}>, retried prompt:".PHP_EOL;
-            $text .= "> $prompt";
+            $text .= "> $prompt".PHP_EOL;
 
             $builder->addComponent(
                 $this->buildActionRow(
@@ -188,7 +185,7 @@ class Art extends Command
                 ->setListener(
                     callback: fn (Interaction $interaction) => Shitbot::command(Variation::class)->handle(
                         entity: $interaction,
-                        args: $args
+                        args: []
                     ),
                     discord: Shitbot::discord()
                 )
