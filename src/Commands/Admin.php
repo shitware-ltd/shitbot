@@ -20,13 +20,13 @@ class Admin extends Command
     }
 
     /**
-     * @param  Message  $message
+     * @param  Message  $entity
      * @param  array  $args
      * @return void
      */
-    public function handle(Message $message, array $args): void
+    public function handle(Message $entity, array $args): void
     {
-        if (! Helpers::isOwner($message)) {
+        if (! Helpers::isOwner($entity->author)) {
             return;
         }
 
@@ -39,7 +39,7 @@ class Admin extends Command
         };
 
         if ($matched) {
-            $message->react('a:verified:903877054271979522')
+            $entity->react('a:verified:903877054271979522')
                 ->then(function () use ($matched) {
                     if (is_callable($matched)) {
                         $matched();

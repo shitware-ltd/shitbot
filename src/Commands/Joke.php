@@ -22,13 +22,13 @@ class Joke extends Command
     }
 
     /**
-     * @param  Message  $message
+     * @param  Message  $entity
      * @param  array  $args
      * @return void
      */
-    public function handle(Message $message, array $args): void
+    public function handle(Message $entity, array $args): void
     {
-        if ($this->skip($message)) {
+        if ($this->skip($entity)) {
             return;
         }
 
@@ -37,7 +37,7 @@ class Joke extends Command
         $reply = $joke['setup'].PHP_EOL;
         $reply .= "||{$joke['punchline']}||";
 
-        $message->reply($reply);
+        $entity->reply($reply);
     }
 
     /**

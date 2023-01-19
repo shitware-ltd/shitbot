@@ -35,26 +35,26 @@ class Variation extends Command
     }
 
     /**
-     * @param  Message|Interaction  $message
+     * @param  Message|Interaction  $entity
      * @param  array  $args
      * @return void
      */
-    public function handle(Message|Interaction $message, array $args): void
+    public function handle(Message|Interaction $entity, array $args): void
     {
         coroutine(function (Message|Interaction $entity) {
             if ($this->skip($entity)) {
                 return;
             }
 
-            $message = $entity instanceof Message
-                ? $entity
-                : $entity->message;
+            $message = Helpers::getMessage($entity);
 
             if (! $this->passesInitialChecks($message)) {
                 return;
             }
 
-            $this->hitCooldown($message->author);
+            $user = Helpers::getUser($entity);
+
+            $this->hitCooldown($user);
 
             $message->channel->broadcastTyping();
 
@@ -101,21 +101,21 @@ class Variation extends Command
                             )
                     );
 
-                    Bank::for($message->author)->charge(
+                    Bank::for($user)->charge(
                         item: Item::Dalle2,
                         units: 1
                     );
 
-                    $this->hitCooldown($message->author);
+                    $this->hitCooldown($user);
                 } else {
-                    $this->clearCooldown($message->author);
+                    $this->clearCooldown($user);
 
                     $message->reply($this->formatError(
                         $result['error']['message']
                     ));
                 }
             } catch (Throwable $e) {
-                $this->clearCooldown($message->author);
+                $this->clearCooldown($user);
 
                 $message->reply($this->formatError(
                     $e->getMessage()
@@ -123,7 +123,7 @@ class Variation extends Command
             }
 
             Loop::cancelTimer($typing);
-        }, $message);
+        }, $entity);
     }
 
     /**

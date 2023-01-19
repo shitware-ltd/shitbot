@@ -21,14 +21,14 @@ class Chuck extends Command
     }
 
     /**
-     * @param  Message  $message
+     * @param  Message  $entity
      * @param  array  $args
      * @return void
      */
-    public function handle(Message $message, array $args): void
+    public function handle(Message $entity, array $args): void
     {
-        coroutine(function (Message $message) {
-            if ($this->skip($message)) {
+        coroutine(function (Message $entity) {
+            if ($this->skip($entity)) {
                 return;
             }
 
@@ -38,10 +38,10 @@ class Chuck extends Command
 
                 $result = Helpers::json($response);
 
-                $message->reply("💀 {$result['value']}");
+                $entity->reply("💀 {$result['value']}");
             } catch (Throwable) {
                 //Not important
             }
-        }, $message);
+        }, $entity);
     }
 }

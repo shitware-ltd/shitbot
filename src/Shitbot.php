@@ -10,6 +10,7 @@ use Discord\Parts\Interactions\Command\Command as SlashCommand;
 use Discord\Parts\Interactions\Interaction;
 use Discord\Parts\WebSockets\TypingStart as Typing;
 use Discord\WebSockets\Event;
+use Exception;
 use React\EventLoop\LoopInterface;
 use React\Http\Browser;
 use ShitwareLtd\Shitbot\Commands\Admin;
@@ -67,7 +68,7 @@ class Shitbot
     /**
      * @var array
      */
-    private static array $commandInstances = [];
+    private static array $commands = [];
 
     /**
      * @var array<Command>
@@ -160,17 +161,18 @@ class Shitbot
     }
 
     /**
-     * @param  string  $commandClass
+     * @param  string  $command
      * @return Command
-     * @throws \Exception
+     *
+     * @throws Exception
      */
-    public static function commandInstances(string $commandClass): Command
+    public static function command(string $command): Command
     {
-        if (! isset(static::$commandInstances[$commandClass])) {
-            throw new \Exception('You fucked.');
+        if (! isset(static::$commands[$command])) {
+            throw new Exception('Invalid Command.');
         }
 
-        return static::$commandInstances[$commandClass];
+        return static::$commands[$command];
     }
 
     /**
@@ -213,13 +215,13 @@ class Shitbot
     private function registerPrefixCommands(): void
     {
         foreach ($this->prefixCommands as $command) {
-            $commandInstance = new $command();
+            $instance = new $command();
 
-            static::$commandInstances[$command] = $commandInstance;
+            static::$commands[$command] = $instance;
 
             static::$discord->registerCommand(
-                command: $commandInstance->trigger(),
-                callable: [$commandInstance, 'handle']
+                command: $instance->trigger(),
+                callable: [$instance, 'handle']
             );
         }
     }

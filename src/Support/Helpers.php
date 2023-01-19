@@ -62,17 +62,41 @@ class Helpers
      */
     public static function isBotOrDirectMessage(Message|TypingStart|Interaction $part): bool
     {
-        if ($part instanceof Interaction) {
-            return false;
-        }
-
         if ($part instanceof Message) {
             return $part->author->bot
                 || $part->guild === null;
         }
 
-        return $part->user->bot
-            || $part->guild === null;
+        if ($part instanceof TypingStart) {
+            return $part->user->bot
+                || $part->guild === null;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param  Message|Interaction  $entity
+     * @return User
+     */
+    public static function getUser(Message|Interaction $entity): User
+    {
+        if ($entity instanceof Message) {
+            return $entity->author;
+        }
+
+        return $entity->user;
+    }
+
+    /**
+     * @param  Message|Interaction  $entity
+     * @return Message
+     */
+    public static function getMessage(Message|Interaction $entity): Message
+    {
+        return $entity instanceof Message
+            ? $entity
+            : $entity->message;
     }
 
     /**

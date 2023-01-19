@@ -32,24 +32,24 @@ class Ask extends Command
     }
 
     /**
-     * @param  Message  $message
+     * @param  Message  $entity
      * @param  array  $args
      * @return void
      */
-    public function handle(Message $message, array $args): void
+    public function handle(Message $entity, array $args): void
     {
-        coroutine(function (Message $message, array $args) {
-            if ($this->skip($message)) {
+        coroutine(function (Message $entity, array $args) {
+            if ($this->skip($entity)) {
                 return;
             }
 
-            $this->hitCooldown($message->author);
+            $this->hitCooldown($entity->author);
 
-            $message->channel->broadcastTyping();
+            $entity->channel->broadcastTyping();
 
             $typing = Loop::addPeriodicTimer(
                 interval: 4,
-                callback: fn () => $message->channel->broadcastTyping()
+                callback: fn () => $entity->channel->broadcastTyping()
             );
 
             try {
@@ -75,27 +75,27 @@ class Ask extends Command
 
                 foreach (Helpers::splitMessage($response['choices'][0]['text']) as $key => $chunk) {
                     if ($key === 0) {
-                        $message->reply($chunk);
+                        $entity->reply($chunk);
                     } else {
-                        $message->channel->sendMessage($chunk);
+                        $entity->channel->sendMessage($chunk);
                     }
                 }
 
-                Bank::for($message->author)->charge(
+                Bank::for($entity->author)->charge(
                     item: Item::Davinci003,
                     units: $response['usage']['total_tokens']
                 );
 
-                $this->hitCooldown($message->author);
+                $this->hitCooldown($entity->author);
             } catch (Throwable $e) {
-                $this->clearCooldown($message->author);
+                $this->clearCooldown($entity->author);
 
-                $message->reply($this->formatError(
+                $entity->reply($this->formatError(
                     $e->getMessage()
                 ));
             }
 
             Loop::cancelTimer($typing);
-        }, $message, $args);
+        }, $entity, $args);
     }
 }

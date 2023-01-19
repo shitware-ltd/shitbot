@@ -29,14 +29,14 @@ class Ip extends Command
     }
 
     /**
-     * @param  Message  $message
+     * @param  Message  $entity
      * @param  array  $args
      * @return void
      */
-    public function handle(Message $message, array $args): void
+    public function handle(Message $entity, array $args): void
     {
-        coroutine(function (Message $message, array $args) {
-            if ($this->skip($message)) {
+        coroutine(function (Message $entity, array $args) {
+            if ($this->skip($entity)) {
                 return;
             }
 
@@ -62,12 +62,12 @@ class Ip extends Command
                 ).PHP_EOL;
                 $reply .= '```';
 
-                $message->reply($reply);
+                $entity->reply($reply);
 
-                $this->hitCooldown($message->author);
+                $this->hitCooldown($entity->author);
             } catch (Throwable) {
                 //Not important
             }
-        }, $message, $args);
+        }, $entity, $args);
     }
 }

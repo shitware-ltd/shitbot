@@ -34,26 +34,26 @@ class RockPaperScissors extends Command
     }
 
     /**
-     * @param  Message  $message
+     * @param  Message  $entity
      * @param  array  $args
      * @return void
      */
-    public function handle(Message $message, array $args): void
+    public function handle(Message $entity, array $args): void
     {
-        if ($this->skip($message)) {
+        if ($this->skip($entity)) {
             return;
         }
 
         if (! is_null($choice = $this->getChoice($args))) {
-            $message->reply($this->makeGameMessage(
-                message: $message,
+            $entity->reply($this->makeGameMessage(
+                message: $entity,
                 choice: $choice
             ));
 
             return;
         }
 
-        $message->reply('Please select a valid choice, i.e. ( !rps rock|paper|scissors )');
+        $entity->reply('Please select a valid choice, i.e. ( !rps rock|paper|scissors )');
     }
 
     /**

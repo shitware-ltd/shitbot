@@ -24,17 +24,17 @@ class Balance extends Command
     }
 
     /**
-     * @param  Message  $message
+     * @param  Message  $entity
      * @param  array  $args
      * @return void
      */
-    public function handle(Message $message, array $args): void
+    public function handle(Message $entity, array $args): void
     {
-        if ($this->skip($message)) {
+        if ($this->skip($entity)) {
             return;
         }
 
-        $expenses = Bank::for($message->author)->expenses();
+        $expenses = Bank::for($entity->author)->expenses();
 
         $reply = "You have spent: **$$expenses->total**".PHP_EOL.PHP_EOL;
         $reply .= 'Here is an overview of your expenses:'.PHP_EOL;
@@ -43,8 +43,8 @@ class Balance extends Command
             $reply .= "> [ $item ]: **$$total**".PHP_EOL;
         }
 
-        $message->reply($reply);
+        $entity->reply($reply);
 
-        $this->hitCooldown($message->author);
+        $this->hitCooldown($entity->author);
     }
 }

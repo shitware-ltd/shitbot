@@ -8,19 +8,15 @@ use Discord\Parts\User\User;
 use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
+/**
+ * @method handle(Message|Interaction $entity, array $args)
+ */
 abstract class Command
 {
     /**
      * @var array
      */
     private array $cooldowns = [];
-
-    /**
-     * @param  Message  $message
-     * @param  array  $args
-     * @return  void
-     */
-    abstract public function handle(Message $message, array $args): void;
 
     /**
      * @return string
@@ -43,16 +39,12 @@ abstract class Command
     {
         if (Shitbot::paused()
             || Helpers::isBotOrDirectMessage($entity)) {
-            var_dump('FAILED');
             return true;
         }
 
-        $user = $entity instanceof Message
-            ? $entity->author
-            : $entity->user;
-        var_dump($user);
-
-        $cooldown = $this->currentCooldown($user);
+        $cooldown = $this->currentCooldown(
+            Helpers::getUser($entity)
+        );
 
         if ($cooldown > 0) {
             $entity->reply("Slow down turbo, $cooldown second(s) until you can use `{$this->trigger()}` again ⏳");

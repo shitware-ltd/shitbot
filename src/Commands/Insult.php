@@ -22,14 +22,14 @@ class Insult extends Command
     }
 
     /**
-     * @param  Message  $message
+     * @param  Message  $entity
      * @param  array  $args
      * @return void
      */
-    public function handle(Message $message, array $args): void
+    public function handle(Message $entity, array $args): void
     {
-        coroutine(function (Message $message) {
-            if ($this->skip($message)) {
+        coroutine(function (Message $entity) {
+            if ($this->skip($entity)) {
                 return;
             }
 
@@ -44,23 +44,23 @@ class Insult extends Command
 
                 $result = Helpers::json($response);
 
-                if (! $message->mentions->count()) {
-                    $message->channel->sendMessage("<@{$message->author->id}>, {$result['insult']}");
+                if (! $entity->mentions->count()) {
+                    $entity->channel->sendMessage("<@{$entity->author->id}>, {$result['insult']}");
 
                     return;
                 }
 
                 $mentions = implode(
                     separator: ', ',
-                    array: $message->mentions
+                    array: $entity->mentions
                         ->map(fn (User $user): string => "<@$user->id>")
                         ->toArray()
                 );
 
-                $message->channel->sendMessage("$mentions, {$result['insult']}");
+                $entity->channel->sendMessage("$mentions, {$result['insult']}");
             } catch (Throwable) {
                 //Not important
             }
-        }, $message);
+        }, $entity);
     }
 }

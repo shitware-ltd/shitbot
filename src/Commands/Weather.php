@@ -31,14 +31,14 @@ class Weather extends Command
     }
 
     /**
-     * @param  Message  $message
+     * @param  Message  $entity
      * @param  array  $args
      * @return void
      */
-    public function handle(Message $message, array $args): void
+    public function handle(Message $entity, array $args): void
     {
-        coroutine(function (Message $message, array $args) {
-            if ($this->skip($message)) {
+        coroutine(function (Message $entity, array $args) {
+            if ($this->skip($entity)) {
                 return;
             }
 
@@ -56,17 +56,17 @@ class Weather extends Command
 
                 $result = Helpers::json($response);
 
-                $message->reply($this->makeWeather($result));
+                $entity->reply($this->makeWeather($result));
 
-                $this->hitCooldown($message->author);
+                $this->hitCooldown($entity->author);
 
                 return;
             } catch (Throwable) {
                 //Not important
             }
 
-            $message->reply("No results for `$location`");
-        }, $message, $args);
+            $entity->reply("No results for `$location`");
+        }, $entity, $args);
     }
 
     /**

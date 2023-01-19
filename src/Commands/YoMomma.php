@@ -22,17 +22,17 @@ class YoMomma extends Command
     }
 
     /**
-     * @param  Message  $message
+     * @param  Message  $entity
      * @param  array  $args
      * @return void
      */
-    public function handle(Message $message, array $args): void
+    public function handle(Message $entity, array $args): void
     {
-        if ($this->skip($message)) {
+        if ($this->skip($entity)) {
             return;
         }
 
-        $message->reply("👩 {$this->getYoMomma()}");
+        $entity->reply("👩 {$this->getYoMomma()}");
     }
 
     /**

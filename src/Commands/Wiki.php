@@ -29,14 +29,14 @@ class Wiki extends Command
     }
 
     /**
-     * @param  Message  $message
+     * @param  Message  $entity
      * @param  array  $args
      * @return void
      */
-    public function handle(Message $message, array $args): void
+    public function handle(Message $entity, array $args): void
     {
-        coroutine(function (Message $message, array $args) {
-            if ($this->skip($message)) {
+        coroutine(function (Message $entity, array $args) {
+            if ($this->skip($entity)) {
                 return;
             }
 
@@ -63,9 +63,9 @@ class Wiki extends Command
                         $reply .= "> `$value` - <{$result[3][$key]}>".PHP_EOL;
                     }
 
-                    $message->reply($reply);
+                    $entity->reply($reply);
 
-                    $this->hitCooldown($message->author);
+                    $this->hitCooldown($entity->author);
 
                     return;
                 }
@@ -73,7 +73,7 @@ class Wiki extends Command
                 //Not important
             }
 
-            $message->reply("I found no results for `$search`");
-        }, $message, $args);
+            $entity->reply("I found no results for `$search`");
+        }, $entity, $args);
     }
 }

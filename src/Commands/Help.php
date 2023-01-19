@@ -23,19 +23,19 @@ class Help extends Command
     }
 
     /**
-     * @param  Message  $message
+     * @param  Message  $entity
      * @param  array  $args
      * @return void
      */
-    public function handle(Message $message, array $args): void
+    public function handle(Message $entity, array $args): void
     {
-        if ($this->skip($message)) {
+        if ($this->skip($entity)) {
             return;
         }
 
-        $message->reply($this->message());
+        $entity->reply($this->message());
 
-        $this->hitCooldown($message->author);
+        $this->hitCooldown($entity->author);
     }
 
     /**
