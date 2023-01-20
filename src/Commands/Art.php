@@ -82,6 +82,8 @@ class Art extends Command
                             result: $result,
                             args: $args
                         )
+                    )->then(
+                        $this->autoExpireComponents(...)
                     );
 
                     Bank::for($user)->charge(
@@ -117,8 +119,11 @@ class Art extends Command
      * @param  array  $args
      * @return MessageBuilder
      */
-    private function buildMessage(Message|Interaction $entity, array $result, array $args): MessageBuilder
-    {
+    private function buildMessage(
+        Message|Interaction $entity,
+        array $result,
+        array $args
+    ): MessageBuilder {
         $builder = MessageBuilder::new();
 
         iF ($entity instanceof Message) {

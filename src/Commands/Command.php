@@ -120,13 +120,34 @@ abstract class Command
      * @param  int  $seconds
      * @return void
      */
-    protected function autoExpireListener(Button $button, int $seconds = 300): void
+    protected function autoExpireListener(Button $button, int $seconds = 180): void
     {
         Shitbot::discord()
             ->getLoop()
             ->addTimer(
                 interval: $seconds,
                 callback: fn () => $button->removeListener()
+            );
+    }
+
+    /**
+     * @param  Message  $message
+     * @param  int  $seconds
+     * @return void
+     */
+    protected function autoExpireComponents(Message $message, int $seconds = 180): void
+    {
+        if (! $message->components->count()) {
+            return;
+        }
+
+        Shitbot::discord()
+            ->getLoop()
+            ->addTimer(
+                interval: $seconds,
+                callback: fn () => $message->edit(
+                    MessageBuilder::new()->setComponents([])
+                )
             );
     }
 

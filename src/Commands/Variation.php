@@ -94,6 +94,8 @@ class Variation extends Command
                             entity: $entity,
                             result: $result
                         )
+                    )->then(
+                        $this->autoExpireComponents(...)
                     );
 
                     Bank::for($user)->charge(
