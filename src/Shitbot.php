@@ -11,7 +11,6 @@ use Discord\Parts\Interactions\Interaction;
 use Discord\Parts\WebSockets\TypingStart as Typing;
 use Discord\WebSockets\Event;
 use Exception;
-use React\EventLoop\LoopInterface;
 use React\Http\Browser;
 use ShitwareLtd\Shitbot\Commands\Admin;
 use ShitwareLtd\Shitbot\Commands\Art;
@@ -61,11 +60,6 @@ class Shitbot
     private static ?DiscordCommandClient $discord = null;
 
     /**
-     * @var LoopInterface|null
-     */
-    private static ?LoopInterface $loop = null;
-
-    /**
      * @var array
      */
     private static array $commands = [];
@@ -104,7 +98,6 @@ class Shitbot
         private readonly bool $installingAppCommands
     ){
         static::$discord = $client;
-        static::$loop = $client->getLoop();
         $this->setConfig();
         $this->setOwners();
     }
@@ -180,7 +173,7 @@ class Shitbot
      */
     public static function browser(): Browser
     {
-        return (new Browser(loop: static::$loop))
+        return (new Browser(loop: static::$discord->getLoop()))
             ->withTimeout(30.0)
             ->withHeader(
                 header: 'Accept',

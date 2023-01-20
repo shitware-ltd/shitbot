@@ -7,9 +7,7 @@ use Discord\Builders\Components\Button;
 use Discord\Builders\MessageBuilder;
 use Discord\Parts\Channel\Message;
 use Discord\Parts\Interactions\Interaction;
-use Illuminate\Support\Str;
 use Psr\Http\Message\ResponseInterface;
-use React\EventLoop\Loop;
 use ShitwareLtd\Shitbot\Bank\Bank;
 use ShitwareLtd\Shitbot\Bank\Item;
 use ShitwareLtd\Shitbot\Shitbot;
@@ -54,12 +52,7 @@ class Art extends Command
 
             $this->hitCooldown($user);
 
-            $message->channel->broadcastTyping();
-
-            $typing = Loop::addPeriodicTimer(
-                interval: 4,
-                callback: fn () => $message->channel->broadcastTyping()
-            );
+            $typing = $this->startTyping($message);
 
             try {
                 /** @var ResponseInterface $response */
@@ -114,7 +107,7 @@ class Art extends Command
                 );
             }
 
-            Loop::cancelTimer($typing);
+            $this->stopTyping($typing);
         }, $entity, $args);
     }
 
@@ -165,7 +158,7 @@ class Art extends Command
 
         if ($withRetry) {
             $action->addComponent(
-                Button::new(Button::STYLE_PRIMARY)
+                $retry = Button::new(Button::STYLE_PRIMARY)
                     ->setLabel('Retry Prompt')
                     ->setEmoji(Emoji::get())
                     ->setListener(
@@ -176,10 +169,12 @@ class Art extends Command
                         discord: Shitbot::discord()
                     )
             );
+
+            $this->autoExpireListener($retry);
         }
 
-        return $action->addComponent(
-            Button::new(Button::STYLE_SUCCESS)
+        $action->addComponent(
+            $generate = Button::new(Button::STYLE_SUCCESS)
                 ->setLabel('Generate Variation')
                 ->setEmoji(Emoji::get())
                 ->setListener(
@@ -190,5 +185,9 @@ class Art extends Command
                     discord: Shitbot::discord()
                 )
         );
+
+        $this->autoExpireListener($generate);
+
+        return $action;
     }
 }

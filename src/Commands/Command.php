@@ -2,11 +2,13 @@
 
 namespace ShitwareLtd\Shitbot\Commands;
 
+use Discord\Builders\Components\Button;
 use Discord\Builders\MessageBuilder;
 use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
 use Discord\Parts\Interactions\Interaction;
 use Discord\Parts\User\User;
+use React\EventLoop\TimerInterface;
 use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
@@ -84,6 +86,48 @@ abstract class Command
         if (isset($this->cooldowns[$user->id])) {
             unset($this->cooldowns[$user->id]);
         }
+    }
+
+    /**
+     * @param  Message  $message
+     * @return TimerInterface
+     */
+    protected function startTyping(Message $message): TimerInterface
+    {
+        $message->channel->broadcastTyping();
+
+        return Shitbot::discord()
+            ->getLoop()
+            ->addPeriodicTimer(
+                interval: 4,
+                callback: fn () => $message->channel->broadcastTyping()
+            );
+    }
+
+    /**
+     * @param  TimerInterface  $typing
+     * @return void
+     */
+    protected function stopTyping(TimerInterface $typing): void
+    {
+        Shitbot::discord()
+            ->getLoop()
+            ->cancelTimer($typing);
+    }
+
+    /**
+     * @param  Button  $button
+     * @param  int  $seconds
+     * @return void
+     */
+    protected function autoExpireListener(Button $button, int $seconds = 300): void
+    {
+        Shitbot::discord()
+            ->getLoop()
+            ->addTimer(
+                interval: $seconds,
+                callback: fn () => $button->removeListener()
+            );
     }
 
     /**

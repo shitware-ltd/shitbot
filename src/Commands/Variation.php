@@ -9,7 +9,6 @@ use Discord\Parts\Channel\Attachment;
 use Discord\Parts\Channel\Message;
 use Discord\Parts\Interactions\Interaction;
 use Psr\Http\Message\ResponseInterface;
-use React\EventLoop\Loop;
 use ShitwareLtd\Shitbot\Bank\Bank;
 use ShitwareLtd\Shitbot\Bank\Item;
 use ShitwareLtd\Shitbot\Shitbot;
@@ -59,12 +58,7 @@ class Variation extends Command
 
             $this->hitCooldown($user);
 
-            $message->channel->broadcastTyping();
-
-            $typing = Loop::addPeriodicTimer(
-                interval: 4,
-                callback: fn () => $message->channel->broadcastTyping()
-            );
+            $typing = $this->startTyping($message);
 
             try {
                 /** @var Attachment $attachment */
@@ -125,7 +119,7 @@ class Variation extends Command
                 );
             }
 
-            Loop::cancelTimer($typing);
+            $this->stopTyping($typing);
         }, $entity);
     }
 
@@ -173,18 +167,20 @@ class Variation extends Command
      */
     private function buildActionRow(): ActionRow
     {
-        return ActionRow::new()->addComponent(
-            Button::new(Button::STYLE_SUCCESS)
-                ->setLabel('Retry Variation')
-                ->setEmoji(Emoji::get())
-                ->setListener(
-                    callback: fn (Interaction $interaction) => Shitbot::command(Variation::class)->handle(
-                        entity: $interaction,
-                        args: []
-                    ),
-                    discord: Shitbot::discord()
-                )
-        );
+        $retry = Button::new(Button::STYLE_SUCCESS)
+            ->setLabel('Retry Variation')
+            ->setEmoji(Emoji::get())
+            ->setListener(
+                callback: fn (Interaction $interaction) => Shitbot::command(Variation::class)->handle(
+                    entity: $interaction,
+                    args: []
+                ),
+                discord: Shitbot::discord()
+            );
+
+        $this->autoExpireListener($retry);
+
+        return ActionRow::new()->addComponent($retry);
     }
 
     /**

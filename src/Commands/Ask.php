@@ -4,7 +4,6 @@ namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Parts\Channel\Message;
 use Psr\Http\Message\ResponseInterface;
-use React\EventLoop\Loop;
 use ShitwareLtd\Shitbot\Bank\Bank;
 use ShitwareLtd\Shitbot\Bank\Item;
 use ShitwareLtd\Shitbot\Shitbot;
@@ -45,12 +44,7 @@ class Ask extends Command
 
             $this->hitCooldown($entity->author);
 
-            $entity->channel->broadcastTyping();
-
-            $typing = Loop::addPeriodicTimer(
-                interval: 4,
-                callback: fn () => $entity->channel->broadcastTyping()
-            );
+            $typing = $this->startTyping($entity);
 
             try {
                 /** @var ResponseInterface $response */
@@ -96,7 +90,7 @@ class Ask extends Command
                 );
             }
 
-            Loop::cancelTimer($typing);
+            $this->stopTyping($typing);
         }, $entity, $args);
     }
 }
