@@ -229,7 +229,7 @@ $image->compositeImage(
      * @param  string  $image
      * @return string
      */
-    private function buildMultipartBody(string $boundary, string $image): string
+    private function buildMultipartBody(string $boundary, string $image, string $mask): string
     {
         return <<<EOT
         --$boundary
@@ -249,6 +249,14 @@ $image->compositeImage(
         Content-Transfer-Encoding: binary
         
         $image
+        --$boundary
+        
+        b64_json
+        --$boundary
+        Content-Disposition: form-data; name="image"; filename="image.png"
+        Content-Transfer-Encoding: binary
+        
+        $mask
         --$boundary--
         EOT;
     }
