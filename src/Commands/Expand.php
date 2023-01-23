@@ -213,30 +213,6 @@ $image = new Imagick();
 // Set image canvas
 $image->newImage($size, $size, new ImagickPixel( 'none' ));
 
-// Create ImagickDraw object to draw border
-$border = new ImagickDraw();
-
-// Set fill color to transparent
-$border->setFillColor( 'none' );
-
-// Set border format
-$border->setStrokeColor( new ImagickPixel( 'none' ) );
-$border->setStrokeWidth( $borderWidth );
-$border->setStrokeAntialias( false );
-
-// Draw border
-$border->rectangle(
-    $borderWidth / 2 - 1,
-    $borderWidth / 2 - 1,
-    $size - ( ($borderWidth / 2) ),
-    $size - ( ($borderWidth / 2) )
-);
-
-// Apply drawn border to final image
-$image->drawImage( $border );
-
-$image->setImageFormat('png');
-
 // Put source image to final image
 $image->compositeImage(
     $original, Imagick::COMPOSITE_DEFAULT,
