@@ -15,7 +15,7 @@ use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Emoji;
 use ShitwareLtd\Shitbot\Support\Helpers;
 use Throwable;
-
+use Imagick;
 use function React\Async\coroutine;
 
 class Expand extends Command
@@ -194,7 +194,7 @@ class Expand extends Command
         return "none";
     }
 
-    private function generateExpansionMask(Image $image, $direction = null)
+    private function generateExpansionMask(Attachment $image, $direction = null)
     {
         $borderWidth = floor((1024 - $image->width) /2);
 
