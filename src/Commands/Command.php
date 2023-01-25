@@ -35,6 +35,8 @@ abstract class Command
         return 0;
     }
 
+    abstract public function handle(Interaction|Message $entity, array $args): void;
+
     /**
      * @param  Interaction|Message  $entity
      * @return bool

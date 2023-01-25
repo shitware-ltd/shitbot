@@ -3,6 +3,7 @@
 namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Parts\Channel\Message;
+use Discord\Parts\Interactions\Interaction;
 use Discord\Parts\User\User;
 use Psr\Http\Message\ResponseInterface;
 use ShitwareLtd\Shitbot\Shitbot;
@@ -26,7 +27,7 @@ class Insult extends Command
      * @param  array  $args
      * @return void
      */
-    public function handle(Message $entity, array $args): void
+    public function handle(Interaction|Message $entity, array $args): void
     {
         coroutine(function (Message $entity) {
             if ($this->skip($entity)) {

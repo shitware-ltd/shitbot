@@ -19,6 +19,7 @@ use ShitwareLtd\Shitbot\Commands\Balance;
 use ShitwareLtd\Shitbot\Commands\Chuck;
 use ShitwareLtd\Shitbot\Commands\Command;
 use ShitwareLtd\Shitbot\Commands\Dad;
+use ShitwareLtd\Shitbot\Commands\Expand;
 use ShitwareLtd\Shitbot\Commands\Help;
 use ShitwareLtd\Shitbot\Commands\Hype;
 use ShitwareLtd\Shitbot\Commands\Image;
@@ -74,6 +75,7 @@ class Shitbot
         Balance::class,
         Chuck::class,
         Dad::class,
+        Expand::class,
         Help::class,
         Hype::class,
         Image::class,
