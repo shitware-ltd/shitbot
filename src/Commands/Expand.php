@@ -142,8 +142,9 @@ class Expand extends Command
             !$message->attachments->count()
             || $message->attachments->first()?->size >= 4194400
             || $message->attachments->first()?->height !== $message->attachments->first()?->width
+            || $message->attachments->first()?->height > 769
         ) {
-            $message->reply('You must attach an image to use as the basis for the variation. Must be a valid PNG file, less than 4MB, and square.');
+            $message->reply('You must attach an image to use as the basis for the expansion. Must be a valid PNG file, less than 4MB, smaller than 769x769, and square.');
 
             return false;
         }
@@ -165,7 +166,7 @@ class Expand extends Command
                 $this->buildActionRow()
             );
         } else {
-            $builder->setContent("<@{$entity->user->id}>, here is your variation:");
+            $builder->setContent("<@{$entity->user->id}>, here is your expansion:");
         }
 
         return $builder->addFileFromContent(
@@ -195,8 +196,13 @@ class Expand extends Command
         return ActionRow::new()->addComponent($retry);
     }
 
+
     /**
      * @see https://stackoverflow.com/questions/15246813/php-gd-transparent-background
+     * 
+     * @param Attachment $image
+     * @param int $max_width
+     * @return string
      */
     private function generateExpansionMask(Attachment $image, int $max_width = 1024): string
     {
@@ -204,34 +210,61 @@ class Expand extends Command
             ($max_width - $image->width) / 2
         );
 
-        // Create the image handle, set the background to white
         /**
          * @var GdImage $image 
          */
         $image = imagecreatetruecolor(1024, 1024);
         
-        // Transparent Background
-        imagealphablending($image, false);
-        $transparency = imagecolorallocatealpha($image, 0, 0, 0, 127);
-        imagefill($image, 0, 0, $transparency);
-        imagesavealpha($image, true);
-        
-        // Drawing over
-        $black = imagecolorallocate($image, 0, 0, 0);
-        imagefilledrectangle(
-            $image, 
-            $borderWidth, 
-            $borderWidth, 
-            $max_width - $borderWidth,
-            $max_width - $borderWidth, $black
+        imagealphablending(
+            image: $image, 
+            enable: false
         );
 
-        return Helpers::getImageDataFromGdImage($image);
+        $transparency = imagecolorallocatealpha(
+            image: $image,
+            red: 0,
+            green: 0,
+            blue: 0,
+            alpha: 127
+        );
+
+        imagefill(
+            image: $image,
+            x: 0,
+            y: 0,
+            color: $transparency
+        );
+
+        imagesavealpha(
+            image: $image,
+            enable: true
+        );
+        
+        $black = imagecolorallocate(
+            image: $image,
+            red: 0,
+            green: 0,
+            blue: 0
+        );
+
+        imagefilledrectangle(
+            image: $image, 
+            x1: $borderWidth, 
+            y1: $borderWidth, 
+            x2: $max_width - $borderWidth,
+            y2: $max_width - $borderWidth,
+            color: $black
+        );
+
+        return Helpers::getImageDataFromGdImage(
+            image: $image
+        );
     }
 
     /**
      * @param  string  $boundary
      * @param  string  $image
+     * @param  string  $mask
      * @return string
      */
     private function buildMultipartBody(string $boundary, string $image, string $mask): string
