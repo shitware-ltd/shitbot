@@ -4,6 +4,7 @@ namespace ShitwareLtd\Shitbot\Commands;
 
 use Closure;
 use Discord\Parts\Channel\Message;
+use Discord\Parts\Interactions\Interaction;
 use Discord\Parts\User\Activity;
 use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Helpers;
@@ -24,7 +25,7 @@ class Admin extends Command
      * @param  array  $args
      * @return void
      */
-    public function handle(Message $entity, array $args): void
+    public function handle(Interaction|Message $entity, array $args): void
     {
         if (! Helpers::isOwner($entity->author)) {
             return;

@@ -15,7 +15,7 @@ use ShitwareLtd\Shitbot\Shitbot;
 use ShitwareLtd\Shitbot\Support\Emoji;
 use ShitwareLtd\Shitbot\Support\Helpers;
 use Throwable;
-use Imagick;
+use GdImage;
 use function React\Async\coroutine;
 
 class Expand extends Command
@@ -48,8 +48,10 @@ class Expand extends Command
                 return;
             }
 
-            if ($entity instanceof Message
-                && ! $this->passesInitialChecks($entity)) {
+            if (
+                $entity instanceof Message
+                && !$this->passesInitialChecks($entity)
+            ) {
                 return;
             }
 
@@ -70,7 +72,9 @@ class Expand extends Command
                 $image = $fetchImage->getBody()->getContents();
                 $boundary = uniqid();
 
-                $mask = $this->generateExpansionMask($image, $this->getDirection($message));
+                $mask = $this->generateExpansionMask(
+                    image: $attachment
+                );
 
                 /** @var ResponseInterface $response */
                 $response = yield Shitbot::browser()
@@ -79,8 +83,8 @@ class Expand extends Command
                     ->post(
                         url: 'https://api.openai.com/v1/images/variations',
                         headers: [
-                            'Authorization' => 'Bearer '.Shitbot::config('OPENAI_TOKEN'),
-                            'Content-Type' => 'multipart/form-data; boundary="'.$boundary.'"',
+                            'Authorization' => 'Bearer ' . Shitbot::config('OPENAI_TOKEN'),
+                            'Content-Type' => 'multipart/form-data; boundary="' . $boundary . '"',
                         ],
                         body: $this->buildMultipartBody(
                             boundary: $boundary,
@@ -134,9 +138,11 @@ class Expand extends Command
      */
     private function passesInitialChecks(Message $message): bool
     {
-        if (! $message->attachments->count()
+        if (
+            !$message->attachments->count()
             || $message->attachments->first()?->size >= 4194400
-            || $message->attachments->first()?->height !== $message->attachments->first()?->width) {
+            || $message->attachments->first()?->height !== $message->attachments->first()?->width
+        ) {
             $message->reply('You must attach an image to use as the basis for the variation. Must be a valid PNG file, less than 4MB, and square.');
 
             return false;
@@ -154,7 +160,7 @@ class Expand extends Command
     {
         $builder = MessageBuilder::new();
 
-        iF ($entity instanceof Message) {
+        if ($entity instanceof Message) {
             $builder->setReplyTo($entity)->addComponent(
                 $this->buildActionRow()
             );
@@ -163,7 +169,7 @@ class Expand extends Command
         }
 
         return $builder->addFileFromContent(
-            filename: 'dalle_'.uniqid(more_entropy: true).'.png',
+            filename: 'dalle_' . uniqid(more_entropy: true) . '.png',
             content: base64_decode($result['data'][0]['b64_json'])
         );
     }
@@ -189,39 +195,38 @@ class Expand extends Command
         return ActionRow::new()->addComponent($retry);
     }
 
-    private function getDirection(Message $message): string
+    /**
+     * @see https://stackoverflow.com/questions/15246813/php-gd-transparent-background
+     */
+    private function generateExpansionMask(Attachment $image, int $max_width = 1024): string
     {
-        return "none";
-    }
+        $borderWidth = floor(
+            ($max_width - $image->width) / 2
+        );
 
-    private function generateExpansionMask(Attachment $image, $direction = null)
-    {
-        $borderWidth = floor((1024 - $image->width) /2);
+        // Create the image handle, set the background to white
+        /**
+         * @var GdImage $image 
+         */
+        $image = imagecreatetruecolor(1024, 1024);
+        
+        // Transparent Background
+        imagealphablending($image, false);
+        $transparency = imagecolorallocatealpha($image, 0, 0, 0, 127);
+        imagefill($image, 0, 0, $transparency);
+        imagesavealpha($image, true);
+        
+        // Drawing over
+        $black = imagecolorallocate($image, 0, 0, 0);
+        imagefilledrectangle(
+            $image, 
+            $borderWidth, 
+            $borderWidth, 
+            $max_width - $borderWidth,
+            $max_width - $borderWidth, $black
+        );
 
-
-// Create Imagick object for source image
-$original = new Imagick();
-$original->newImage($image->width, $image->height, new ImagickPixel("rgba(255, 255, 255, 1)"));
-
-// Get image width and height, and automatically set it wider than
-// source image dimension to give space for border (and padding if set)
-$size = $image->width->getImageWidth() + 2 * $borderWidth ;
-
-// Create Imagick object for final image with border
-$image = new Imagick();
-
-// Set image canvas
-$image->newImage($size, $size, new ImagickPixel( 'none' ));
-
-// Put source image to final image
-$image->compositeImage(
-    $original, Imagick::COMPOSITE_DEFAULT,
-    $borderWidth,
-    $borderWidth
-);
-        $image->setImageFormat('png');
-
-        return $image->getImageBlob();
+        return Helpers::getImageDataFromGdImage($image);
     }
 
     /**

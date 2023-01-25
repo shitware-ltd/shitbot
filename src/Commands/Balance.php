@@ -4,6 +4,7 @@ namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
+use Discord\Parts\Interactions\Interaction;
 use ShitwareLtd\Shitbot\Bank\Bank;
 
 class Balance extends Command
@@ -31,7 +32,7 @@ class Balance extends Command
      *
      * @throws NoPermissionsException
      */
-    public function handle(Message $entity, array $args): void
+    public function handle(Interaction|Message $entity, array $args): void
     {
         if ($this->skip($entity)) {
             return;

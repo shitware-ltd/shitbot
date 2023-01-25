@@ -6,6 +6,7 @@ use Discord\Parts\Channel\Message;
 use Discord\Parts\Interactions\Interaction;
 use Discord\Parts\User\User;
 use Discord\Parts\WebSockets\TypingStart;
+use GdImage;
 use Illuminate\Support\Str;
 use Psr\Http\Message\ResponseInterface;
 use ShitwareLtd\Shitbot\Shitbot;
@@ -22,6 +23,16 @@ class Helpers
             json: file_get_contents($path),
             associative: true
         );
+    }
+
+    public static function getImageDataFromGdImage(GdImage $image): string
+    {
+        ob_start();
+        imagepng($image);
+        $image_data = ob_get_contents();
+        ob_end_clean();
+
+        return $image_data;
     }
 
     /**

@@ -5,6 +5,7 @@ namespace ShitwareLtd\Shitbot\Commands;
 use Carbon\CarbonInterface;
 use Discord\Http\Exceptions\NoPermissionsException;
 use Discord\Parts\Channel\Message;
+use Discord\Parts\Interactions\Interaction;
 use Illuminate\Support\Carbon;
 use ShitwareLtd\Shitbot\Support\Helpers;
 
@@ -33,7 +34,7 @@ class Uptime extends Command
      *
      * @throws NoPermissionsException
      */
-    public function handle(Message $entity, array $args): void
+    public function handle(Interaction|Message $entity, array $args): void
     {
         if ($this->skip($entity)) {
             return;

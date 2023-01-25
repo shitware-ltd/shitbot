@@ -4,6 +4,7 @@ namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Builders\MessageBuilder;
 use Discord\Parts\Channel\Message;
+use Discord\Parts\Interactions\Interaction;
 use Throwable;
 
 use function React\Async\coroutine;
@@ -31,7 +32,7 @@ class Image extends Command
      * @param  array  $args
      * @return void
      */
-    public function handle(Message $entity, array $args): void
+    public function handle(Interaction|Message $entity, array $args): void
     {
         coroutine(function (Message $entity) {
             if ($this->skip($entity)) {

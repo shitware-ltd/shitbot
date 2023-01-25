@@ -3,6 +3,7 @@
 namespace ShitwareLtd\Shitbot\Commands;
 
 use Discord\Parts\Channel\Message;
+use Discord\Parts\Interactions\Interaction;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Psr\Http\Message\ResponseInterface;
@@ -35,7 +36,7 @@ class Weather extends Command
      * @param  array  $args
      * @return void
      */
-    public function handle(Message $entity, array $args): void
+    public function handle(Interaction|Message $entity, array $args): void
     {
         coroutine(function (Message $entity, array $args) {
             if ($this->skip($entity)) {
