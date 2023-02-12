@@ -33,7 +33,7 @@ class RockPaperScissors extends Command
     $🎲 = $this->🗝️($💰);
     
     if (empty($🎲)) {
-      $💬->reply('Please select a valid choice, i.e. ( !rps rock|paper|scissors )');
+      $💬->reply('Please select a valid choice, i.e. ( !rps ⛰|📄|✂ )');
     } else {
       $💬->reply($this->🎮⚔️($💬, $🎲));
     }
