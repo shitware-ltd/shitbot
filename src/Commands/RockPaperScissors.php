@@ -21,9 +21,15 @@ class RockPaperScissors extends Command
       '😀' => '✂',
     ],
   ];
+
+  public function trigger(): string
+  {
+    return '!rps';
+  }
   
   /** @throws NoPermissionsException */
-  public function handle(Message $💬, array $💰): void {
+  public function handle(Message $💬, array $💰): void 
+  {
     $🎲 = $this->🗝️($💰);
     
     if (empty($🎲)) {
@@ -33,7 +39,8 @@ class RockPaperScissors extends Command
     }
   }
   
-  private function 🎮⚔️(Message $💬, $🎲) {
+  private function 🎮⚔️(Message $💬, $🎲) 
+  {
     $🤖 = $this->🤖();
     
     $💾 = "> I picked ".self::🎮[$🤖]['😀']."\n";
@@ -50,7 +57,8 @@ class RockPaperScissors extends Command
     return $💾;
   }
   
-  private function 🗝️(array $💰) {
+  private function 🗝️(array $💰) 
+  {
     $🎲 = strtolower($💰[0] ?? '');
     
     if (empty($🎲)) {
@@ -64,7 +72,8 @@ class RockPaperScissors extends Command
     return null;
   }
   
-  private function 🤖() {
+  private function 🤖() 
+  {
     $🎲 = rand(1, 99);
     
     if ($🎲 < 34) {
