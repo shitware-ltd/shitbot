@@ -13,16 +13,16 @@ class ⛰📄✂ extends Command
      */
     public const 🎮 = [
         'rock' => [
-            'weakness' => 'paper',
-            '💩' => '⛰',
+            '💩' => 'paper',
+            '☢' => '⛰',
         ],
         'paper' => [
-            'weakness' => 'scissors',
-            '💩' => '📄',
+            '💩' => 'scissors',
+            '☢' => '📄',
         ],
         'scissors' => [
-            'weakness' => 'rock',
-            '💩' => '✂',
+            '💩' => 'rock',
+            '☢' => '✂',
         ],
     ];
 
@@ -98,8 +98,8 @@ class ⛰📄✂ extends Command
         string $😀,
         string $🧑
     ): string {
-        $💦 = '> I picked '.self::🎮[$🤖]['💩'].PHP_EOL;
-        $💦 .= "> $🧑 picked ".self::🎮[$😀]['💩'].PHP_EOL;
+        $💦 = '> I picked '.self::🎮[$🤖]['☢'].PHP_EOL;
+        $💦 .= "> $🧑 picked ".self::🎮[$😀]['☢'].PHP_EOL;
 
         return $💦;
     }
@@ -119,7 +119,7 @@ class ⛰📄✂ extends Command
             return "**Seems we had a tie $🧑!**";
         }
 
-        if (self::🎮[$🤖]['weakness'] === $😀) {
+        if (self::🎮[$🤖]['💩'] === $😀) {
             return "**$🧑 wins!**";
         }
 
