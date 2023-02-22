@@ -2,9 +2,9 @@
 
 namespace ShitwareLtd\Shitbot\Commands;
 
-use Discord\Http\Exceptions\NoPermissionsException;
-use Discord\Parts\Channel\Message;
-use Illuminate\Support\Str;
+use Discord\Http\Exceptions\NoPermissionsException as 🧨;
+use Discord\Parts\Channel\Message as 💭;
+use Illuminate\Support\Str as 🧶;
 
 class ⛰📄✂ extends Command
 {
@@ -35,13 +35,13 @@ class ⛰📄✂ extends Command
     }
 
     /**
-     * @param  Message  $💬
+     * @param  💭  $💬
      * @param  array  $💰
      * @return void
      *
-     * @throws NoPermissionsException
+     * @throws 🧨
      */
-    public function handle(Message $💬, array $💰): void
+    public function handle(💭 $💬, array $💰): void
     {
         if ($this->skip($💬)) {
             return;
@@ -60,11 +60,11 @@ class ⛰📄✂ extends Command
     }
 
     /**
-     * @param  Message  $💬
+     * @param  💭  $💬
      * @param  string  $👆
      * @return string
      */
-    private function 💬🎮(Message $💬, string $👆): string
+    private function 💬🎮(💭 $💬, string $👆): string
     {
         $🤖 = $this->🤖();
 
@@ -132,7 +132,7 @@ class ⛰📄✂ extends Command
      */
     private function 👆👇(array $⁉): ?string
     {
-        $👆 = Str::lower($⁉[0] ?? '');
+        $👆 = 🧶::lower($⁉[0] ?? '');
 
         if (empty($👆)) {
             return '';
