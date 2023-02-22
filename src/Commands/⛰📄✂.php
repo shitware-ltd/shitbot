@@ -72,19 +72,19 @@ class ⛰📄✂ extends Command
             return '> **I choose '.self::🎮[$🤖]['💩'].'**';
         }
 
-        $reply = $this->💬🎲(
+        $🎃 = $this->💬🎲(
             🤖: $🤖,
             😀: $👆,
             🧑: $💬->author->username
         ).PHP_EOL;
 
-        $reply .= $this->💯💬(
+        $🎃 .= $this->💯💬(
             🤖: $🤖,
             😀: $👆,
             🧑: $💬->author->username
         ).PHP_EOL;
 
-        return $reply;
+        return $🎃;
     }
 
     /**
@@ -98,10 +98,10 @@ class ⛰📄✂ extends Command
         string $😀,
         string $🧑
     ): string {
-        $reply = '> I picked '.self::🎮[$🤖]['💩'].PHP_EOL;
-        $reply .= "> $🧑 picked ".self::🎮[$😀]['💩'].PHP_EOL;
+        $💦 = '> I picked '.self::🎮[$🤖]['💩'].PHP_EOL;
+        $💦 .= "> $🧑 picked ".self::🎮[$😀]['💩'].PHP_EOL;
 
-        return $reply;
+        return $💦;
     }
 
     /**
