@@ -14,15 +14,15 @@ class ⛰📄✂ extends Command
     public const 🎮 = [
         'rock' => [
             'weakness' => 'paper',
-            'emoji' => '⛰',
+            '💩' => '⛰',
         ],
         'paper' => [
             'weakness' => 'scissors',
-            'emoji' => '📄',
+            '💩' => '📄',
         ],
         'scissors' => [
             'weakness' => 'rock',
-            'emoji' => '✂',
+            '💩' => '✂',
         ],
     ];
 
@@ -69,7 +69,7 @@ class ⛰📄✂ extends Command
         $🤖 = $this->🤖();
 
         if (empty($👆)) {
-            return '> **I choose '.self::🎮[$🤖]['emoji'].'**';
+            return '> **I choose '.self::🎮[$🤖]['💩'].'**';
         }
 
         $reply = $this->💬🎲(
@@ -98,8 +98,8 @@ class ⛰📄✂ extends Command
         string $😀,
         string $🧑
     ): string {
-        $reply = '> I picked '.self::🎮[$🤖]['emoji'].PHP_EOL;
-        $reply .= "> $🧑 picked ".self::🎮[$😀]['emoji'].PHP_EOL;
+        $reply = '> I picked '.self::🎮[$🤖]['💩'].PHP_EOL;
+        $reply .= "> $🧑 picked ".self::🎮[$😀]['💩'].PHP_EOL;
 
         return $reply;
     }
