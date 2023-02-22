@@ -25,13 +25,13 @@ use ShitwareLtd\Shitbot\Commands\Image;
 use ShitwareLtd\Shitbot\Commands\Insult;
 use ShitwareLtd\Shitbot\Commands\Ip;
 use ShitwareLtd\Shitbot\Commands\Joke;
-use ShitwareLtd\Shitbot\Commands\RockPaperScissors;
 use ShitwareLtd\Shitbot\Commands\Uptime;
 use ShitwareLtd\Shitbot\Commands\Variation;
 use ShitwareLtd\Shitbot\Commands\Weather;
 use ShitwareLtd\Shitbot\Commands\Wiki;
 use ShitwareLtd\Shitbot\Commands\YoMomma;
 use ShitwareLtd\Shitbot\Commands\YouTube;
+use ShitwareLtd\Shitbot\Commands\⛰📄✂;
 use ShitwareLtd\Shitbot\EventHandlers\MessageCreate;
 use ShitwareLtd\Shitbot\EventHandlers\TypingStart;
 use ShitwareLtd\Shitbot\Support\Status;
@@ -80,13 +80,13 @@ class Shitbot
         Insult::class,
         Ip::class,
         Joke::class,
-        RockPaperScissors::class,
         Uptime::class,
         Variation::class,
         Weather::class,
         Wiki::class,
         YoMomma::class,
         YouTube::class,
+        ⛰📄✂::class,
     ];
 
     /**
