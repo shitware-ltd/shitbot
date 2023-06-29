@@ -20,7 +20,6 @@ use ShitwareLtd\Shitbot\Commands\Chuck;
 use ShitwareLtd\Shitbot\Commands\Command;
 use ShitwareLtd\Shitbot\Commands\Dad;
 use ShitwareLtd\Shitbot\Commands\Help;
-use ShitwareLtd\Shitbot\Commands\Hype;
 use ShitwareLtd\Shitbot\Commands\Image;
 use ShitwareLtd\Shitbot\Commands\Insult;
 use ShitwareLtd\Shitbot\Commands\Ip;
@@ -75,7 +74,6 @@ class Shitbot
         Chuck::class,
         Dad::class,
         Help::class,
-        Hype::class,
         Image::class,
         Insult::class,
         Ip::class,
@@ -321,7 +319,6 @@ class Shitbot
     {
         static::$config = [
             'WEATHER_TOKEN' => $_ENV['WEATHER_TOKEN'] ?? 'token',
-            'HYPE_TOKEN' => $_ENV['HYPE_TOKEN'] ?? 'token',
             'YOUTUBE_TOKEN' => $_ENV['YOUTUBE_TOKEN'] ?? 'token',
             'OPENAI_TOKEN' => $_ENV['OPENAI_TOKEN'] ?? 'token',
             'IP_TOKEN' => $_ENV['IP_TOKEN'] ?? 'token',

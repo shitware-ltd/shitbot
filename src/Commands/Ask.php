@@ -23,14 +23,6 @@ class Ask extends Command
     }
 
     /**
-     * @return int
-     */
-    public function cooldown(): int
-    {
-        return 20000;
-    }
-
-    /**
      * @param  Message  $entity
      * @param  array  $args
      * @return void

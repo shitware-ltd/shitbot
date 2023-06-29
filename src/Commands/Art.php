@@ -28,14 +28,6 @@ class Art extends Command
     }
 
     /**
-     * @return int
-     */
-    public function cooldown(): int
-    {
-        return 120000;
-    }
-
-    /**
      * @param  Message|Interaction  $entity
      * @param  array  $args
      * @return void

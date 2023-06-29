@@ -35,7 +35,6 @@
 - `WEATHER_TOKEN`: To use `!weather`, you must get an API key from [Weather API](https://www.weatherapi.com).
 - `YOUTUBE_TOKEN`: To use `!yt`, you must get an API key from [Google Developers Console](https://console.developers.google.com).
 - `IP_TOKEN`: To use `!ip`, you must get an API key from [IP API](https://ip-api.com).
-- `HYPE_TOKEN`: To use `!hype`, you must get an API key from [Hype Quotes](https://github.com/jorqensen/hypequotes).
 
 ## Prefix Commands:
 
@@ -45,7 +44,6 @@
 - `!balance`: See how much money from API usage you have spent.
 - `!chuck`: Chuck Norris jokes.
 - `!daddy`: Dad jokes.
-- `!hype`: Lara-cord best quotes of all time.
 - `!image`: Gets a random image from unsplash.
 - `!insult {@mention(s)}`: Will give you a mean insult. If you @mention other users, it will tag and insult them instead.
 - `!ip {ip}`: Obtain details about the supplied IP address.
