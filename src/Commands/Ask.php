@@ -50,7 +50,7 @@ class Ask extends Command
                         ],
                         body: json_encode([
                             'max_tokens' => 3072,
-                            'model' => 'text-davinci-003',
+                            'model' => 'gpt-3.5-turbo-instruct',
                             'n' => 1,
                             'prompt' => Helpers::implodeContent($args),
                             'temperature' => 1,

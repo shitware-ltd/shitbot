@@ -58,6 +58,7 @@ class Art extends Command
                             'Content-Type' => 'application/json',
                         ],
                         body: json_encode([
+                            'model' => 'dall-e-3',
                             'n' => 1,
                             'prompt' => Helpers::implodeContent($args),
                             'response_format' => 'b64_json',
