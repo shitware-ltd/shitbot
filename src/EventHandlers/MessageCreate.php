@@ -16,7 +16,7 @@ class MessageCreate
         'think' => ['hmm', 'huh', 'interesting', 'think', 'thonk', 'curious', 'why', 'how', 'who', 'wonder'],
         'rage' => ['fuck', 'asshole', 'bitch', 'cunt', 'shit', 'pussy', 'dildo', 'dick', 'dumb', 'twat', 'piss', 'bastard', 'prick', 'wanker', 'cock'],
         'drugs' => ['drunk', 'tipzy', 'weed', '420', 'high', 'stoned', 'alcohol', 'smashed', 'crack', 'meth', 'drinking', 'beer', 'wine', 'drug'],
-        'sheep' => ['filament']
+        'filament' => ['filament']
         'trongate' => ['trongate', 'connelly', 'dc', 'havc'],
     ];
 

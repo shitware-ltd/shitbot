@@ -104,7 +104,7 @@ class Emoji
             '🤮',
             '🤢',
         ],
-        'sheep' => [
+        'filament' => [
             '🐑',
         ],
         'trongate' => [
