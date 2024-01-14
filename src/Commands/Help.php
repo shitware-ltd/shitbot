@@ -49,8 +49,8 @@ class Help extends Command
         return <<<EOT
         If you want to play with me, try:
         > `!help`: Well...you are already here, so you got this one down.
-        > `!art {prompt}`: Ask the A.I. overlords to make a magical image for you. **[DALLE-2]**
-        > `!ask {prompt}`: Ask the A.I. overlords something magnificent. **[GPT-3 text-davinci-003]**
+        > `!art {prompt}`: Ask the A.I. overlords to make a magical image for you. **[DALLE-3]**
+        > `!ask {prompt}`: Ask the A.I. overlords something magnificent. **[gpt-3.5-turbo-instruct]**
         > `!balance`: Show how much money from API usage you've spent.
         > `!chuck`: Chuck Norris is still alive.
         > `!daddy`: Dad jokes brighten everyone's day up.
