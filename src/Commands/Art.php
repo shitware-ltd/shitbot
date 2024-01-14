@@ -60,6 +60,7 @@ class Art extends Command
                         body: json_encode([
                             'model' => 'dall-e-3',
                             'n' => 1,
+                            'quality' => 'standard',
                             'prompt' => Helpers::implodeContent($args),
                             'response_format' => 'b64_json',
                             'size' => '1024x1024',
